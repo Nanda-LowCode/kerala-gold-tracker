@@ -8,8 +8,10 @@ interface MalabarRateResponse {
 }
 
 function parseRate(rateStr: string): number {
-  // Malabar returns strings like "₹7,285" or "7285" — strip everything except digits
-  return parseInt(rateStr.replace(/[^0-9]/g, ""), 10);
+  // Malabar returns strings like "13,835.00 INR" — extract the number before decimals
+  const match = rateStr.replace(/,/g, "").match(/(\d+)/);
+  if (!match) throw new Error(`Cannot parse rate: ${rateStr}`);
+  return parseInt(match[1], 10);
 }
 
 function getTodayIST(): string {
@@ -25,14 +27,33 @@ export async function GET(request: NextRequest) {
 
   try {
     // Fetch rates from Malabar Gold
-    const res = await fetch(
-      "https://www.malabargoldanddiamonds.com/malabarprice/index/getrates/?country=IN&state=Kerala",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        cache: "no-store",
-      }
-    );
+    // Step 1: Initial request to get session cookie (returns 302)
+    const MALABAR_URL =
+      "https://www.malabargoldanddiamonds.com/malabarprice/index/getrates/?country=IN&state=Kerala";
+
+    const initialRes = await fetch(MALABAR_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0",
+      },
+      redirect: "manual",
+      cache: "no-store",
+    });
+
+    // Extract cookies from the redirect response
+    const cookies = initialRes.headers.getSetCookie?.().join("; ") ?? "";
+
+    // Step 2: Follow up with the cookie to get actual data
+    const res = await fetch(MALABAR_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0",
+        Cookie: cookies,
+      },
+      cache: "no-store",
+    });
 
     if (!res.ok) {
       throw new Error(`Malabar API returned ${res.status}`);
