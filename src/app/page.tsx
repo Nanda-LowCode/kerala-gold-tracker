@@ -5,6 +5,7 @@ import HistoryTable from "@/components/HistoryTable";
 import FAQ from "@/components/FAQ";
 import TodayVsYesterday from "@/components/TodayVsYesterday";
 import MonthlyHighLow from "@/components/MonthlyHighLow";
+import GoldCalculator from "@/components/GoldCalculator";
 
 interface GoldRate {
   date: string;
@@ -259,6 +260,13 @@ export default async function Home() {
                 </div>
               </div>
             </div>
+
+            {/* Gold Calculator Component */}
+            <GoldCalculator 
+              rate18k={today.rate_18k_1g} 
+              rate22k={today.rate_22k_1g} 
+              rate24k={today.rate_24k_1g} 
+            />
 
             {/* Today vs. Yesterday multi-weight comparison */}
             <TodayVsYesterday today={today} yesterday={yesterday} />
