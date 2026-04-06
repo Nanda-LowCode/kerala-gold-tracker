@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { createSupabaseClient } from "@/lib/supabase";
 import PriceChart from "@/components/PriceChart";
 import HistoryTable from "@/components/HistoryTable";
@@ -49,6 +50,28 @@ function formatDate(dateStr: string): string {
 
 export const revalidate = 300;
 
+export async function generateMetadata(): Promise<Metadata> {
+  const history = await getHistory();
+  const today = history[0] ?? null;
+
+  if (!today) {
+    return {
+      title: "Today's Gold Rate in Kochi | LiveGold Kerala",
+      description: "View the most recent 22K and 24K gold rates in Kochi, Kerala.",
+    };
+  }
+
+  const dateFormatted = new Date(today.date + "T00:00:00").toLocaleDateString("en-IN", {
+    month: "short",
+    day: "numeric",
+  });
+
+  return {
+    title: `Today's Gold Rate in Kochi (${dateFormatted}): 22K @ ₹${today.rate_22k_1g}/g`,
+    description: `Current gold price in Kerala today: 22 Karat is ₹${today.rate_22k_1g} per gram (₹${today.rate_22k_1g * 8} per pavan). 24 Karat is ₹${today.rate_24k_1g} per gram. Live tracking.`,
+  };
+}
+
 export default async function Home() {
   const history = await getHistory();
   const today = history[0] ?? null;
@@ -62,8 +85,52 @@ export default async function Home() {
     today && yesterday ? today.rate_24k_1g - yesterday.rate_24k_1g : null;
   const chartData = [...history].reverse();
 
+  const jsonLd = today ? {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": `Today's Gold Rate in Kochi, Kerala`,
+    "description": `Check today's 22 Karat and 24 Karat gold rate in Kochi.`,
+    "mainEntity": {
+      "@type": "FinancialProduct",
+      "name": "Gold Rate Kochi",
+      "offers": {
+        "@type": "AggregateOffer",
+        "priceCurrency": "INR",
+        "lowPrice": today.rate_18k_1g,
+        "highPrice": today.rate_24k_1g,
+        "offerCount": 3,
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "22K Gold 1 Gram",
+            "price": today.rate_22k_1g,
+            "priceCurrency": "INR"
+          },
+          {
+            "@type": "Offer",
+            "name": "24K Gold 1 Gram",
+            "price": today.rate_24k_1g,
+            "priceCurrency": "INR"
+          },
+          {
+            "@type": "Offer",
+            "name": "22K Gold 1 Pavan",
+            "price": today.rate_22k_1g * 8,
+            "priceCurrency": "INR"
+          }
+        ]
+      }
+    }
+  } : null;
+
   return (
     <>
+      {today && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
       {/* Premium sticky header */}
       <header className="sticky top-0 z-50 border-b border-zinc-200/60 bg-white/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-4">
@@ -119,7 +186,7 @@ export default async function Home() {
                 Today&apos;s Gold Rate
               </h2>
               <p className="mt-1 text-sm text-zinc-500">
-                {formatDate(today.date)} · {today.city}
+                <time dateTime={today.date}>{formatDate(today.date)}</time> · {today.city}
               </p>
             </section>
 
@@ -241,7 +308,7 @@ function RateCard({
   showCTA?: boolean;
 }) {
   return (
-    <div
+    <article
       className={`group relative overflow-hidden rounded-2xl border bg-white transition-all hover:-translate-y-0.5 ${
         compact ? "p-4 md:p-6" : "p-6"
       } ${
@@ -310,7 +377,7 @@ function RateCard({
           </button>
         )}
       </div>
-    </div>
+    </article>
   );
 }
 
@@ -325,6 +392,7 @@ function ChangeBadge({ change }: { change: number }) {
   const up = change > 0;
   return (
     <span
+      aria-live="polite"
       className={`inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-[11px] font-semibold ring-1 ring-inset ${
         up
           ? "bg-red-50 text-red-600 ring-red-200/60"

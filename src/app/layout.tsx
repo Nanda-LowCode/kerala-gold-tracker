@@ -8,7 +8,11 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Today's Gold Rate in Kochi, Kerala | 22K & 24K Live Price",
+  metadataBase: new URL("https://livegoldkerala.com"),
+  title: {
+    default: "Today's Gold Rate in Kochi, Kerala | LiveGold Kerala",
+    template: "%s | LiveGold Kerala",
+  },
   description:
     "Check today's 22 Karat and 24 Karat gold rate per gram and per sovereign (8g) in Kochi, Kerala. Updated daily from Malabar Gold.",
   keywords: [
@@ -21,6 +25,22 @@ export const metadata: Metadata = {
     "gold price per gram",
     "sovereign price today",
   ],
+  openGraph: {
+    title: "LiveGold Kerala | Verified Today's Gold Rate",
+    description: "Check today's 22 Karat and 24 Karat gold rate in Kochi, Kerala. Updated daily.",
+    url: "https://livegoldkerala.com",
+    siteName: "LiveGold Kerala",
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "LiveGold Kerala | Verified Today's Gold Rate",
+    description: "Latest 22K and 24K gold rates in Kochi. Hourly updates.",
+  },
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function RootLayout({
