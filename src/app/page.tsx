@@ -165,7 +165,7 @@ export default async function Home() {
       {/* Top Ticker - highly integrated below header */}
       {today && <TopTicker history={history} />}
 
-      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-4 px-4 py-3 sm:gap-7 sm:py-10">
+      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-4 px-4 py-3 md:gap-8 md:py-10">
         {today ? (
           <>
             {/* Hero: trust badge + date -> Squished aggressively for mobile */}
@@ -186,10 +186,10 @@ export default async function Home() {
                   Verified Kerala Board Rate
                 </span>
               </div>
-              <h2 className="mt-1 text-lg font-bold tracking-tight text-zinc-900 sm:mt-4 sm:text-3xl">
+              <h2 className="mt-1 text-lg font-bold tracking-tight text-zinc-900 md:mt-4 md:text-3xl">
                 Today&apos;s Gold Rate
               </h2>
-              <p className="mt-0.5 text-xs text-zinc-500 sm:mt-1 sm:text-sm">
+              <p className="mt-0.5 text-xs text-zinc-500 md:mt-1 md:text-sm">
                 <time dateTime={today.date}>{formatDate(today.date)}</time> · {today.city}
               </p>
             </section>
@@ -282,7 +282,7 @@ function RateCard({
   return (
     <article
       className={`group relative overflow-hidden rounded-2xl border bg-white transition-all hover:-translate-y-0.5 ${
-        compact ? "p-3 sm:p-4 md:p-6" : "p-4 sm:p-6 md:p-8"
+        compact ? "p-3 sm:p-4 md:p-6" : "p-4 md:p-8"
       } ${
         featured
           ? "border-amber-300 ring-2 ring-amber-400/50 shadow-xl shadow-amber-300/40 hover:shadow-2xl hover:shadow-amber-400/50"
@@ -323,7 +323,7 @@ function RateCard({
           className={`whitespace-nowrap bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text font-bold tracking-tight text-transparent ${
             compact
               ? "mt-2 text-xl sm:text-2xl md:text-3xl"
-              : "mt-2 text-3xl sm:mt-4 sm:text-4xl md:text-5xl"
+              : "mt-2 text-3xl md:mt-4 md:text-5xl"
           }`}
         >
           {formatCurrency(ratePerGram)}
