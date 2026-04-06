@@ -2,10 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseClient } from "@/lib/supabase";
 
 interface MalabarRateResponse {
-  "18kt": string;
   "22kt": string;
   "24kt": string;
-  [key: string]: unknown;
 }
 
 function parseRate(rateStr: string): number {
@@ -62,12 +60,13 @@ export async function GET(request: NextRequest) {
 
     const data: MalabarRateResponse = await res.json();
 
-    const rate18k = parseRate(data["18kt"]);
     const rate22k = parseRate(data["22kt"]);
     const rate24k = parseRate(data["24kt"]);
+    // 18K = 75% purity (18/24 of 24K) — Malabar doesn't provide 18kt directly
+    const rate18k = Math.round(rate24k * (18 / 24));
 
-    if (isNaN(rate18k) || isNaN(rate22k) || isNaN(rate24k)) {
-      throw new Error(`Failed to parse rates: 18k="${data["18kt"]}", 22k="${data["22kt"]}", 24k="${data["24kt"]}"`);
+    if (isNaN(rate22k) || isNaN(rate24k)) {
+      throw new Error(`Failed to parse rates: 22k="${data["22kt"]}", 24k="${data["24kt"]}"`);
     }
 
     // Upsert into Supabase (won't duplicate if cron runs twice)
