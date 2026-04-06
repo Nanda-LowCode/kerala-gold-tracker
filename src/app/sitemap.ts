@@ -1,26 +1,26 @@
 import { MetadataRoute } from 'next'
-import { createSupabaseClient } from "@/lib/supabase"
+import { KERALA_CITIES } from '@/components/DashboardLayout'
 
-export const revalidate = 300 // Revalidate every 5 minutes
+export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = 'https://www.livegoldkerala.com'
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const supabase = createSupabaseClient();
-  const { data } = await supabase
-    .from("daily_gold_rates")
-    .select("date")
-    .eq("city", "Kochi")
-    .order("date", { ascending: false })
-    .limit(1)
-    .single();
-
-  const lastModifiedDate = data?.date ? new Date(data.date) : new Date();
-
-  return [
+  // 1. The main homepage route (Default Kochi)
+  const rootRoute: MetadataRoute.Sitemap = [
     {
-      url: 'https://livegoldkerala.com',
-      lastModified: lastModifiedDate,
+      url: baseUrl,
+      lastModified: new Date(),
       changeFrequency: 'daily',
-      priority: 1,
+      priority: 1.0,
     },
   ]
+
+  // 2. The dynamic programmatic SEO city pages
+  const cityRoutes: MetadataRoute.Sitemap = KERALA_CITIES.map((city) => ({
+    url: `${baseUrl}/${city}`,
+    lastModified: new Date(),
+    changeFrequency: 'daily',
+    priority: 0.8,
+  }))
+
+  return [...rootRoute, ...cityRoutes]
 }
