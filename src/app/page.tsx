@@ -162,7 +162,7 @@ export default async function Home() {
         </div>
       </header>
 
-      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-7 px-4 py-10 sm:py-14">
+      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-5 px-4 py-6 sm:gap-7 sm:py-10">
         {today ? (
           <>
             {/* Hero: trust badge + date */}
@@ -183,7 +183,7 @@ export default async function Home() {
                   Verified Kerala Board Rate
                 </span>
               </div>
-              <h2 className="mt-4 text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl">
+              <h2 className="mt-2 text-xl font-bold tracking-tight text-zinc-900 sm:mt-4 sm:text-3xl">
                 Today&apos;s Gold Rate
               </h2>
               <p className="mt-1 text-sm text-zinc-500">
@@ -191,30 +191,30 @@ export default async function Home() {
               </p>
             </section>
 
-            {/* Rate Cards: Hero 22K + split 24K/18K */}
+            {/* Rate Cards: Hero 18K + split 22K/24K */}
             <div className="grid gap-4 md:grid-cols-3">
-              {/* 22K hero — full width on mobile, first col on desktop */}
+              {/* 18K hero — full width on mobile, first col on desktop */}
               <RateCard
-                label="22 Karat Gold"
-                purity="916 Hallmark"
-                ratePerGram={today.rate_22k_1g}
-                change={change22k}
+                label="18 Karat Gold"
+                purity="750"
+                ratePerGram={today.rate_18k_1g}
+                change={change18k}
                 featured
               />
-              {/* 24K & 18K side-by-side on mobile */}
+              {/* 22K & 24K side-by-side on mobile */}
               <div className="grid grid-cols-2 gap-4 md:contents">
+                <RateCard
+                  label="22 Karat Gold"
+                  purity="916 Hallmark"
+                  ratePerGram={today.rate_22k_1g}
+                  change={change22k}
+                  compact
+                />
                 <RateCard
                   label="24 Karat Gold"
                   purity="999 Fine"
                   ratePerGram={today.rate_24k_1g}
                   change={change24k}
-                  compact
-                />
-                <RateCard
-                  label="18 Karat Gold"
-                  purity="750"
-                  ratePerGram={today.rate_18k_1g}
-                  change={change18k}
                   compact
                 />
               </div>
