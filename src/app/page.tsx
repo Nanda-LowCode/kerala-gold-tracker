@@ -199,6 +199,7 @@ export default async function Home() {
                 purity="916 Hallmark"
                 ratePerGram={today.rate_22k_1g}
                 change={change22k}
+                pavanRate={today.rate_22k_1g * 8}
                 featured
               />
               {/* 24K & 18K side-by-side on mobile */}
@@ -208,6 +209,7 @@ export default async function Home() {
                   purity="999 Fine"
                   ratePerGram={today.rate_24k_1g}
                   change={change24k}
+                  pavanRate={today.rate_24k_1g * 8}
                   compact
                 />
                 <RateCard
@@ -215,53 +217,16 @@ export default async function Home() {
                   purity="750"
                   ratePerGram={today.rate_18k_1g}
                   change={change18k}
+                  pavanRate={today.rate_18k_1g * 8}
                   compact
                 />
               </div>
             </div>
 
-            {/* Per Pavan section */}
-            <div className="relative overflow-hidden rounded-2xl border border-zinc-200/70 bg-white p-7 shadow-lg shadow-amber-100/40">
-              <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-gradient-to-br from-amber-200/40 to-transparent blur-3xl" />
-              <div className="relative">
-                <div className="mb-5 text-center">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-zinc-400">
-                    Per Pavan · 8 Grams
-                  </p>
-                  <p className="mt-1 text-xs text-zinc-500">
-                    Traditional Kerala measurement
-                  </p>
-                </div>
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="border-r border-zinc-100 pr-4 text-center">
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-amber-500">
-                      18K
-                    </p>
-                    <p className="mt-1.5 bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-base font-extrabold tracking-tight text-transparent sm:text-lg md:text-2xl">
-                      {formatCurrency(today.rate_18k_1g * 8)}
-                    </p>
-                  </div>
-                  <div className="border-r border-zinc-100 pr-4 text-center">
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-amber-600">
-                      22K
-                    </p>
-                    <p className="mt-1.5 bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-base font-extrabold tracking-tight text-transparent sm:text-lg md:text-2xl">
-                      {formatCurrency(today.rate_22k_1g * 8)}
-                    </p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-amber-700">
-                      24K
-                    </p>
-                    <p className="mt-1.5 bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-base font-extrabold tracking-tight text-transparent sm:text-lg md:text-2xl">
-                      {formatCurrency(today.rate_24k_1g * 8)}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            {/* Price Chart (MOVED UP) */}
+            <PriceChart history={chartData} />
 
-            {/* Gold Calculator Component */}
+            {/* Gold Calculator Component (MOVED DOWN) */}
             <GoldCalculator 
               rate18k={today.rate_18k_1g} 
               rate22k={today.rate_22k_1g} 
@@ -273,9 +238,6 @@ export default async function Home() {
 
             {/* Monthly High/Low SEO callout */}
             <MonthlyHighLow history={history} />
-
-            {/* Price Chart */}
-            <PriceChart history={chartData} />
 
             {/* History Table */}
             <HistoryTable history={history} />
@@ -303,6 +265,7 @@ function RateCard({
   purity,
   ratePerGram,
   change,
+  pavanRate,
   featured = false,
   compact = false,
   showCTA = false,
@@ -311,6 +274,7 @@ function RateCard({
   purity: string;
   ratePerGram: number;
   change: number | null;
+  pavanRate?: number;
   featured?: boolean;
   compact?: boolean;
   showCTA?: boolean;
@@ -321,7 +285,7 @@ function RateCard({
         compact ? "p-4 md:p-6" : "p-6"
       } ${
         featured
-          ? "border-amber-200/80 shadow-lg shadow-amber-200/60 hover:shadow-xl hover:shadow-amber-300/70"
+          ? "border-amber-300 ring-2 ring-amber-400/50 shadow-xl shadow-amber-300/40 hover:shadow-2xl hover:shadow-amber-400/50"
           : "border-zinc-200/70 shadow-lg shadow-amber-100/40 hover:shadow-xl hover:shadow-amber-200/50"
       }`}
     >
@@ -337,15 +301,22 @@ function RateCard({
       <div className="relative">
         <div className="mb-1 flex items-center justify-between gap-2">
           <p className={`font-semibold text-zinc-800 ${compact ? "text-xs sm:text-sm" : "text-sm"}`}>{label}</p>
-          <span
-            className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ring-1 ring-inset ${
-              featured
-                ? "bg-amber-100 text-amber-800 ring-amber-300/60"
-                : "bg-amber-50 text-amber-700 ring-amber-200/60"
-            }`}
-          >
-            {purity}
-          </span>
+          <div className="flex items-center gap-1.5">
+            {featured && (
+              <span className="shrink-0 rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-white shadow-sm ring-1 ring-inset ring-amber-600/30">
+                ★ Popular
+              </span>
+            )}
+            <span
+              className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ring-1 ring-inset ${
+                featured
+                  ? "bg-amber-100 text-amber-800 ring-amber-300/60"
+                  : "bg-amber-50 text-amber-700 ring-amber-200/60"
+              }`}
+            >
+              {purity}
+            </span>
+          </div>
         </div>
 
         <p
@@ -357,6 +328,12 @@ function RateCard({
         >
           {formatCurrency(ratePerGram)}
         </p>
+        
+        {pavanRate && (
+          <p className="mt-0.5 text-[11px] font-medium text-zinc-400">
+            ({formatCurrency(pavanRate)} per Pavan)
+          </p>
+        )}
 
         <div className={`flex items-center justify-between ${compact ? "mt-2" : "mt-3"}`}>
           <span className="text-xs font-medium uppercase tracking-wider text-zinc-400">
