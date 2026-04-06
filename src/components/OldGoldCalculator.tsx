@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { sendGAEvent } from "@next/third-parties/google";
 
 interface OldGoldCalculatorProps {
   rate18k: number;
@@ -84,7 +85,13 @@ export default function OldGoldCalculator({
                   min="0.1"
                   step="0.1"
                   value={weightGrams}
-                  onChange={(e) => setWeightGrams(e.target.value === "" ? "" : parseFloat(e.target.value))}
+                  onChange={(e) => {
+                    const val = e.target.value === "" ? "" : parseFloat(e.target.value);
+                    setWeightGrams(val);
+                    if (val !== "") {
+                      sendGAEvent({ event: "use_old_gold_calculator", weight: val });
+                    }
+                  }}
                   className="w-full rounded-xl border border-zinc-200 bg-white px-4 py-2.5 pr-12 text-zinc-900 shadow-sm transition-colors focus:border-zinc-400 focus:outline-none focus:ring-4 focus:ring-zinc-500/10"
                   placeholder="e.g. 8"
                 />
