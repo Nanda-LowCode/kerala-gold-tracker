@@ -163,7 +163,7 @@ export default async function Home() {
                     <p className="text-[11px] font-bold uppercase tracking-wider text-amber-500">
                       18K
                     </p>
-                    <p className="mt-1.5 bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-xl font-extrabold tracking-tight text-transparent sm:text-2xl">
+                    <p className="mt-1.5 bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-base font-extrabold tracking-tight text-transparent sm:text-lg md:text-2xl">
                       {formatCurrency(today.rate_18k_1g * 8)}
                     </p>
                   </div>
@@ -171,7 +171,7 @@ export default async function Home() {
                     <p className="text-[11px] font-bold uppercase tracking-wider text-amber-600">
                       22K
                     </p>
-                    <p className="mt-1.5 bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-xl font-extrabold tracking-tight text-transparent sm:text-2xl">
+                    <p className="mt-1.5 bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-base font-extrabold tracking-tight text-transparent sm:text-lg md:text-2xl">
                       {formatCurrency(today.rate_22k_1g * 8)}
                     </p>
                   </div>
@@ -179,7 +179,7 @@ export default async function Home() {
                     <p className="text-[11px] font-bold uppercase tracking-wider text-amber-700">
                       24K
                     </p>
-                    <p className="mt-1.5 bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-xl font-extrabold tracking-tight text-transparent sm:text-2xl">
+                    <p className="mt-1.5 bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-base font-extrabold tracking-tight text-transparent sm:text-lg md:text-2xl">
                       {formatCurrency(today.rate_24k_1g * 8)}
                     </p>
                   </div>
