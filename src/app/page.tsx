@@ -191,30 +191,30 @@ export default async function Home() {
               </p>
             </section>
 
-            {/* Rate Cards: Hero 18K + split 22K/24K */}
+            {/* Rate Cards: Hero 22K + split 24K/18K */}
             <div className="grid gap-4 md:grid-cols-3">
-              {/* 18K hero — full width on mobile, first col on desktop */}
+              {/* 22K hero — full width on mobile, first col on desktop */}
               <RateCard
-                label="18 Karat Gold"
-                purity="750"
-                ratePerGram={today.rate_18k_1g}
-                change={change18k}
+                label="22 Karat Gold"
+                purity="916 Hallmark"
+                ratePerGram={today.rate_22k_1g}
+                change={change22k}
                 featured
               />
-              {/* 22K & 24K side-by-side on mobile */}
+              {/* 24K & 18K side-by-side on mobile */}
               <div className="grid grid-cols-2 gap-4 md:contents">
-                <RateCard
-                  label="22 Karat Gold"
-                  purity="916 Hallmark"
-                  ratePerGram={today.rate_22k_1g}
-                  change={change22k}
-                  compact
-                />
                 <RateCard
                   label="24 Karat Gold"
                   purity="999 Fine"
                   ratePerGram={today.rate_24k_1g}
                   change={change24k}
+                  compact
+                />
+                <RateCard
+                  label="18 Karat Gold"
+                  purity="750"
+                  ratePerGram={today.rate_18k_1g}
+                  change={change18k}
                   compact
                 />
               </div>
