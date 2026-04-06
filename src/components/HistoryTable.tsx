@@ -4,6 +4,7 @@ import { useState } from "react";
 
 interface DayRate {
   date: string;
+  rate_18k_1g: number;
   rate_22k_1g: number;
   rate_24k_1g: number;
 }
@@ -25,7 +26,7 @@ function formatDate(dateStr: string): string {
 }
 
 export default function HistoryTable({ history }: { history: DayRate[] }) {
-  const [karat, setKarat] = useState<"22k" | "24k">("22k");
+  const [karat, setKarat] = useState<"18k" | "22k" | "24k">("22k");
 
   if (history.length === 0) return null;
 
@@ -50,12 +51,11 @@ export default function HistoryTable({ history }: { history: DayRate[] }) {
 
       <ul className="divide-y divide-zinc-100">
         {visible.map((day, i) => {
-          const rate = karat === "22k" ? day.rate_22k_1g : day.rate_24k_1g;
+          const rateKey = `rate_${karat}_1g` as keyof DayRate;
+          const rate = day[rateKey] as number;
           const prev =
             i < visible.length - 1
-              ? karat === "22k"
-                ? visible[i + 1].rate_22k_1g
-                : visible[i + 1].rate_24k_1g
+              ? (visible[i + 1][rateKey] as number)
               : null;
           const change = prev !== null ? rate - prev : null;
           const isToday = i === 0;
@@ -114,39 +114,35 @@ export default function HistoryTable({ history }: { history: DayRate[] }) {
   );
 }
 
+const karatOptions = ["18k", "22k", "24k"] as const;
+
 function KaratToggle({
   karat,
   setKarat,
 }: {
-  karat: "22k" | "24k";
-  setKarat: (k: "22k" | "24k") => void;
+  karat: "18k" | "22k" | "24k";
+  setKarat: (k: "18k" | "22k" | "24k") => void;
 }) {
+  const idx = karatOptions.indexOf(karat);
   return (
     <div className="relative inline-flex rounded-full border border-zinc-200 bg-zinc-50 p-1 shadow-inner">
       {/* Animated slider */}
       <div
-        className={`absolute top-1 h-[calc(100%-8px)] w-[calc(50%-4px)] rounded-full bg-gradient-to-r from-amber-500 to-amber-600 shadow-md shadow-amber-500/30 transition-transform duration-200 ease-out ${
-          karat === "24k" ? "translate-x-full" : "translate-x-0"
-        }`}
+        className="absolute top-1 h-[calc(100%-8px)] w-[calc(33.333%-3px)] rounded-full bg-gradient-to-r from-amber-500 to-amber-600 shadow-md shadow-amber-500/30 transition-transform duration-200 ease-out"
+        style={{ transform: `translateX(${idx * 100}%)` }}
       />
-      <button
-        type="button"
-        onClick={() => setKarat("22k")}
-        className={`relative z-10 min-w-[52px] rounded-full px-3 py-1.5 text-xs font-bold transition-colors ${
-          karat === "22k" ? "text-white" : "text-zinc-500 hover:text-zinc-700"
-        }`}
-      >
-        22K
-      </button>
-      <button
-        type="button"
-        onClick={() => setKarat("24k")}
-        className={`relative z-10 min-w-[52px] rounded-full px-3 py-1.5 text-xs font-bold transition-colors ${
-          karat === "24k" ? "text-white" : "text-zinc-500 hover:text-zinc-700"
-        }`}
-      >
-        24K
-      </button>
+      {karatOptions.map((k) => (
+        <button
+          key={k}
+          type="button"
+          onClick={() => setKarat(k)}
+          className={`relative z-10 min-w-[46px] rounded-full px-3 py-1.5 text-xs font-bold transition-colors ${
+            karat === k ? "text-white" : "text-zinc-500 hover:text-zinc-700"
+          }`}
+        >
+          {k.toUpperCase()}
+        </button>
+      ))}
     </div>
   );
 }

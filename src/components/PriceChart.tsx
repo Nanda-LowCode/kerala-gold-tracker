@@ -23,12 +23,13 @@ ChartJS.register(
 
 interface DayRate {
   date: string;
+  rate_18k_1g: number;
   rate_22k_1g: number;
   rate_24k_1g: number;
 }
 
 export default function PriceChart({ history }: { history: DayRate[] }) {
-  const [karat, setKarat] = useState<"22k" | "24k">("22k");
+  const [karat, setKarat] = useState<"18k" | "22k" | "24k">("22k");
 
   if (history.length < 2) {
     return (
@@ -45,17 +46,22 @@ export default function PriceChart({ history }: { history: DayRate[] }) {
     })
   );
 
-  const values = history.map((d) =>
-    karat === "22k" ? d.rate_22k_1g : d.rate_24k_1g
-  );
+  const rateKey = `rate_${karat}_1g` as keyof DayRate;
+  const values = history.map((d) => d[rateKey] as number);
+
+  const colors: Record<string, { border: string; bg: string }> = {
+    "18k": { border: "#ca8a04", bg: "rgba(202,138,4,0.1)" },
+    "22k": { border: "#d97706", bg: "rgba(217,119,6,0.1)" },
+    "24k": { border: "#b45309", bg: "rgba(180,83,9,0.1)" },
+  };
 
   const data = {
     labels,
     datasets: [
       {
         data: values,
-        borderColor: karat === "22k" ? "#d97706" : "#b45309",
-        backgroundColor: karat === "22k" ? "rgba(217,119,6,0.1)" : "rgba(180,83,9,0.1)",
+        borderColor: colors[karat].border,
+        backgroundColor: colors[karat].bg,
         borderWidth: 2,
         pointRadius: history.length > 15 ? 2 : 4,
         pointHoverRadius: 6,
@@ -90,26 +96,19 @@ export default function PriceChart({ history }: { history: DayRate[] }) {
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-800">Price Trend</h2>
         <div className="flex gap-1 rounded-lg bg-gray-100 p-1">
-          <button
-            onClick={() => setKarat("22k")}
-            className={`rounded-md px-3 py-1 text-sm font-medium transition ${
-              karat === "22k"
-                ? "bg-amber-600 text-white shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-          >
-            22K
-          </button>
-          <button
-            onClick={() => setKarat("24k")}
-            className={`rounded-md px-3 py-1 text-sm font-medium transition ${
-              karat === "24k"
-                ? "bg-amber-700 text-white shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-          >
-            24K
-          </button>
+          {(["18k", "22k", "24k"] as const).map((k) => (
+            <button
+              key={k}
+              onClick={() => setKarat(k)}
+              className={`rounded-md px-3 py-1 text-sm font-medium transition ${
+                karat === k
+                  ? "bg-amber-600 text-white shadow-sm"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              {k.toUpperCase()}
+            </button>
+          ))}
         </div>
       </div>
       <div className="h-64">

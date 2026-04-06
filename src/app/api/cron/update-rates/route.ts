@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseClient } from "@/lib/supabase";
 
 interface MalabarRateResponse {
+  "18kt": string;
   "22kt": string;
   "24kt": string;
   [key: string]: unknown;
@@ -61,11 +62,12 @@ export async function GET(request: NextRequest) {
 
     const data: MalabarRateResponse = await res.json();
 
+    const rate18k = parseRate(data["18kt"]);
     const rate22k = parseRate(data["22kt"]);
     const rate24k = parseRate(data["24kt"]);
 
-    if (isNaN(rate22k) || isNaN(rate24k)) {
-      throw new Error(`Failed to parse rates: 22k="${data["22kt"]}", 24k="${data["24kt"]}"`);
+    if (isNaN(rate18k) || isNaN(rate22k) || isNaN(rate24k)) {
+      throw new Error(`Failed to parse rates: 18k="${data["18kt"]}", 22k="${data["22kt"]}", 24k="${data["24kt"]}"`);
     }
 
     // Upsert into Supabase (won't duplicate if cron runs twice)
@@ -76,6 +78,7 @@ export async function GET(request: NextRequest) {
       {
         date: today,
         city: "Kochi",
+        rate_18k_1g: rate18k,
         rate_22k_1g: rate22k,
         rate_24k_1g: rate24k,
         consensus_sources: 1,
@@ -90,6 +93,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       date: today,
+      rate_18k_1g: rate18k,
       rate_22k_1g: rate22k,
       rate_24k_1g: rate24k,
     });

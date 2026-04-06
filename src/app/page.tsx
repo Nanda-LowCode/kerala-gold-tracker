@@ -8,6 +8,7 @@ import MonthlyHighLow from "@/components/MonthlyHighLow";
 interface GoldRate {
   date: string;
   city: string;
+  rate_18k_1g: number;
   rate_22k_1g: number;
   rate_24k_1g: number;
 }
@@ -17,7 +18,7 @@ async function getHistory(): Promise<GoldRate[]> {
     const supabase = createSupabaseClient();
     const { data, error } = await supabase
       .from("daily_gold_rates")
-      .select("date, city, rate_22k_1g, rate_24k_1g")
+      .select("date, city, rate_18k_1g, rate_22k_1g, rate_24k_1g")
       .eq("city", "Kochi")
       .order("date", { ascending: false })
       .limit(30);
@@ -53,6 +54,8 @@ export default async function Home() {
   const today = history[0] ?? null;
   const yesterday = history[1] ?? null;
 
+  const change18k =
+    today && yesterday ? today.rate_18k_1g - yesterday.rate_18k_1g : null;
   const change22k =
     today && yesterday ? today.rate_22k_1g - yesterday.rate_22k_1g : null;
   const change24k =
@@ -121,7 +124,13 @@ export default async function Home() {
             </section>
 
             {/* Rate Cards */}
-            <div className="grid gap-5 sm:grid-cols-2">
+            <div className="grid gap-5 sm:grid-cols-3">
+              <RateCard
+                label="18 Karat Gold"
+                purity="750"
+                ratePerGram={today.rate_18k_1g}
+                change={change18k}
+              />
               <RateCard
                 label="22 Karat Gold"
                 purity="916 Hallmark"
@@ -149,20 +158,28 @@ export default async function Home() {
                     Traditional Kerala measurement
                   </p>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="border-r border-zinc-100 pr-4 text-center">
+                    <p className="text-[11px] font-bold uppercase tracking-wider text-amber-500">
+                      18K
+                    </p>
+                    <p className="mt-1.5 bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-xl font-extrabold tracking-tight text-transparent sm:text-2xl">
+                      {formatCurrency(today.rate_18k_1g * 8)}
+                    </p>
+                  </div>
                   <div className="border-r border-zinc-100 pr-4 text-center">
                     <p className="text-[11px] font-bold uppercase tracking-wider text-amber-600">
                       22K
                     </p>
-                    <p className="mt-1.5 bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-2xl font-extrabold tracking-tight text-transparent sm:text-3xl">
+                    <p className="mt-1.5 bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-xl font-extrabold tracking-tight text-transparent sm:text-2xl">
                       {formatCurrency(today.rate_22k_1g * 8)}
                     </p>
                   </div>
-                  <div className="pl-4 text-center">
+                  <div className="text-center">
                     <p className="text-[11px] font-bold uppercase tracking-wider text-amber-700">
                       24K
                     </p>
-                    <p className="mt-1.5 bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-2xl font-extrabold tracking-tight text-transparent sm:text-3xl">
+                    <p className="mt-1.5 bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-xl font-extrabold tracking-tight text-transparent sm:text-2xl">
                       {formatCurrency(today.rate_24k_1g * 8)}
                     </p>
                   </div>
