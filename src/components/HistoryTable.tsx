@@ -63,9 +63,9 @@ export default function HistoryTable({ history }: { history: DayRate[] }) {
           return (
             <li
               key={day.date}
-              className="flex items-center justify-between py-3.5 transition-colors"
+              className="flex items-center py-3.5 transition-colors"
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 shrink-0">
                 <div
                   className={`flex h-2 w-2 flex-none rounded-full ${
                     isToday ? "bg-amber-500 ring-4 ring-amber-100" : "bg-zinc-200"
@@ -83,7 +83,10 @@ export default function HistoryTable({ history }: { history: DayRate[] }) {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
+              {/* Dotted spacer connecting left and right */}
+              <div className="mx-4 flex-1 border-b-[1.5px] border-dotted border-zinc-200/70" />
+
+              <div className="flex items-center gap-3 shrink-0">
                 <p className="text-base font-bold text-zinc-900">
                   {fmt(rate)}
                 </p>
