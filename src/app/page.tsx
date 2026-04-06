@@ -263,7 +263,7 @@ function RateCard({
           </span>
         </div>
 
-        <p className="mt-4 bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-5xl font-black tracking-tight text-transparent sm:text-[3.5rem] sm:leading-none">
+        <p className="mt-4 whitespace-nowrap bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-4xl font-bold tracking-tight text-transparent lg:text-5xl">
           {formatCurrency(ratePerGram)}
         </p>
 
