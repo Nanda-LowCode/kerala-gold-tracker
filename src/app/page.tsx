@@ -123,27 +123,33 @@ export default async function Home() {
               </p>
             </section>
 
-            {/* Rate Cards */}
-            <div className="grid gap-5 sm:grid-cols-3">
-              <RateCard
-                label="18 Karat Gold"
-                purity="750"
-                ratePerGram={today.rate_18k_1g}
-                change={change18k}
-              />
+            {/* Rate Cards: Hero 22K + split 24K/18K */}
+            <div className="grid gap-4 md:grid-cols-3">
+              {/* 22K hero — full width on mobile, first col on desktop */}
               <RateCard
                 label="22 Karat Gold"
                 purity="916 Hallmark"
                 ratePerGram={today.rate_22k_1g}
                 change={change22k}
-              />
-              <RateCard
-                label="24 Karat Gold"
-                purity="999 Fine"
-                ratePerGram={today.rate_24k_1g}
-                change={change24k}
                 featured
               />
+              {/* 24K & 18K side-by-side on mobile */}
+              <div className="grid grid-cols-2 gap-4 md:contents">
+                <RateCard
+                  label="24 Karat Gold"
+                  purity="999 Fine"
+                  ratePerGram={today.rate_24k_1g}
+                  change={change24k}
+                  compact
+                />
+                <RateCard
+                  label="18 Karat Gold"
+                  purity="750"
+                  ratePerGram={today.rate_18k_1g}
+                  change={change18k}
+                  compact
+                />
+              </div>
             </div>
 
             {/* Per Pavan section */}
@@ -223,6 +229,7 @@ function RateCard({
   ratePerGram,
   change,
   featured = false,
+  compact = false,
   showCTA = false,
 }: {
   label: string;
@@ -230,11 +237,14 @@ function RateCard({
   ratePerGram: number;
   change: number | null;
   featured?: boolean;
+  compact?: boolean;
   showCTA?: boolean;
 }) {
   return (
     <div
-      className={`group relative overflow-hidden rounded-2xl border bg-white p-6 transition-all hover:-translate-y-0.5 ${
+      className={`group relative overflow-hidden rounded-2xl border bg-white transition-all hover:-translate-y-0.5 ${
+        compact ? "p-4 md:p-6" : "p-6"
+      } ${
         featured
           ? "border-amber-200/80 shadow-lg shadow-amber-200/60 hover:shadow-xl hover:shadow-amber-300/70"
           : "border-zinc-200/70 shadow-lg shadow-amber-100/40 hover:shadow-xl hover:shadow-amber-200/50"
@@ -250,10 +260,10 @@ function RateCard({
       />
 
       <div className="relative">
-        <div className="mb-1 flex items-center justify-between">
-          <p className="text-sm font-semibold text-zinc-800">{label}</p>
+        <div className="mb-1 flex items-center justify-between gap-2">
+          <p className={`font-semibold text-zinc-800 ${compact ? "text-xs sm:text-sm" : "text-sm"}`}>{label}</p>
           <span
-            className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ring-1 ring-inset ${
+            className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ring-1 ring-inset ${
               featured
                 ? "bg-amber-100 text-amber-800 ring-amber-300/60"
                 : "bg-amber-50 text-amber-700 ring-amber-200/60"
@@ -263,11 +273,17 @@ function RateCard({
           </span>
         </div>
 
-        <p className="mt-4 whitespace-nowrap bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-[1.7rem] md:text-3xl lg:text-4xl">
+        <p
+          className={`whitespace-nowrap bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text font-bold tracking-tight text-transparent ${
+            compact
+              ? "mt-3 text-2xl md:text-3xl"
+              : "mt-4 text-4xl md:text-3xl lg:text-4xl"
+          }`}
+        >
           {formatCurrency(ratePerGram)}
         </p>
 
-        <div className="mt-3 flex items-center justify-between">
+        <div className={`flex items-center justify-between ${compact ? "mt-2" : "mt-3"}`}>
           <span className="text-xs font-medium uppercase tracking-wider text-zinc-400">
             per gram
           </span>
