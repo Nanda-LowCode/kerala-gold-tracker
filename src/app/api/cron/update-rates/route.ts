@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { createSupabaseClient } from "@/lib/supabase";
 
 interface MalabarRateResponse {
@@ -88,6 +89,9 @@ export async function GET(request: NextRequest) {
     if (error) {
       throw new Error(`Supabase upsert failed: ${error.message}`);
     }
+
+    // Clear the Next.js frontend cache to display new rates instantly
+    revalidatePath("/");
 
     return NextResponse.json({
       success: true,
