@@ -8,7 +8,7 @@ interface GoldRate {
   rate_24k_1g: number;
 }
 
-export default function TopTicker({ history }: { history: GoldRate[] }) {
+export default function TopTicker({ history, cityName = "Kochi" }: { history: GoldRate[]; cityName?: string }) {
   if (!history || history.length < 2) return null;
   
   const latestDateStr = history[0].date;
@@ -57,7 +57,7 @@ export default function TopTicker({ history }: { history: GoldRate[] }) {
     <>
       {/* MOBILE TICKER: Hidden on md screens */}
       <div className="md:hidden w-full bg-gradient-to-r from-amber-50/90 via-amber-100/30 to-amber-50/90 py-1.5 px-2 text-center text-[10px] sm:text-[11px] font-semibold tracking-wide text-zinc-600 border-b border-amber-200/50 shadow-sm shadow-amber-100/20">
-        <span className="uppercase text-amber-800 font-extrabold mr-1.5 sm:mr-2">{monthNameShort} 22K</span>
+        <span className="uppercase text-amber-800 font-extrabold mr-1.5 sm:mr-2 flex-shrink-0">{monthNameShort} 22K · {cityName}</span>
         <span className="inline-block whitespace-nowrap">
           📈 Hi: <span className="text-zinc-900">{formatINR(highest.rate_22k_1g)}</span> <span className="font-medium text-zinc-400">({formatShortDate(highest.date)})</span>
         </span>
@@ -73,7 +73,7 @@ export default function TopTicker({ history }: { history: GoldRate[] }) {
           <div className="flex items-center justify-between">
             <div className="mb-0">
               <h3 className="text-base font-bold tracking-tight text-zinc-900">
-                {monthNameLong} High & Low
+                {monthNameLong} High & Low <span className="text-amber-600">in {cityName}</span>
               </h3>
               <p className="mt-0.5 text-xs font-medium text-zinc-500">
                 22K Per Pavan extremes
