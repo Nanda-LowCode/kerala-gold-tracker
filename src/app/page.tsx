@@ -282,7 +282,7 @@ function RateCard({
   return (
     <article
       className={`group relative overflow-hidden rounded-2xl border bg-white transition-all hover:-translate-y-0.5 ${
-        compact ? "p-3 sm:p-4 md:p-6" : "p-4 md:p-8"
+        compact ? "p-4 md:p-5 lg:p-6" : "p-5 md:p-6"
       } ${
         featured
           ? "border-amber-300 ring-2 ring-amber-400/50 shadow-xl shadow-amber-300/40 hover:shadow-2xl hover:shadow-amber-400/50"
@@ -299,16 +299,16 @@ function RateCard({
       />
 
       <div className="relative">
-        <div className="mb-1 flex items-center justify-between gap-1 sm:gap-2">
-          <p className={`font-semibold text-zinc-800 ${compact ? "text-[11px] sm:text-sm" : "text-sm sm:text-base"}`}>{label}</p>
-          <div className="flex items-center gap-1 sm:gap-1.5">
+        <div className="mb-2 flex flex-col items-start gap-2 lg:flex-row lg:items-center lg:justify-between">
+          <p className={`font-semibold text-zinc-800 ${compact ? "text-sm" : "text-base"}`}>{label}</p>
+          <div className="flex flex-wrap items-center gap-1.5">
             {featured && (
-              <span className="shrink-0 rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 px-1.5 py-0.5 sm:px-2 text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-white shadow-sm ring-1 ring-inset ring-amber-600/30">
+              <span className="shrink-0 rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-white shadow-sm ring-1 ring-inset ring-amber-600/30">
                 ★ Popular
               </span>
             )}
             <span
-              className={`shrink-0 rounded-full px-1.5 py-0.5 sm:px-2 sm:py-0.5 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider ring-1 ring-inset ${
+              className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ring-1 ring-inset ${
                 featured
                   ? "bg-amber-100 text-amber-800 ring-amber-300/60"
                   : "bg-amber-50 text-amber-700 ring-amber-200/60"
@@ -320,17 +320,17 @@ function RateCard({
         </div>
 
         <p
-          className={`whitespace-nowrap bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text font-bold tracking-tight text-transparent ${
+          className={`bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text font-bold tracking-tight text-transparent ${
             compact
-              ? "mt-2 text-xl sm:text-2xl md:text-3xl"
-              : "mt-2 text-3xl md:mt-4 md:text-5xl"
+              ? "mt-2 text-2xl md:text-3xl"
+              : "mt-2 text-3xl md:text-4xl"
           }`}
         >
           {formatCurrency(ratePerGram)}
         </p>
         
         {pavanRate && (
-          <p className="mt-0.5 text-[10px] sm:text-[11px] font-medium text-zinc-400">
+          <p className="mt-0.5 text-[11px] font-medium text-zinc-400">
             ({formatCurrency(pavanRate)} per Pavan)
           </p>
         )}
