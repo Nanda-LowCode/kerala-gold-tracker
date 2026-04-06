@@ -6,6 +6,7 @@ import FAQ from "@/components/FAQ";
 import TodayVsYesterday from "@/components/TodayVsYesterday";
 import TopTicker from "@/components/TopTicker";
 import GoldCalculator from "@/components/GoldCalculator";
+import OldGoldCalculator from "@/components/OldGoldCalculator";
 
 interface GoldRate {
   date: string;
@@ -207,6 +208,12 @@ export default function DashboardLayout({
 
             {/* Price Chart */}
             <PriceChart history={chartData} />
+
+            {/* Old Gold Calculator Component */}
+            <OldGoldCalculator 
+              rate18k={today.rate_18k_1g} 
+              rate22k={today.rate_22k_1g} 
+            />
 
             {/* Gold Calculator Component */}
             <GoldCalculator
