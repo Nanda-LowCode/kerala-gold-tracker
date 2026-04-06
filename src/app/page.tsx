@@ -4,7 +4,7 @@ import PriceChart from "@/components/PriceChart";
 import HistoryTable from "@/components/HistoryTable";
 import FAQ from "@/components/FAQ";
 import TodayVsYesterday from "@/components/TodayVsYesterday";
-import MonthlyHighLow from "@/components/MonthlyHighLow";
+import TopTicker from "@/components/TopTicker";
 import GoldCalculator from "@/components/GoldCalculator";
 
 interface GoldRate {
@@ -162,14 +162,17 @@ export default async function Home() {
         </div>
       </header>
 
-      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-5 px-4 py-6 sm:gap-7 sm:py-10">
+      {/* Top Ticker - highly integrated below header */}
+      {today && <TopTicker history={history} />}
+
+      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-4 px-4 py-3 sm:gap-7 sm:py-10">
         {today ? (
           <>
-            {/* Hero: trust badge + date */}
+            {/* Hero: trust badge + date -> Squished aggressively for mobile */}
             <section className="flex flex-col items-center text-center">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 shadow-sm">
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 sm:px-3 sm:py-1 shadow-sm">
                 <svg
-                  className="h-3.5 w-3.5 text-emerald-600"
+                  className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-emerald-600"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -179,20 +182,20 @@ export default async function Home() {
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-xs font-semibold text-emerald-700">
+                <span className="text-[10px] sm:text-xs font-semibold text-emerald-700">
                   Verified Kerala Board Rate
                 </span>
               </div>
-              <h2 className="mt-2 text-xl font-bold tracking-tight text-zinc-900 sm:mt-4 sm:text-3xl">
+              <h2 className="mt-1 text-lg font-bold tracking-tight text-zinc-900 sm:mt-4 sm:text-3xl">
                 Today&apos;s Gold Rate
               </h2>
-              <p className="mt-1 text-sm text-zinc-500">
+              <p className="mt-0.5 text-xs text-zinc-500 sm:mt-1 sm:text-sm">
                 <time dateTime={today.date}>{formatDate(today.date)}</time> · {today.city}
               </p>
             </section>
 
             {/* Rate Cards: Hero 22K + split 24K/18K */}
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-3 sm:gap-4 md:grid-cols-3">
               {/* 22K hero — full width on mobile, first col on desktop */}
               <RateCard
                 label="22 Karat Gold"
@@ -203,7 +206,7 @@ export default async function Home() {
                 featured
               />
               {/* 24K & 18K side-by-side on mobile */}
-              <div className="grid grid-cols-2 gap-4 md:contents">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 md:contents">
                 <RateCard
                   label="24 Karat Gold"
                   purity="999 Fine"
@@ -223,10 +226,10 @@ export default async function Home() {
               </div>
             </div>
 
-            {/* Price Chart (MOVED UP) */}
+            {/* Price Chart */}
             <PriceChart history={chartData} />
 
-            {/* Gold Calculator Component (MOVED DOWN) */}
+            {/* Gold Calculator Component */}
             <GoldCalculator 
               rate18k={today.rate_18k_1g} 
               rate22k={today.rate_22k_1g} 
@@ -235,9 +238,6 @@ export default async function Home() {
 
             {/* Today vs. Yesterday multi-weight comparison */}
             <TodayVsYesterday today={today} yesterday={yesterday} />
-
-            {/* Monthly High/Low SEO callout */}
-            <MonthlyHighLow history={history} />
 
             {/* History Table */}
             <HistoryTable history={history} />
@@ -282,11 +282,11 @@ function RateCard({
   return (
     <article
       className={`group relative overflow-hidden rounded-2xl border bg-white transition-all hover:-translate-y-0.5 ${
-        compact ? "p-4 md:p-6" : "p-6"
+        compact ? "p-3 sm:p-4 md:p-6" : "p-4 sm:p-6 md:p-8"
       } ${
         featured
           ? "border-amber-300 ring-2 ring-amber-400/50 shadow-xl shadow-amber-300/40 hover:shadow-2xl hover:shadow-amber-400/50"
-          : "border-zinc-200/70 shadow-lg shadow-amber-100/40 hover:shadow-xl hover:shadow-amber-200/50"
+          : "border-zinc-200/70 shadow-md shadow-amber-100/40 hover:shadow-lg hover:shadow-amber-200/50"
       }`}
     >
       {/* Decorative gold glow */}
@@ -294,21 +294,21 @@ function RateCard({
         className={`pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full blur-3xl ${
           featured
             ? "bg-gradient-to-br from-amber-300/50 to-transparent"
-            : "bg-gradient-to-br from-amber-200/40 to-transparent"
+            : "bg-gradient-to-br from-amber-200/30 to-transparent"
         }`}
       />
 
       <div className="relative">
-        <div className="mb-1 flex items-center justify-between gap-2">
-          <p className={`font-semibold text-zinc-800 ${compact ? "text-xs sm:text-sm" : "text-sm"}`}>{label}</p>
-          <div className="flex items-center gap-1.5">
+        <div className="mb-1 flex items-center justify-between gap-1 sm:gap-2">
+          <p className={`font-semibold text-zinc-800 ${compact ? "text-[11px] sm:text-sm" : "text-sm sm:text-base"}`}>{label}</p>
+          <div className="flex items-center gap-1 sm:gap-1.5">
             {featured && (
-              <span className="shrink-0 rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-white shadow-sm ring-1 ring-inset ring-amber-600/30">
+              <span className="shrink-0 rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 px-1.5 py-0.5 sm:px-2 text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-white shadow-sm ring-1 ring-inset ring-amber-600/30">
                 ★ Popular
               </span>
             )}
             <span
-              className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ring-1 ring-inset ${
+              className={`shrink-0 rounded-full px-1.5 py-0.5 sm:px-2 sm:py-0.5 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider ring-1 ring-inset ${
                 featured
                   ? "bg-amber-100 text-amber-800 ring-amber-300/60"
                   : "bg-amber-50 text-amber-700 ring-amber-200/60"
@@ -322,21 +322,21 @@ function RateCard({
         <p
           className={`whitespace-nowrap bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text font-bold tracking-tight text-transparent ${
             compact
-              ? "mt-3 text-2xl md:text-3xl"
-              : "mt-4 text-4xl md:text-3xl lg:text-4xl"
+              ? "mt-2 text-xl sm:text-2xl md:text-3xl"
+              : "mt-2 text-3xl sm:mt-4 sm:text-4xl md:text-5xl"
           }`}
         >
           {formatCurrency(ratePerGram)}
         </p>
         
         {pavanRate && (
-          <p className="mt-0.5 text-[11px] font-medium text-zinc-400">
+          <p className="mt-0.5 text-[10px] sm:text-[11px] font-medium text-zinc-400">
             ({formatCurrency(pavanRate)} per Pavan)
           </p>
         )}
 
-        <div className={`flex items-center justify-between ${compact ? "mt-2" : "mt-3"}`}>
-          <span className="text-xs font-medium uppercase tracking-wider text-zinc-400">
+        <div className={`flex items-center justify-between ${compact ? "mt-2" : "mt-2 sm:mt-3"}`}>
+          <span className="text-[10px] sm:text-xs font-medium uppercase tracking-wider text-zinc-400">
             per gram
           </span>
           {change !== null && <ChangeBadge change={change} />}
@@ -369,7 +369,7 @@ function RateCard({
 function ChangeBadge({ change }: { change: number }) {
   if (change === 0) {
     return (
-      <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[11px] font-semibold text-zinc-500">
+      <span className="rounded-full bg-zinc-100 px-1.5 py-0.5 sm:px-2 text-[10px] sm:text-[11px] font-semibold text-zinc-500">
         No change
       </span>
     );
@@ -377,8 +377,7 @@ function ChangeBadge({ change }: { change: number }) {
   const up = change > 0;
   return (
     <span
-      aria-live="polite"
-      className={`inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-[11px] font-semibold ring-1 ring-inset ${
+      className={`inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 sm:px-2 text-[10px] sm:text-[11px] font-semibold ring-1 ring-inset ${
         up
           ? "bg-red-50 text-red-600 ring-red-200/60"
           : "bg-green-50 text-green-600 ring-green-200/60"
