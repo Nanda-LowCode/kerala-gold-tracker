@@ -76,9 +76,19 @@ export default function PriceChart({ history }: { history: DayRate[] }) {
     maintainAspectRatio: false,
     plugins: {
       tooltip: {
+        backgroundColor: "rgba(255, 255, 255, 0.95)",
+        titleColor: "#a1a1aa",
+        titleFont: { size: 12, weight: "normal" as const },
+        bodyColor: "#b45309",
+        bodyFont: { size: 15, weight: "bold" as const },
+        borderColor: "rgba(251, 191, 36, 0.3)",
+        borderWidth: 1,
+        padding: 12,
+        displayColors: false,
+        cornerRadius: 8,
         callbacks: {
-          label: (ctx: { parsed: { y: number | null } }) =>
-            `₹${(ctx.parsed.y ?? 0).toLocaleString("en-IN")}/g`,
+          title: (context: any[]) => context[0].label,
+          label: (context: any) => `₹${(context.parsed.y ?? 0).toLocaleString("en-IN")}/g`,
         },
       },
     },
