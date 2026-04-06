@@ -74,6 +74,10 @@ export default function PriceChart({ history }: { history: DayRate[] }) {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    interaction: {
+      mode: "index" as const,
+      intersect: false,
+    },
     plugins: {
       tooltip: {
         backgroundColor: "rgba(255, 255, 255, 0.95)",
