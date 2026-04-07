@@ -1,14 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import * as cheerio from "cheerio";
 import { createSupabaseAdminClient } from "@/lib/supabase";
 
-interface MalabarRateResponse {
-  "22kt": string;
-  "24kt": string;
+// ─── Types ───────────────────────────────────────────────────────────────────
+
+interface GoldRateResult {
+  rate_22k_1g: number;
+  rate_24k_1g: number;
+  source: string;
 }
 
+type FetcherFn = () => Promise<GoldRateResult>;
+
+// ─── Config ──────────────────────────────────────────────────────────────────
+
+const FETCH_TIMEOUT_MS = 15_000;
+const USER_AGENT =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+  "(KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36";
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function getTodayIST(): string {
+  return new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+}
+
+/** Parse Malabar JSON strings like "13,835.00 INR" into integers */
 function parseRate(rateStr: string): number {
-  // Malabar returns strings like "13,835.00 INR" — extract the full number including decimals
   const match = rateStr.replace(/,/g, "").match(/[\d.]+/);
   if (!match) throw new Error(`Cannot parse rate: ${rateStr}`);
   const num = parseFloat(match[0]);
@@ -16,63 +35,239 @@ function parseRate(rateStr: string): number {
   return Math.round(num);
 }
 
-function getTodayIST(): string {
-  return new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+/** Parse scraped price strings like "₹14,984" or "₹ 13,735" into integers */
+function parsePrice(raw: string): number {
+  const cleaned = raw.replace(/[₹,\s]/g, "").trim();
+  const num = Math.round(parseFloat(cleaned));
+  if (isNaN(num) || num <= 0) {
+    throw new Error(`Invalid price: "${raw}" → ${cleaned}`);
+  }
+  return num;
 }
 
+/** Fetch HTML with timeout and browser headers */
+async function fetchHtml(url: string): Promise<string> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
+  try {
+    const res = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        "User-Agent": USER_AGENT,
+        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+      },
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status} from ${url}`);
+    return await res.text();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/** Sanity check — reject rates outside a reasonable band */
+function validateRates(result: GoldRateResult): void {
+  const { rate_22k_1g, rate_24k_1g, source } = result;
+  if (rate_22k_1g < 3000 || rate_22k_1g > 30000) {
+    throw new Error(`[${source}] 22K rate ${rate_22k_1g} outside sane range`);
+  }
+  if (rate_24k_1g < 3000 || rate_24k_1g > 35000) {
+    throw new Error(`[${source}] 24K rate ${rate_24k_1g} outside sane range`);
+  }
+  if (rate_24k_1g <= rate_22k_1g) {
+    throw new Error(`[${source}] 24K (${rate_24k_1g}) must be > 22K (${rate_22k_1g})`);
+  }
+}
+
+// ─── Fetcher #1: Malabar Gold (Primary — JSON API) ──────────────────────────
+
+const fetchMalabar: FetcherFn = async () => {
+  const MALABAR_URL =
+    "https://www.malabargoldanddiamonds.com/malabarprice/index/getrates/?country=IN&state=Kerala";
+
+  // Step 1: Initial request to get session cookie (returns 302)
+  const initialRes = await fetch(MALABAR_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "User-Agent": "Mozilla/5.0" },
+    redirect: "manual",
+    cache: "no-store",
+  });
+  const cookies = initialRes.headers.getSetCookie?.().join("; ") ?? "";
+
+  // Step 2: Follow up with cookie to get actual JSON
+  const res = await fetch(MALABAR_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "User-Agent": "Mozilla/5.0",
+      Cookie: cookies,
+    },
+    cache: "no-store",
+  });
+
+  if (!res.ok) throw new Error(`Malabar API returned ${res.status}`);
+
+  const data: { "22kt": string; "24kt": string } = await res.json();
+  const rate22k = parseRate(data["22kt"]);
+  const rate24k = parseRate(data["24kt"]);
+
+  const result: GoldRateResult = { rate_22k_1g: rate22k, rate_24k_1g: rate24k, source: "malabar" };
+  validateRates(result);
+  return result;
+};
+
+// ─── Fetcher #2: GoodReturns (Fallback 1 — HTML scrape) ─────────────────────
+
+const fetchGoodReturns: FetcherFn = async () => {
+  const html = await fetchHtml("https://www.goodreturns.in/gold-rates/kerala.html");
+  const $ = cheerio.load(html);
+
+  let rate22k: number | null = null;
+  let rate24k: number | null = null;
+
+  // Strategy A: Parse gold rate cards (div.gold-each-container)
+  $("div.gold-each-container").each((_, container) => {
+    const label = $(container).find("div.gold-top p.gold-common-head").first().text().trim();
+    const priceText = $(container).find("div.gold-bottom p.gold-common-head").first().text().trim();
+    if (!priceText) return;
+
+    if (/24K/i.test(label)) rate24k = parsePrice(priceText);
+    else if (/22K/i.test(label)) rate22k = parsePrice(priceText);
+  });
+
+  // Strategy B: Fallback to table parsing (table.table-conatiner — their typo)
+  if (!rate22k || !rate24k) {
+    const tables = $("table.table-conatiner");
+    if (!rate24k && tables.length > 0) {
+      const cell = $(tables[0]).find("tr").eq(1).find("td").eq(0);
+      if (cell.length) rate24k = parsePrice(cell.text());
+    }
+    if (!rate22k && tables.length > 1) {
+      const cell = $(tables[1]).find("tr").eq(1).find("td").eq(0);
+      if (cell.length) rate22k = parsePrice(cell.text());
+    }
+  }
+
+  if (!rate22k || !rate24k) {
+    throw new Error(`GoodReturns: Could not extract both rates (22K=${rate22k}, 24K=${rate24k})`);
+  }
+
+  const result: GoldRateResult = { rate_22k_1g: rate22k, rate_24k_1g: rate24k, source: "goodreturns" };
+  validateRates(result);
+  return result;
+};
+
+// ─── Fetcher #3: BankBazaar (Fallback 2 — HTML scrape) ──────────────────────
+
+const fetchBankBazaar: FetcherFn = async () => {
+  const html = await fetchHtml("https://www.bankbazaar.com/gold-rate-kerala.html");
+  const $ = cheerio.load(html);
+
+  let rate22k: number | null = null;
+  let rate24k: number | null = null;
+
+  // Strategy A: Find tables by their preceding h2 heading
+  $("h2").each((_, heading) => {
+    const headingText = $(heading).text().trim();
+    if (!/(?:22|24)\s*Carat/i.test(headingText)) return;
+
+    // Walk forward through siblings to find the next table
+    let sibling = $(heading).next();
+    let table: ReturnType<typeof $> | null = null;
+    while (sibling.length && !table) {
+      if (sibling.is("table")) {
+        table = sibling;
+      } else {
+        const inner = sibling.find("table");
+        if (inner.length) table = inner.first();
+      }
+      sibling = sibling.next();
+    }
+    if (!table || !table.length) return;
+
+    // Extract "Today" price from first data row, second cell
+    const todayCell = table.find("tr").eq(1).find("td").eq(1);
+    if (!todayCell.length) return;
+
+    const price = todayCell.text().trim();
+    if (/22\s*Carat/i.test(headingText) && !rate22k) rate22k = parsePrice(price);
+    else if (/24\s*Carat/i.test(headingText) && !rate24k) rate24k = parsePrice(price);
+  });
+
+  // Strategy B: Positional fallback — first table.w-full = 22K, second = 24K
+  if (!rate22k || !rate24k) {
+    const tables = $("table.w-full");
+    if (!rate22k && tables.length > 0) {
+      const price = $(tables[0]).find("tr").eq(1).find("td").eq(1).text().trim();
+      if (price) rate22k = parsePrice(price);
+    }
+    if (!rate24k && tables.length > 1) {
+      const price = $(tables[1]).find("tr").eq(1).find("td").eq(1).text().trim();
+      if (price) rate24k = parsePrice(price);
+    }
+  }
+
+  if (!rate22k || !rate24k) {
+    throw new Error(`BankBazaar: Could not extract both rates (22K=${rate22k}, 24K=${rate24k})`);
+  }
+
+  const result: GoldRateResult = { rate_22k_1g: rate22k, rate_24k_1g: rate24k, source: "bankbazaar" };
+  validateRates(result);
+  return result;
+};
+
+// ─── Waterfall ───────────────────────────────────────────────────────────────
+
+const FETCHERS: { name: string; fn: FetcherFn }[] = [
+  { name: "Malabar Gold", fn: fetchMalabar },
+  { name: "GoodReturns", fn: fetchGoodReturns },
+  { name: "BankBazaar", fn: fetchBankBazaar },
+];
+
+async function fetchWithFallbacks(): Promise<{ data: GoldRateResult | null; errors: string[] }> {
+  const errors: string[] = [];
+
+  for (const { name, fn } of FETCHERS) {
+    try {
+      console.log(`[gold-cron] Trying source: ${name}...`);
+      const data = await fn();
+      console.log(`[gold-cron] Success from ${name}: 22K=${data.rate_22k_1g}, 24K=${data.rate_24k_1g}`);
+      return { data, errors };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      const warning = `[gold-cron] ${name} failed: ${message}`;
+      console.warn(warning);
+      errors.push(warning);
+    }
+  }
+
+  return { data: null, errors };
+}
+
+// ─── Route Handler ───────────────────────────────────────────────────────────
+
 export async function GET(request: NextRequest) {
-  // Verify cron secret (Vercel sends this header for cron jobs)
   const authHeader = request.headers.get("authorization");
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    // Fetch rates from Malabar Gold
-    // Step 1: Initial request to get session cookie (returns 302)
-    const MALABAR_URL =
-      "https://www.malabargoldanddiamonds.com/malabarprice/index/getrates/?country=IN&state=Kerala";
+    const { data, errors } = await fetchWithFallbacks();
 
-    const initialRes = await fetch(MALABAR_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "User-Agent": "Mozilla/5.0",
-      },
-      redirect: "manual",
-      cache: "no-store",
-    });
-
-    // Extract cookies from the redirect response
-    const cookies = initialRes.headers.getSetCookie?.().join("; ") ?? "";
-
-    // Step 2: Follow up with the cookie to get actual data
-    const res = await fetch(MALABAR_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "User-Agent": "Mozilla/5.0",
-        Cookie: cookies,
-      },
-      cache: "no-store",
-    });
-
-    if (!res.ok) {
-      throw new Error(`Malabar API returned ${res.status}`);
+    if (!data) {
+      console.error("[gold-cron] All sources failed!", errors);
+      return NextResponse.json(
+        { success: false, error: "All gold rate sources failed", details: errors },
+        { status: 502 }
+      );
     }
 
-    const data: MalabarRateResponse = await res.json();
+    // Calculate 18K from 24K (75% purity = 18/24)
+    const rate18k = Math.round(data.rate_24k_1g * (18 / 24));
 
-    const rate22k = parseRate(data["22kt"]);
-    const rate24k = parseRate(data["24kt"]);
-    // 18K = 75% purity (18/24 of 24K) — Malabar doesn't provide 18kt directly
-    const rate18k = Math.round(rate24k * (18 / 24));
-
-    if (isNaN(rate22k) || isNaN(rate24k)) {
-      throw new Error(`Failed to parse rates: 22k="${data["22kt"]}", 24k="${data["24kt"]}"`);
-    }
-
-    // Upsert into Supabase (won't duplicate if cron runs twice)
+    // Upsert into Supabase
     const supabase = createSupabaseAdminClient();
     const today = getTodayIST();
 
@@ -81,9 +276,9 @@ export async function GET(request: NextRequest) {
         date: today,
         city: "Kochi",
         rate_18k_1g: rate18k,
-        rate_22k_1g: rate22k,
-        rate_24k_1g: rate24k,
-        consensus_sources: 1,
+        rate_22k_1g: data.rate_22k_1g,
+        rate_24k_1g: data.rate_24k_1g,
+        consensus_sources: data.source,
       },
       { onConflict: "date,city" }
     );
@@ -92,9 +287,8 @@ export async function GET(request: NextRequest) {
       throw new Error(`Supabase upsert failed: ${error.message}`);
     }
 
-    // Clear the Next.js frontend cache to display new rates instantly
+    // Clear Next.js cache for all pages
     revalidatePath("/");
-    // Also revalidate programmatic city pages
     const cities = ["trivandrum", "kozhikode", "thrissur", "kollam", "palakkad", "kannur", "alappuzha", "kottayam", "malappuram"];
     for (const city of cities) {
       revalidatePath(`/${city}`);
@@ -104,8 +298,10 @@ export async function GET(request: NextRequest) {
       success: true,
       date: today,
       rate_18k_1g: rate18k,
-      rate_22k_1g: rate22k,
-      rate_24k_1g: rate24k,
+      rate_22k_1g: data.rate_22k_1g,
+      rate_24k_1g: data.rate_24k_1g,
+      source: data.source,
+      fallback_errors: errors.length > 0 ? errors : undefined,
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
