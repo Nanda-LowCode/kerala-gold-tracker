@@ -117,48 +117,7 @@ const fetchMalabar: FetcherFn = async () => {
   return result;
 };
 
-// ─── Fetcher #2: GoodReturns (Fallback 1 — HTML scrape) ─────────────────────
-
-const fetchGoodReturns: FetcherFn = async () => {
-  const html = await fetchHtml("https://www.goodreturns.in/gold-rates/kerala.html");
-  const $ = cheerio.load(html);
-
-  let rate22k: number | null = null;
-  let rate24k: number | null = null;
-
-  // Strategy A: Parse gold rate cards (div.gold-each-container)
-  $("div.gold-each-container").each((_, container) => {
-    const label = $(container).find("div.gold-top p.gold-common-head").first().text().trim();
-    const priceText = $(container).find("div.gold-bottom p.gold-common-head").first().text().trim();
-    if (!priceText) return;
-
-    if (/24K/i.test(label)) rate24k = parsePrice(priceText);
-    else if (/22K/i.test(label)) rate22k = parsePrice(priceText);
-  });
-
-  // Strategy B: Fallback to table parsing (table.table-conatiner — their typo)
-  if (!rate22k || !rate24k) {
-    const tables = $("table.table-conatiner");
-    if (!rate24k && tables.length > 0) {
-      const cell = $(tables[0]).find("tr").eq(1).find("td").eq(0);
-      if (cell.length) rate24k = parsePrice(cell.text());
-    }
-    if (!rate22k && tables.length > 1) {
-      const cell = $(tables[1]).find("tr").eq(1).find("td").eq(0);
-      if (cell.length) rate22k = parsePrice(cell.text());
-    }
-  }
-
-  if (!rate22k || !rate24k) {
-    throw new Error(`GoodReturns: Could not extract both rates (22K=${rate22k}, 24K=${rate24k})`);
-  }
-
-  const result: GoldRateResult = { rate_22k_1g: rate22k, rate_24k_1g: rate24k, source: "goodreturns" };
-  validateRates(result);
-  return result;
-};
-
-// ─── Fetcher #3: BankBazaar (Fallback 2 — HTML scrape) ──────────────────────
+// ─── Fetcher #2: BankBazaar (Fallback — HTML scrape) ────────────────────────
 
 const fetchBankBazaar: FetcherFn = async () => {
   const html = await fetchHtml("https://www.bankbazaar.com/gold-rate-kerala.html");
@@ -221,7 +180,6 @@ const fetchBankBazaar: FetcherFn = async () => {
 
 const FETCHERS: { name: string; fn: FetcherFn }[] = [
   { name: "Malabar Gold", fn: fetchMalabar },
-  { name: "GoodReturns", fn: fetchGoodReturns },
   { name: "BankBazaar", fn: fetchBankBazaar },
 ];
 
