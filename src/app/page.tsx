@@ -37,6 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
     return {
       title: "Today's Gold Rate in Kochi | LiveGold Kerala",
       description: "View the most recent 22K and 24K gold rates in Kochi, Kerala.",
+      alternates: { canonical: "/" },
     };
   }
 
@@ -48,6 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `Today's Gold Rate in Kochi (${dateFormatted}): 22K @ ₹${today.rate_22k_1g}/g`,
     description: `Current gold price in Kerala today: 22 Karat is ₹${today.rate_22k_1g} per gram (₹${today.rate_22k_1g * 8} per pavan). 24 Karat is ₹${today.rate_24k_1g} per gram. Live tracking.`,
+    alternates: { canonical: "/" },
   };
 }
 

@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { KERALA_CITIES } from '@/components/DashboardLayout'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://www.livegoldkerala.com'
+  const baseUrl = 'https://livegoldkerala.com'
 
   // 1. The main homepage route (Default Kochi)
   const rootRoute: MetadataRoute.Sitemap = [

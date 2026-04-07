@@ -20,6 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
     return {
       title: `Today's Gold Rate in ${cityName} | LiveGold Kerala`,
       description: `View the most recent 22K and 24K gold rates in ${cityName}, Kerala.`,
+      alternates: { canonical: `/${p.city}` },
     };
   }
 
@@ -31,6 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
   return {
     title: `Today's Gold Rate in ${cityName} (${dateFormatted}): 22K @ ₹${today.rate_22k_1g}/g`,
     description: `Current gold price in Kerala today: 22 Karat is ₹${today.rate_22k_1g} per gram (₹${today.rate_22k_1g * 8} per pavan). 24 Karat is ₹${today.rate_24k_1g} per gram. Live tracking.`,
+    alternates: { canonical: `/${p.city}` },
   };
 }
 

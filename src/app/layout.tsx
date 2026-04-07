@@ -39,9 +39,6 @@ export const metadata: Metadata = {
     title: "LiveGold Kerala | Verified Today's Gold Rate",
     description: "Latest 22K and 24K gold rates in Kochi. Hourly updates.",
   },
-  alternates: {
-    canonical: "/",
-  },
   verification: {
     google: "RJTBoklRKLnaK24UcIkOxVTLH4tgXkXCjjRgCR-JDek",
   },
