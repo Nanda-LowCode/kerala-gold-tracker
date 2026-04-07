@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import * as cheerio from "cheerio";
+import { Resend } from "resend";
 import { createSupabaseAdminClient } from "@/lib/supabase";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -212,6 +213,27 @@ async function fetchWithFallbacks(): Promise<{ data: GoldRateResult | null; erro
   return { data: null, errors };
 }
 
+// ─── Alerting ────────────────────────────────────────────────────────────────
+
+async function sendFailureAlert(errors: string[]): Promise<void> {
+  const apiKey = process.env.RESEND_API_KEY;
+  const alertEmail = process.env.ALERT_EMAIL;
+  if (!apiKey || !alertEmail) return;
+
+  try {
+    const resend = new Resend(apiKey);
+    await resend.emails.send({
+      from: "LiveGold Alerts <onboarding@resend.dev>",
+      to: alertEmail,
+      subject: `[LiveGold] Cron failed — all gold rate sources down`,
+      text: `All gold rate sources failed at ${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })} IST.\n\nErrors:\n${errors.join("\n")}\n\nNo data was written for today. Check the sources manually.`,
+    });
+    console.log("[gold-cron] Failure alert email sent");
+  } catch (err) {
+    console.error("[gold-cron] Failed to send alert email:", err);
+  }
+}
+
 // ─── Route Handler ───────────────────────────────────────────────────────────
 
 export async function GET(request: NextRequest) {
@@ -225,6 +247,7 @@ export async function GET(request: NextRequest) {
 
     if (!data) {
       console.error("[gold-cron] All sources failed!", errors);
+      await sendFailureAlert(errors);
       return NextResponse.json(
         { success: false, error: "All gold rate sources failed", details: errors },
         { status: 502 }

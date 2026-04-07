@@ -1,6 +1,6 @@
 # Kerala Gold Tracker — Progress Log
 
-Last updated: 2026-04-07 (post code-review fixes)
+Last updated: 2026-04-07 (fallback sources & alerting)
 
 ## Status Overview
 
@@ -12,6 +12,7 @@ Last updated: 2026-04-07 (post code-review fixes)
 | Phase 4: Deployment & Security | Complete |
 | Phase 5: SEO, Growth, & V2 | Complete (Programmatic City SEO, Canonical fixes) |
 | Code Review Fixes | Complete |
+| Fallback Sources & Alerting | Complete |
 
 ---
 
@@ -158,9 +159,25 @@ Server component that fetches the last 30 days from Supabase and renders:
 
 ### Remaining (Future Roadmap)
 - AdSense implementation when traffic supports.
-- Secondary Data Source engine fallback.
 - Blog articles.
-- Unit tests for `parseRate`, rate derivation, and `formatCurrency`.
+- Unit tests for `parseRate`, `parsePrice`, `validateRates`, and `formatCurrency`.
+
+---
+
+## Fallback Data Sources & Alerting — Done
+
+### Data Pipeline Resilience
+- **Waterfall pattern** — cron tries sources in priority order: Malabar Gold (JSON API) → BankBazaar (HTML scrape via cheerio). First success wins; errors from failed sources are logged.
+- **BankBazaar fallback** — cheerio-based scraper with dual strategy (h2-heading-driven table lookup → positional `table.w-full` fallback)
+- **GoodReturns evaluated and rejected** — Cloudflare bot protection returns 403 from server environments
+- **Rate validation** — `validateRates()` rejects rates outside ₹3,000–₹30,000 (22K) / ₹3,000–₹35,000 (24K) and ensures 24K > 22K
+- **Fetch timeout** — all fetchers use 15s `AbortController` timeout to prevent hanging
+- **`parsePrice()` helper** — parses `₹14,984` / `₹ 13,735` style strings from scraped HTML
+
+### Email Alerting
+- **Resend integration** — sends failure alert email when all sources are down
+- **Alert recipient** — configured via `ALERT_EMAIL` env var
+- **Non-blocking** — alert errors are caught and logged, never crash the cron
 
 ---
 
@@ -173,6 +190,8 @@ Server component that fetches the last 30 days from Supabase and renders:
 | `@supabase/supabase-js` | ^2.101.1 | Database client |
 | `chart.js` | ^4.5.1 | Charting |
 | `react-chartjs-2` | ^5.3.1 | React wrapper for Chart.js |
+| `cheerio` | ^1 | HTML parsing for fallback scrapers |
+| `resend` | ^4 | Email alerts on cron failure |
 | `tailwindcss` | ^4 | Styling |
 | `typescript` | ^5 | Type safety |
 
