@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import DashboardLayout, { KERALA_CITIES } from "@/components/DashboardLayout";
 import { getHistory } from "../page";
 
-export const revalidate = 300;
+export const revalidate = 3600; // Revalidate every 60 minutes
 
 export function generateStaticParams() {
   return KERALA_CITIES.map((city) => ({
