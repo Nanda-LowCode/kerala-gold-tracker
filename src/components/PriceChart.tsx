@@ -11,6 +11,7 @@ import {
   Filler,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import { GoldRate } from "@/lib/types";
 
 ChartJS.register(
   CategoryScale,
@@ -21,14 +22,7 @@ ChartJS.register(
   Filler
 );
 
-interface DayRate {
-  date: string;
-  rate_18k_1g: number;
-  rate_22k_1g: number;
-  rate_24k_1g: number;
-}
-
-export default function PriceChart({ history }: { history: DayRate[] }) {
+export default function PriceChart({ history }: { history: GoldRate[] }) {
   const [karat, setKarat] = useState<"18k" | "22k" | "24k">("22k");
 
   if (history.length < 2) {
@@ -46,7 +40,7 @@ export default function PriceChart({ history }: { history: DayRate[] }) {
     })
   );
 
-  const rateKey = `rate_${karat}_1g` as keyof DayRate;
+  const rateKey = `rate_${karat}_1g` as keyof GoldRate;
   const values = history.map((d) => d[rateKey] as number);
 
   const colors: Record<string, { border: string; bg: string }> = {

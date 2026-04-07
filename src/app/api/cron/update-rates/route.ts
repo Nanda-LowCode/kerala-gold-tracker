@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { createSupabaseClient } from "@/lib/supabase";
+import { createSupabaseAdminClient } from "@/lib/supabase";
 
 interface MalabarRateResponse {
   "22kt": string;
@@ -8,10 +8,12 @@ interface MalabarRateResponse {
 }
 
 function parseRate(rateStr: string): number {
-  // Malabar returns strings like "13,835.00 INR" — extract the number before decimals
-  const match = rateStr.replace(/,/g, "").match(/(\d+)/);
+  // Malabar returns strings like "13,835.00 INR" — extract the full number including decimals
+  const match = rateStr.replace(/,/g, "").match(/[\d.]+/);
   if (!match) throw new Error(`Cannot parse rate: ${rateStr}`);
-  return parseInt(match[1], 10);
+  const num = parseFloat(match[0]);
+  if (isNaN(num)) throw new Error(`Cannot parse rate: ${rateStr}`);
+  return Math.round(num);
 }
 
 function getTodayIST(): string {
@@ -71,7 +73,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Upsert into Supabase (won't duplicate if cron runs twice)
-    const supabase = createSupabaseClient();
+    const supabase = createSupabaseAdminClient();
     const today = getTodayIST();
 
     const { error } = await supabase.from("daily_gold_rates").upsert(
@@ -92,6 +94,11 @@ export async function GET(request: NextRequest) {
 
     // Clear the Next.js frontend cache to display new rates instantly
     revalidatePath("/");
+    // Also revalidate programmatic city pages
+    const cities = ["trivandrum", "kozhikode", "thrissur", "kollam", "palakkad", "kannur", "alappuzha", "kottayam", "malappuram"];
+    for (const city of cities) {
+      revalidatePath(`/${city}`);
+    }
 
     return NextResponse.json({
       success: true,

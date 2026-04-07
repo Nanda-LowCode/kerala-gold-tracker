@@ -1,13 +1,8 @@
 "use client";
 
 import { useState } from "react";
-
-interface DayRate {
-  date: string;
-  rate_18k_1g: number;
-  rate_22k_1g: number;
-  rate_24k_1g: number;
-}
+import { GoldRate } from "@/lib/types";
+import { formatCurrency } from "@/lib/format";
 
 const weights = [
   { label: "1 Gram", grams: 1 },
@@ -19,24 +14,16 @@ const weights = [
 const karatOptions = ["18k", "22k", "24k"] as const;
 type Karat = (typeof karatOptions)[number];
 
-function fmt(n: number): string {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(n);
-}
-
 export default function TodayVsYesterday({
   today,
   yesterday,
 }: {
-  today: DayRate;
-  yesterday: DayRate | null;
+  today: GoldRate;
+  yesterday: GoldRate | null;
 }) {
   const [karat, setKarat] = useState<Karat>("22k");
 
-  const rateKey = `rate_${karat}_1g` as keyof DayRate;
+  const rateKey = `rate_${karat}_1g` as keyof GoldRate;
 
   return (
     <section className="overflow-hidden rounded-2xl border border-zinc-200/70 bg-white shadow-lg shadow-amber-100/40">
@@ -94,11 +81,11 @@ export default function TodayVsYesterday({
                   </td>
                   <td className="px-4 py-3.5 text-right">
                     <span className="font-bold text-zinc-900">
-                      {fmt(todayPrice)}
+                      {formatCurrency(todayPrice)}
                     </span>
                   </td>
                   <td className="px-4 py-3.5 text-right text-zinc-500">
-                    {yesterdayPrice !== null ? fmt(yesterdayPrice) : "\u2014"}
+                    {yesterdayPrice !== null ? formatCurrency(yesterdayPrice) : "\u2014"}
                   </td>
                   <td className="px-6 py-3.5 text-right">
                     {change !== null ? (
@@ -159,11 +146,7 @@ function ChangeCell({ change }: { change: number }) {
       }`}
     >
       {up ? "\u25B2" : "\u25BC"} {up ? "+" : ""}
-      {new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: "INR",
-        maximumFractionDigits: 0,
-      }).format(change)}
+      {formatCurrency(change)}
     </span>
   );
 }

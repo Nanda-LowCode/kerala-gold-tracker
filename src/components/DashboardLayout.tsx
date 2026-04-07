@@ -7,22 +7,8 @@ import TodayVsYesterday from "@/components/TodayVsYesterday";
 import TopTicker from "@/components/TopTicker";
 import GoldCalculator from "@/components/GoldCalculator";
 import OldGoldCalculator from "@/components/OldGoldCalculator";
-
-interface GoldRate {
-  date: string;
-  city: string;
-  rate_18k_1g: number;
-  rate_22k_1g: number;
-  rate_24k_1g: number;
-}
-
-function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
+import { GoldRate } from "@/lib/types";
+import { formatCurrency } from "@/lib/format";
 
 function formatDate(dateStr: string): string {
   return new Date(dateStr + "T00:00:00").toLocaleDateString("en-IN", {
@@ -172,6 +158,11 @@ export default function DashboardLayout({
               <p className="mt-0.5 text-xs text-zinc-500 md:mt-1 md:text-sm">
                 <time dateTime={today.date}>{formatDate(today.date)}</time> · {cityName}
               </p>
+              {cityName !== "Kochi" && (
+                <p className="mt-1 text-[10px] text-zinc-400 md:mt-2 md:text-xs">
+                  Gold rates in Kerala are standardised across all districts by the Kerala Gold &amp; Silver Merchants Association.
+                </p>
+              )}
             </section>
 
             {/* Rate Cards: Hero 22K + split 24K/18K */}

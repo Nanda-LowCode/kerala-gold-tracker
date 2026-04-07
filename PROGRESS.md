@@ -1,6 +1,6 @@
 # Kerala Gold Tracker — Progress Log
 
-Last updated: 2026-04-05
+Last updated: 2026-04-07
 
 ## Status Overview
 
@@ -8,9 +8,9 @@ Last updated: 2026-04-05
 |-------|--------|
 | Phase 1: Environment & Database Setup | Complete |
 | Phase 2: Automated Backend (Data Pipeline) | Complete |
-| Phase 3: Frontend (User Interface) | Complete (extended beyond original scope) |
-| Phase 4: Deployment & Security | Pending (git initialized, not yet pushed) |
-| Phase 5: SEO, Growth, & V2 | Partial (FAQ schema + metadata done) |
+| Phase 3: Frontend (User Interface) | Complete (Calculators & Ticker added) |
+| Phase 4: Deployment & Security | Complete |
+| Phase 5: SEO, Growth, & V2 | Complete (Programmatic City SEO, Canonical fixes) |
 
 ---
 
@@ -111,39 +111,31 @@ Server component that fetches the last 30 days from Supabase and renders:
 
 ---
 
-## Phase 4: Deployment & Security — Pending
+## Phase 4: Deployment & Security — Done
 
 ### Done
-- Git repository initialized
-- Initial commit created on `master` branch (later moved to `main`)
-- `.gitignore` properly excludes `.env.local` and other secrets
-
-### Remaining
-- [ ] Log into GitHub CLI (`gh auth login`) — user has installed `gh` at `/c/Program Files/GitHub CLI/gh.exe`
-- [ ] Create GitHub repository and push
-- [ ] Import project into Vercel
-- [ ] Add environment variables in Vercel dashboard:
-  - `NEXT_PUBLIC_SUPABASE_URL`
-  - `SUPABASE_SERVICE_ROLE_KEY`
-  - `CRON_SECRET`
-- [ ] Deploy — Vercel auto-reads `vercel.json` and activates cron jobs
+- Git repository actively syncing with remote state.
+- Production deployed and integrated with Vercel.
+- Environment variables secured in deployment.
+- Google Analytics integrated via `@next/third-parties/google`.
+- `.env.local` safely excluded with automated Cron job successfully updating database.
 
 ---
 
-## Phase 5: SEO, Growth, V2 — Partial
+## Phase 5: SEO, Growth, V2 — Done
 
 ### Done
-- SEO metadata in layout (title, description, keywords)
-- FAQ with `schema.org/FAQPage` structured data
-- Clean URL structure and semantic HTML
+- Programmatic SEO generated via `src/app/[city]/page.tsx` utilizing dynamic params.
+- Global canonical logic debugged and fixed within `layout.tsx` enabling deep multi-city indexing.
+- `sitemap.ts` and `robots.ts` standardized cleanly mapping all endpoints to absolute non-www domains.
+- Search Console verified and XML submitted.
+- Created **Gold Calculator** and **Old Gold Calculator** UI components directly supporting conversion workflows.
+- Implemented real-time **Top Ticker**.
 
-### Remaining
-- Dynamic routes for other Kerala cities (e.g., `/gold-rate-trivandrum`)
-- Google AdSense integration once traffic > 500/day
-- V2: Consensus engine reading from multiple sources (Goodreturns, BankBazaar fallback)
-- Gram-to-pavan converter tool
-- Making charges calculator
-- Blog section
+### Remaining (Future Roadmap)
+- AdSense implementation when traffic supports.
+- Secondary Data Source engine fallback.
+- Blog articles.
 
 ---
 

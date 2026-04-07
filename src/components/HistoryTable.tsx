@@ -1,21 +1,8 @@
 "use client";
 
 import { useState } from "react";
-
-interface DayRate {
-  date: string;
-  rate_18k_1g: number;
-  rate_22k_1g: number;
-  rate_24k_1g: number;
-}
-
-function fmt(n: number): string {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(n);
-}
+import { GoldRate } from "@/lib/types";
+import { formatCurrency } from "@/lib/format";
 
 function formatDate(dateStr: string): string {
   return new Date(dateStr + "T00:00:00").toLocaleDateString("en-IN", {
@@ -25,33 +12,55 @@ function formatDate(dateStr: string): string {
   });
 }
 
-export default function HistoryTable({ history }: { history: DayRate[] }) {
+const rangeOptions = [7, 14, 30] as const;
+type Range = (typeof rangeOptions)[number];
+
+export default function HistoryTable({ history }: { history: GoldRate[] }) {
   const [karat, setKarat] = useState<"18k" | "22k" | "24k">("22k");
+  const [range, setRange] = useState<Range>(7);
 
   if (history.length === 0) return null;
 
-  // Default to 7-day view
-  const visible = history.slice(0, 7);
+  const visible = history.slice(0, range);
 
   return (
     <section className="rounded-2xl border border-zinc-200/70 bg-white p-6 shadow-lg shadow-amber-100/40">
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-lg font-bold tracking-tight text-zinc-900">
-            Last 7 Days
+            Last {range} Days
           </h2>
           <p className="mt-0.5 text-xs text-zinc-500">
             Historical rate per gram
           </p>
         </div>
 
-        {/* Toggle switch */}
-        <KaratToggle karat={karat} setKarat={setKarat} />
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Range filter */}
+          <div className="inline-flex rounded-full border border-zinc-200 bg-zinc-50 p-1">
+            {rangeOptions.map((r) => (
+              <button
+                key={r}
+                type="button"
+                onClick={() => setRange(r)}
+                className={`rounded-full px-2.5 py-1 text-[10px] font-bold transition-colors ${
+                  range === r
+                    ? "bg-zinc-800 text-white shadow-sm"
+                    : "text-zinc-500 hover:text-zinc-700"
+                }`}
+              >
+                {r}D
+              </button>
+            ))}
+          </div>
+          {/* Karat toggle */}
+          <KaratToggle karat={karat} setKarat={setKarat} />
+        </div>
       </div>
 
       <ul className="divide-y divide-zinc-100">
         {visible.map((day, i) => {
-          const rateKey = `rate_${karat}_1g` as keyof DayRate;
+          const rateKey = `rate_${karat}_1g` as keyof GoldRate;
           const rate = day[rateKey] as number;
           const prev =
             i < visible.length - 1
@@ -88,7 +97,7 @@ export default function HistoryTable({ history }: { history: DayRate[] }) {
 
               <div className="flex items-center gap-3 shrink-0">
                 <p className="text-base font-bold text-zinc-900">
-                  {fmt(rate)}
+                  {formatCurrency(rate)}
                 </p>
                 {change !== null && (
                   <div className="w-16 text-right">

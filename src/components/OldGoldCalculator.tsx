@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { sendGAEvent } from "@next/third-parties/google";
+import { formatCurrency } from "@/lib/format";
 
 interface OldGoldCalculatorProps {
   rate18k: number;
@@ -15,6 +16,7 @@ export default function OldGoldCalculator({
   const [karat, setKarat] = useState<"18k" | "22k">("22k");
   const [weightGrams, setWeightGrams] = useState<number | "">(8);
   const [deductionPercent, setDeductionPercent] = useState<number | "">(3);
+  const gaFired = useRef(false);
 
   const rates = {
     "18k": rate18k,
@@ -28,13 +30,6 @@ export default function OldGoldCalculator({
   const grossValue = parsedWeight * currentRate;
   const deductionAmount = grossValue * (parsedDeduction / 100);
   const netValue = grossValue - deductionAmount;
-
-  const formatCurrency = (val: number) =>
-    new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      maximumFractionDigits: 0,
-    }).format(val);
 
   return (
     <section className="relative overflow-hidden rounded-2xl border border-zinc-200/70 bg-white p-6 shadow-lg shadow-amber-100/40 md:p-8">
@@ -88,8 +83,11 @@ export default function OldGoldCalculator({
                   onChange={(e) => {
                     const val = e.target.value === "" ? "" : parseFloat(e.target.value);
                     setWeightGrams(val);
-                    if (val !== "") {
-                      sendGAEvent({ event: "use_old_gold_calculator", weight: val });
+                  }}
+                  onBlur={() => {
+                    if (!gaFired.current && typeof weightGrams === "number") {
+                      sendGAEvent({ event: "use_old_gold_calculator", weight: weightGrams });
+                      gaFired.current = true;
                     }
                   }}
                   className="w-full rounded-xl border border-zinc-200 bg-white px-4 py-2.5 pr-12 text-zinc-900 shadow-sm transition-colors focus:border-zinc-400 focus:outline-none focus:ring-4 focus:ring-zinc-500/10"

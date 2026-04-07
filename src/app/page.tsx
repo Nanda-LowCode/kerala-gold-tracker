@@ -1,20 +1,13 @@
 import { Metadata } from "next";
-import { createSupabaseClient } from "@/lib/supabase";
+import { createSupabaseReadClient } from "@/lib/supabase";
+import { GoldRate } from "@/lib/types";
 import DashboardLayout from "@/components/DashboardLayout";
-
-interface GoldRate {
-  date: string;
-  city: string;
-  rate_18k_1g: number;
-  rate_22k_1g: number;
-  rate_24k_1g: number;
-}
 
 export const revalidate = 300;
 
 export async function getHistory(): Promise<GoldRate[]> {
   try {
-    const supabase = createSupabaseClient();
+    const supabase = createSupabaseReadClient();
     const { data, error } = await supabase
       .from("daily_gold_rates")
       .select("date, city, rate_18k_1g, rate_22k_1g, rate_24k_1g")

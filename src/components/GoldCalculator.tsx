@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { formatCurrency } from "@/lib/format";
 
 interface GoldCalculatorProps {
   rate18k: number;
@@ -32,13 +33,6 @@ export default function GoldCalculator({
   const makingCharges = basePrice * (parsedMaking / 100);
   const gst = (basePrice + makingCharges) * 0.03;
   const totalPrice = basePrice + makingCharges + gst;
-
-  const formatCurrency = (val: number) =>
-    new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      maximumFractionDigits: 0,
-    }).format(val);
 
   return (
     <section className="relative overflow-hidden rounded-2xl border border-amber-200/70 bg-white p-6 shadow-lg shadow-amber-100/40 md:p-8" aria-labelledby="calculator-heading">
