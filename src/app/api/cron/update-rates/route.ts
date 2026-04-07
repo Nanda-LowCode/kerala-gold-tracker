@@ -278,7 +278,7 @@ export async function GET(request: NextRequest) {
         rate_18k_1g: rate18k,
         rate_22k_1g: data.rate_22k_1g,
         rate_24k_1g: data.rate_24k_1g,
-        consensus_sources: data.source,
+        consensus_sources: 1,
       },
       { onConflict: "date,city" }
     );
