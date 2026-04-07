@@ -1,6 +1,6 @@
 # Kerala Gold Tracker — Progress Log
 
-Last updated: 2026-04-07
+Last updated: 2026-04-07 (post code-review fixes)
 
 ## Status Overview
 
@@ -11,6 +11,7 @@ Last updated: 2026-04-07
 | Phase 3: Frontend (User Interface) | Complete (Calculators & Ticker added) |
 | Phase 4: Deployment & Security | Complete |
 | Phase 5: SEO, Growth, & V2 | Complete (Programmatic City SEO, Canonical fixes) |
+| Code Review Fixes | Complete |
 
 ---
 
@@ -55,14 +56,13 @@ Last updated: 2026-04-07
 ### Vercel Cron Schedule
 **File:** [vercel.json](vercel.json)
 
-Runs twice daily, Monday through Saturday:
+Runs once daily (Vercel Hobby plan limit):
 - 10:30 AM IST
-- 4:30 PM IST
 
 ```json
 {
   "crons": [
-    { "path": "/api/cron/update-rates", "schedule": "30 10,16 * * 1-6" }
+    { "path": "/api/cron/update-rates", "schedule": "0 5 * * *" }
   ]
 }
 ```
@@ -82,7 +82,7 @@ Server component that fetches the last 30 days from Supabase and renders:
 - **Historical data table** (client component)
 - **FAQ section**
 - **Empty state fallback** — shown when DB has no data yet
-- Revalidation every 5 minutes (`export const revalidate = 300`)
+- ISR revalidation every 60 minutes (`export const revalidate = 3600`), plus instant revalidation via `revalidatePath` after cron updates
 
 ### Components
 
@@ -132,10 +132,35 @@ Server component that fetches the last 30 days from Supabase and renders:
 - Created **Gold Calculator** and **Old Gold Calculator** UI components directly supporting conversion workflows.
 - Implemented real-time **Top Ticker**.
 
+---
+
+## Code Review Fixes — Done
+
+### Security
+- **Separated Supabase clients** — `createSupabaseReadClient()` (anon key) for server-component reads, `createSupabaseAdminClient()` (service role key) for cron writes only (`src/lib/supabase.ts`)
+
+### Bug Fixes
+- **Restored `vercel.json`** — was accidentally deleted; cron schedule now once-daily for Hobby plan (`0 5 * * *`)
+- **Fixed `parseRate` decimal handling** — uses `parseFloat` + `Math.round` instead of `parseInt` to avoid silently losing paise
+- **Fixed city page revalidation** — cron now calls `revalidatePath` for all 9 city routes, not just `/`
+- **Fixed GA event spam** — `OldGoldCalculator` fires analytics event once on blur instead of every keystroke
+- **Fixed metadata** — Twitter description corrected from "Hourly updates" to "Updated twice daily"
+- **ISR revalidation** — increased from 5min to 60min to prevent stale cache issues
+
+### Code Quality
+- **Shared types** — extracted `GoldRate` interface to `src/lib/types.ts` (was duplicated 6 times)
+- **Shared utilities** — extracted `formatCurrency` to `src/lib/format.ts` (was duplicated 6 times)
+- **Removed `build_error.log`** from repo, added `*.log` to `.gitignore`
+
+### UX
+- **History table filter** — added 7D / 14D / 30D range toggle
+- **City page disclaimer** — non-Kochi city pages show note about uniform Kerala board rates
+
 ### Remaining (Future Roadmap)
 - AdSense implementation when traffic supports.
 - Secondary Data Source engine fallback.
 - Blog articles.
+- Unit tests for `parseRate`, rate derivation, and `formatCurrency`.
 
 ---
 
@@ -157,4 +182,5 @@ Server component that fetches the last 30 days from Supabase and renders:
 
 - **Malabar API quirk:** The endpoint returns a 302 redirect on first request. The cron route handles this with a two-step fetch that captures cookies from the first response and sends them with the second. If this ever breaks, check whether Malabar's cookie flow has changed.
 - **Chart data requirement:** The price chart only appears meaningfully once there are at least 2 days of data in the database. Until then it shows a placeholder.
-- **Revalidation:** Homepage revalidates every 5 minutes — the cron only updates twice daily, so this is generous.
+- **Revalidation:** Homepage revalidates every 60 minutes via ISR. The cron triggers instant revalidation via `revalidatePath` after each update.
+- **Vercel Hobby plan:** Limited to once-daily cron. Upgrade to Pro for twice-daily updates.
