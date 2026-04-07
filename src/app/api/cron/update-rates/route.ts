@@ -86,12 +86,17 @@ const fetchMalabar: FetcherFn = async () => {
   const MALABAR_URL =
     "https://www.malabargoldanddiamonds.com/malabarprice/index/getrates/?country=IN&state=Kerala";
 
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
+  try {
   // Step 1: Initial request to get session cookie (returns 302)
   const initialRes = await fetch(MALABAR_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json", "User-Agent": "Mozilla/5.0" },
     redirect: "manual",
     cache: "no-store",
+    signal: controller.signal,
   });
   const cookies = initialRes.headers.getSetCookie?.().join("; ") ?? "";
 
@@ -104,6 +109,7 @@ const fetchMalabar: FetcherFn = async () => {
       Cookie: cookies,
     },
     cache: "no-store",
+    signal: controller.signal,
   });
 
   if (!res.ok) throw new Error(`Malabar API returned ${res.status}`);
@@ -115,6 +121,9 @@ const fetchMalabar: FetcherFn = async () => {
   const result: GoldRateResult = { rate_22k_1g: rate22k, rate_24k_1g: rate24k, source: "malabar" };
   validateRates(result);
   return result;
+  } finally {
+    clearTimeout(timer);
+  }
 };
 
 // ─── Fetcher #2: BankBazaar (Fallback — HTML scrape) ────────────────────────
