@@ -7,6 +7,8 @@ import TodayVsYesterday from "@/components/TodayVsYesterday";
 import TopTicker from "@/components/TopTicker";
 import GoldCalculator from "@/components/GoldCalculator";
 import OldGoldCalculator from "@/components/OldGoldCalculator";
+import CtaBanner from "@/components/CtaBanner";
+import RatesPendingBanner from "@/components/RatesPendingBanner";
 import { GoldRate } from "@/lib/types";
 import { formatCurrency } from "@/lib/format";
 
@@ -165,6 +167,9 @@ export default function DashboardLayout({
               )}
             </section>
 
+            {/* Pending rates notice (hidden once today's data arrives) */}
+            <RatesPendingBanner latestDate={today.date} />
+
             {/* Rate Cards: Hero 22K + split 24K/18K */}
             <div className="grid gap-3 sm:gap-4 md:grid-cols-3">
               {/* 22K hero — full width on mobile, first col on desktop */}
@@ -197,6 +202,9 @@ export default function DashboardLayout({
               </div>
             </div>
 
+            {/* CTA Banner — drives scroll to calculator */}
+            <CtaBanner />
+
             {/* Price Chart */}
             <PriceChart history={chartData} />
 
@@ -207,11 +215,13 @@ export default function DashboardLayout({
             />
 
             {/* Gold Calculator Component */}
-            <GoldCalculator
-              rate18k={today.rate_18k_1g}
-              rate22k={today.rate_22k_1g}
-              rate24k={today.rate_24k_1g}
-            />
+            <div id="estimator-section">
+              <GoldCalculator
+                rate18k={today.rate_18k_1g}
+                rate22k={today.rate_22k_1g}
+                rate24k={today.rate_24k_1g}
+              />
+            </div>
 
             {/* Today vs. Yesterday multi-weight comparison */}
             <TodayVsYesterday today={today} yesterday={yesterday} />
