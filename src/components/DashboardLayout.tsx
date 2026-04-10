@@ -9,6 +9,7 @@ import GoldCalculator from "@/components/GoldCalculator";
 import OldGoldCalculator from "@/components/OldGoldCalculator";
 import CtaBanner from "@/components/CtaBanner";
 import RatesPendingBanner from "@/components/RatesPendingBanner";
+import WhatsAppShare from "@/components/WhatsAppShare";
 import { GoldRate } from "@/lib/types";
 import { formatCurrency } from "@/lib/format";
 
@@ -201,6 +202,14 @@ export default function DashboardLayout({
                 />
               </div>
             </div>
+
+            {/* WhatsApp viral share button */}
+            {change22k !== null && (
+              <WhatsAppShare
+                currentRate22k={today.rate_22k_1g}
+                priceChange={change22k}
+              />
+            )}
 
             {/* CTA Banner — drives scroll to calculator */}
             <CtaBanner />
