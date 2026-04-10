@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import InstallPrompt from "@/components/InstallPrompt";
 import "./globals.css";
 
 const geist = Geist({
@@ -10,6 +11,8 @@ const geist = Geist({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://livegoldkerala.com"),
+  manifest: "/manifest.json",
+  themeColor: "#fbbf24",
   title: {
     default: "Today's Gold Rate in Kochi, Kerala | LiveGold Kerala",
     template: "%s | LiveGold Kerala",
@@ -53,6 +56,7 @@ export default function RootLayout({
     <html lang="en" className={`${geist.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-gradient-to-b from-amber-50 to-white font-sans text-gray-900">
         {children}
+        <InstallPrompt />
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
         )}
