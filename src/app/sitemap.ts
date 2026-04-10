@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next'
 import { KERALA_CITIES } from '@/components/DashboardLayout'
+import { getAllPosts } from '@/lib/mdx'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://livegoldkerala.com'
@@ -22,5 +23,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }))
 
-  return [...rootRoute, ...cityRoutes]
+  // 3. Blog posts
+  const blogRoutes: MetadataRoute.Sitemap = getAllPosts().map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: new Date(post.date),
+    changeFrequency: 'monthly',
+    priority: 0.6,
+  }))
+
+  return [...rootRoute, ...cityRoutes, ...blogRoutes]
 }
