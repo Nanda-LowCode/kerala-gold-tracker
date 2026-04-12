@@ -39,8 +39,56 @@ async function getLatestRates() {
 export default async function OldGoldExchangeCalculatorPage() {
   const rates = await getLatestRates();
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Old Gold Exchange & Melting Loss Calculator",
+    description:
+      "Estimate the resale or exchange value of old gold jewelry after melting loss and wastage deductions.",
+    url: "https://livegoldkerala.com/tools/old-gold-exchange-calculator",
+    applicationCategory: "FinanceApplication",
+    operatingSystem: "All",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "INR",
+    },
+  };
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "What is melting loss?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "When a jeweller melts down old ornaments, 2% to 5% of the weight is lost due to impurities, solder, dirt, and rhodium plating that burn off during the process.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Will I get cash or exchange value?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Exchanging old gold for new jewelry almost always gives a better rate than a direct cash payout, because the jeweller saves on sourcing new metal.",
+        },
+      },
+    ],
+  };
+
   return (
     <>
+      {/* Static hardcoded JSON-LD, no user input */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <header className="border-b border-zinc-200/60 bg-white/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-3xl items-center gap-2.5 px-4 py-4">
           <span className="text-2xl leading-none">✨</span>
@@ -115,12 +163,18 @@ export default async function OldGoldExchangeCalculatorPage() {
           </div>
         </section>
 
-        <div className="text-center">
+        <div className="flex flex-wrap items-center justify-center gap-3">
           <Link
             href="/"
             className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-700 ring-1 ring-inset ring-amber-200/60 transition-colors hover:bg-amber-100"
           >
             ← View Today&apos;s Gold Rates
+          </Link>
+          <Link
+            href="/tools/gold-making-charge-calculator"
+            className="inline-flex items-center gap-1.5 rounded-full bg-zinc-50 px-4 py-2 text-sm font-semibold text-zinc-700 ring-1 ring-inset ring-zinc-200/60 transition-colors hover:bg-zinc-100"
+          >
+            Making Charge Calculator →
           </Link>
         </div>
       </main>

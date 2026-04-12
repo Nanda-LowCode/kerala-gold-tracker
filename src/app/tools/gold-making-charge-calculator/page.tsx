@@ -39,8 +39,29 @@ async function getLatestRates() {
 export default async function GoldMakingChargeCalculatorPage() {
   const rates = await getLatestRates();
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Kerala Gold Making Charge & GST Calculator",
+    description:
+      "Calculate the total cost of gold jewelry in Kerala including making charges and 3% GST.",
+    url: "https://livegoldkerala.com/tools/gold-making-charge-calculator",
+    applicationCategory: "FinanceApplication",
+    operatingSystem: "All",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "INR",
+    },
+  };
+
   return (
     <>
+      {/* Static hardcoded JSON-LD, no user input */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <header className="border-b border-zinc-200/60 bg-white/70 backdrop-blur-xl">
         <div className="mx-auto flex max-w-3xl items-center gap-2.5 px-4 py-4">
           <span className="text-2xl leading-none">✨</span>
@@ -105,12 +126,18 @@ export default async function GoldMakingChargeCalculatorPage() {
           </p>
         </section>
 
-        <div className="text-center">
+        <div className="flex flex-wrap items-center justify-center gap-3">
           <Link
             href="/"
             className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-700 ring-1 ring-inset ring-amber-200/60 transition-colors hover:bg-amber-100"
           >
             ← View Today&apos;s Gold Rates
+          </Link>
+          <Link
+            href="/tools/old-gold-exchange-calculator"
+            className="inline-flex items-center gap-1.5 rounded-full bg-zinc-50 px-4 py-2 text-sm font-semibold text-zinc-700 ring-1 ring-inset ring-zinc-200/60 transition-colors hover:bg-zinc-100"
+          >
+            Old Gold Exchange Estimator →
           </Link>
         </div>
       </main>

@@ -23,7 +23,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }))
 
-  // 3. Blog posts
+  // 3. Tool pages
+  const toolRoutes: MetadataRoute.Sitemap = [
+    'gold-making-charge-calculator',
+    'old-gold-exchange-calculator',
+  ].map((tool) => ({
+    url: `${baseUrl}/tools/${tool}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.9,
+  }))
+
+  // 4. Blog posts
   const blogRoutes: MetadataRoute.Sitemap = getAllPosts().map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
     lastModified: new Date(post.date),
@@ -31,5 +42,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }))
 
-  return [...rootRoute, ...cityRoutes, ...blogRoutes]
+  return [...rootRoute, ...toolRoutes, ...cityRoutes, ...blogRoutes]
 }
