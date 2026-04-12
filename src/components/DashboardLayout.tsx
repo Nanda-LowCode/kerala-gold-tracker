@@ -306,6 +306,31 @@ export default function DashboardLayout({
             </ul>
           </div>
 
+          {/* Tools & Blog links */}
+          <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <Link
+              href="/tools/gold-making-charge-calculator"
+              className="rounded-xl border border-zinc-200/70 bg-white px-4 py-3 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <p className="text-xs font-bold uppercase tracking-wider text-amber-600">Tool</p>
+              <p className="mt-1 text-sm font-semibold text-zinc-800">Making Charge Calculator</p>
+            </Link>
+            <Link
+              href="/tools/old-gold-exchange-calculator"
+              className="rounded-xl border border-zinc-200/70 bg-white px-4 py-3 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <p className="text-xs font-bold uppercase tracking-wider text-amber-600">Tool</p>
+              <p className="mt-1 text-sm font-semibold text-zinc-800">Old Gold Exchange Estimator</p>
+            </Link>
+            <Link
+              href="/blog"
+              className="rounded-xl border border-zinc-200/70 bg-white px-4 py-3 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <p className="text-xs font-bold uppercase tracking-wider text-amber-600">Learn</p>
+              <p className="mt-1 text-sm font-semibold text-zinc-800">Gold Knowledge Hub</p>
+            </Link>
+          </div>
+
           <div className="text-center text-xs text-zinc-400">
             <p className="font-medium">
               Data sourced from Malabar Gold & Diamonds · For reference only

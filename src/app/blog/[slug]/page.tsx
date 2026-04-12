@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { getAllPosts, getPostBySlug } from "@/lib/mdx";
+import { getAllPosts, getPostBySlug, type PostMeta } from "@/lib/mdx";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -32,6 +32,11 @@ export default async function BlogPost({ params }: Props) {
   const { slug } = await params;
   const post = getPostBySlug(slug);
   if (!post) notFound();
+
+  const allPosts = getAllPosts();
+  const relatedPosts = allPosts
+    .filter((p: PostMeta) => p.slug !== slug)
+    .slice(0, 3);
 
   const dateFormatted = new Date(post.date + "T00:00:00").toLocaleDateString(
     "en-IN",
@@ -81,7 +86,34 @@ export default async function BlogPost({ params }: Props) {
           </div>
         </article>
 
-        <div className="mt-12 rounded-2xl border border-amber-200/60 bg-amber-50/50 p-6 text-center">
+        {relatedPosts.length > 0 && (
+          <section className="mt-12">
+            <h2 className="mb-4 text-lg font-bold tracking-tight text-zinc-900">
+              Read Next
+            </h2>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {relatedPosts.map((p: PostMeta) => (
+                <Link
+                  key={p.slug}
+                  href={`/blog/${p.slug}`}
+                  className="group rounded-xl border border-zinc-200/70 bg-white p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+                >
+                  <time className="text-[10px] font-medium uppercase tracking-wider text-zinc-400">
+                    {new Date(p.date + "T00:00:00").toLocaleDateString("en-IN", {
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </time>
+                  <h3 className="mt-1 text-sm font-semibold leading-snug text-zinc-800 group-hover:text-amber-700">
+                    {p.title}
+                  </h3>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <div className="mt-8 rounded-2xl border border-amber-200/60 bg-amber-50/50 p-6 text-center">
           <p className="text-sm font-medium text-zinc-700">
             Want to check today&apos;s gold rate?
           </p>
@@ -94,8 +126,21 @@ export default async function BlogPost({ params }: Props) {
         </div>
       </main>
 
-      <footer className="border-t border-zinc-200/60 bg-white/50 py-6 text-center text-xs text-zinc-400">
-        <p>&copy; 2026 LiveGold Kerala</p>
+      <footer className="border-t border-zinc-200/60 bg-white/50 pt-6 pb-8">
+        <div className="mx-auto max-w-3xl px-4">
+          <div className="mb-6 flex flex-wrap justify-center gap-3 text-xs font-medium">
+            <Link href="/" className="text-zinc-500 hover:text-zinc-800">Today&apos;s Rate</Link>
+            <span className="text-zinc-300">·</span>
+            <Link href="/tools/gold-making-charge-calculator" className="text-zinc-500 hover:text-zinc-800">Making Charge Calculator</Link>
+            <span className="text-zinc-300">·</span>
+            <Link href="/tools/old-gold-exchange-calculator" className="text-zinc-500 hover:text-zinc-800">Old Gold Exchange</Link>
+            <span className="text-zinc-300">·</span>
+            <Link href="/blog" className="text-zinc-500 hover:text-zinc-800">All Articles</Link>
+          </div>
+          <div className="text-center text-xs text-zinc-400">
+            <p>&copy; 2026 LiveGold Kerala</p>
+          </div>
+        </div>
       </footer>
     </>
   );

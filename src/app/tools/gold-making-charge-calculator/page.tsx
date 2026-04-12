@@ -142,12 +142,21 @@ export default async function GoldMakingChargeCalculatorPage() {
         </div>
       </main>
 
-      <footer className="border-t border-zinc-200/60 bg-white/50 py-6">
-        <div className="mx-auto max-w-3xl px-4 text-center text-xs text-zinc-400">
-          <p className="font-medium">
-            Data sourced from Malabar Gold &amp; Diamonds · For reference only
-          </p>
-          <p className="mt-1.5">© 2026 LiveGold Kerala</p>
+      <footer className="border-t border-zinc-200/60 bg-white/50 pt-6 pb-8">
+        <div className="mx-auto max-w-3xl px-4">
+          <div className="mb-6 flex flex-wrap justify-center gap-3 text-xs font-medium">
+            <Link href="/" className="text-zinc-500 hover:text-zinc-800">Today&apos;s Rate</Link>
+            <span className="text-zinc-300">·</span>
+            <Link href="/tools/old-gold-exchange-calculator" className="text-zinc-500 hover:text-zinc-800">Old Gold Exchange</Link>
+            <span className="text-zinc-300">·</span>
+            <Link href="/blog" className="text-zinc-500 hover:text-zinc-800">Gold Knowledge Hub</Link>
+          </div>
+          <div className="text-center text-xs text-zinc-400">
+            <p className="font-medium">
+              Data sourced from Malabar Gold &amp; Diamonds · For reference only
+            </p>
+            <p className="mt-1.5">© 2026 LiveGold Kerala</p>
+          </div>
         </div>
       </footer>
     </>
