@@ -232,6 +232,25 @@ export default function DashboardLayout({
               />
             </div>
 
+            {/* Internal links to dedicated tool pages */}
+            <p className="text-center text-sm text-zinc-500">
+              Need a detailed breakdown? Try our dedicated{" "}
+              <Link
+                href="/tools/gold-making-charge-calculator"
+                className="font-semibold text-amber-700 underline decoration-amber-300/60 underline-offset-2 transition-colors hover:text-amber-900 hover:decoration-amber-500"
+              >
+                Making Charge Calculator
+              </Link>{" "}
+              or{" "}
+              <Link
+                href="/tools/old-gold-exchange-calculator"
+                className="font-semibold text-amber-700 underline decoration-amber-300/60 underline-offset-2 transition-colors hover:text-amber-900 hover:decoration-amber-500"
+              >
+                Old Gold Exchange Estimator
+              </Link>
+              .
+            </p>
+
             {/* Today vs. Yesterday multi-weight comparison */}
             <TodayVsYesterday today={today} yesterday={yesterday} />
 
