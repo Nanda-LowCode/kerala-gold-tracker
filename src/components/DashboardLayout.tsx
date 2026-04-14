@@ -12,6 +12,7 @@ import RatesPendingBanner from "@/components/RatesPendingBanner";
 import WhatsAppShare from "@/components/WhatsAppShare";
 import { GoldRate } from "@/lib/types";
 import { formatCurrency } from "@/lib/format";
+import { getCityData } from "@/lib/cityData";
 
 function formatDate(dateStr: string): string {
   return new Date(dateStr + "T00:00:00").toLocaleDateString("en-IN", {
@@ -44,6 +45,7 @@ export default function DashboardLayout({
 }) {
   const today = history[0] ?? null;
   const yesterday = history[1] ?? null;
+  const cityData = getCityData(cityName);
 
   const change18k =
     today && yesterday ? today.rate_18k_1g - yesterday.rate_18k_1g : null;
@@ -161,7 +163,21 @@ export default function DashboardLayout({
               <p className="mt-0.5 text-xs text-zinc-500 md:mt-1 md:text-sm">
                 <time dateTime={today.date}>{formatDate(today.date)}</time> · {cityName}
               </p>
-              {cityName !== "Kochi" && (
+              
+              {cityData ? (
+                <div className="mt-4 max-w-2xl rounded-2xl border border-amber-200/50 bg-gradient-to-br from-amber-50/50 to-white p-4 text-left shadow-sm md:mt-6">
+                  <h3 className="flex items-center gap-2 text-sm font-bold text-zinc-800">
+                    <svg className="h-4 w-4 text-amber-500" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+                    {cityData.insightTitle}
+                  </h3>
+                  <p className="mt-2 text-xs leading-relaxed text-zinc-600 sm:text-sm">
+                    {cityData.insightContent}
+                  </p>
+                  <p className="mt-3 border-t border-amber-100/60 pt-2 text-[10px] text-zinc-400 sm:text-xs">
+                    * Gold rates in Kerala are standardised across all districts by the Kerala Gold &amp; Silver Merchants Association. The daily board rate applies equally to {cityName}.
+                  </p>
+                </div>
+              ) : (
                 <p className="mt-1 text-[10px] text-zinc-400 md:mt-2 md:text-xs">
                   Gold rates in Kerala are standardised across all districts by the Kerala Gold &amp; Silver Merchants Association.
                 </p>

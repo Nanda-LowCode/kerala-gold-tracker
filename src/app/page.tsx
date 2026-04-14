@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { createSupabaseReadClient } from "@/lib/supabase";
 import { GoldRate } from "@/lib/types";
 import DashboardLayout from "@/components/DashboardLayout";
+import { getCityData } from "@/lib/cityData";
 
 export const revalidate = 3600; // Revalidate every 60 minutes
 
@@ -26,10 +27,13 @@ export async function generateMetadata(): Promise<Metadata> {
   const history = await getHistory();
   const today = history[0] ?? null;
 
+  const cityData = getCityData("Kochi");
+  const descPrefix = cityData?.metaDescriptionPrefix ? cityData.metaDescriptionPrefix + " " : "";
+
   if (!today) {
     return {
       title: "Today's Gold Rate in Kochi | LiveGold Kerala",
-      description: "View the most recent 22K and 24K gold rates in Kochi, Kerala.",
+      description: `${descPrefix}View the most recent 22K and 24K gold rates in Kochi, Kerala.`,
       alternates: { canonical: "/" },
     };
   }
@@ -41,7 +45,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: `Today's Gold Rate in Kochi (${dateFormatted}): 22K @ ₹${today.rate_22k_1g}/g`,
-    description: `Current gold price in Kerala today: 22 Karat is ₹${today.rate_22k_1g} per gram (₹${today.rate_22k_1g * 8} per pavan). 24 Karat is ₹${today.rate_24k_1g} per gram. Live tracking.`,
+    description: `${descPrefix}Current gold price in Kerala today: 22 Karat is ₹${today.rate_22k_1g} per gram (₹${today.rate_22k_1g * 8} per pavan). 24 Karat is ₹${today.rate_24k_1g} per gram. Live tracking.`,
     alternates: { canonical: "/" },
   };
 }
