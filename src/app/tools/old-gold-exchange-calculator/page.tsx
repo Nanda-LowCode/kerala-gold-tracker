@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     title: "Old Gold Exchange & Melting Loss Calculator | Kerala",
     description:
       "Free tool to estimate the exchange or cash value of old gold after melting loss and wastage deductions.",
-    url: "https://livegoldkerala.com/tools/old-gold-exchange-calculator",
+    url: "https://www.livegoldkerala.com/tools/old-gold-exchange-calculator",
   },
 };
 
@@ -45,7 +45,7 @@ export default async function OldGoldExchangeCalculatorPage() {
     name: "Old Gold Exchange & Melting Loss Calculator",
     description:
       "Estimate the resale or exchange value of old gold jewelry after melting loss and wastage deductions.",
-    url: "https://livegoldkerala.com/tools/old-gold-exchange-calculator",
+    url: "https://www.livegoldkerala.com/tools/old-gold-exchange-calculator",
     applicationCategory: "FinanceApplication",
     operatingSystem: "All",
     offers: {

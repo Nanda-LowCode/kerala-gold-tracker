@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     title: "Kerala Gold Making Charge & GST Calculator",
     description:
       "Free tool to estimate Kerala jewelry prices with making charges and GST included.",
-    url: "https://livegoldkerala.com/tools/gold-making-charge-calculator",
+    url: "https://www.livegoldkerala.com/tools/gold-making-charge-calculator",
   },
 };
 
@@ -45,7 +45,7 @@ export default async function GoldMakingChargeCalculatorPage() {
     name: "Kerala Gold Making Charge & GST Calculator",
     description:
       "Calculate the total cost of gold jewelry in Kerala including making charges and 3% GST.",
-    url: "https://livegoldkerala.com/tools/gold-making-charge-calculator",
+    url: "https://www.livegoldkerala.com/tools/gold-making-charge-calculator",
     applicationCategory: "FinanceApplication",
     operatingSystem: "All",
     offers: {

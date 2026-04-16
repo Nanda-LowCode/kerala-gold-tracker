@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://livegoldkerala.com/sitemap.xml',
+    sitemap: 'https://www.livegoldkerala.com/sitemap.xml',
   }
 }
