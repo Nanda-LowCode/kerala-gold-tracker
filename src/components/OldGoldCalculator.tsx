@@ -3,7 +3,6 @@
 import { useState, useRef } from "react";
 import { sendGAEvent } from "@next/third-parties/google";
 import { formatCurrency } from "@/lib/format";
-import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 
 interface OldGoldCalculatorProps {
   rate18k: number;
@@ -19,8 +18,6 @@ export default function OldGoldCalculator({
   const [deductionPercent, setDeductionPercent] = useState<number | "">(3);
   const gaFired = useRef(false);
 
-  const { weightUnit, formatGlobalPrice, weightMultiplier } = useGlobalSettings();
-
   const rates = {
     "18k": rate18k,
     "22k": rate22k,
@@ -30,8 +27,7 @@ export default function OldGoldCalculator({
   const parsedWeight = typeof weightGrams === "number" ? weightGrams : 0;
   const parsedDeduction = typeof deductionPercent === "number" ? deductionPercent : 0;
 
-  const actualWeightInGrams = parsedWeight * weightMultiplier;
-  const grossValue = actualWeightInGrams * currentRate;
+  const grossValue = parsedWeight * currentRate;
   const deductionAmount = grossValue * (parsedDeduction / 100);
   const netValue = grossValue - deductionAmount;
 
@@ -75,7 +71,7 @@ export default function OldGoldCalculator({
             {/* Weight Input */}
             <div>
               <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400" htmlFor="old-weight-input">
-                Weight ({weightUnit})
+                Weight (Grams)
               </label>
               <div className="relative">
                 <input
@@ -98,7 +94,7 @@ export default function OldGoldCalculator({
                   placeholder="e.g. 8"
                 />
                 <span className="absolute inset-y-0 right-4 flex items-center text-sm font-medium text-zinc-400 pointer-events-none">
-                  {weightUnit === "Gram" ? "g" : ""}
+                  g
                 </span>
               </div>
             </div>
@@ -146,12 +142,12 @@ export default function OldGoldCalculator({
             </h3>
             
             <p className="text-center text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100 drop-shadow-sm">
-              {formatGlobalPrice(netValue)}
+              {formatCurrency(netValue)}
             </p>
 
             <div className="mt-6 border-t border-zinc-200 dark:border-zinc-800 pt-4 text-center text-xs font-medium text-zinc-500 dark:text-zinc-400 space-y-1">
-              <p>Gross Value: {formatGlobalPrice(grossValue)}</p>
-              <p className="text-red-500/90 dark:text-red-400/90">- {parsedDeduction}% Deduction: {formatGlobalPrice(deductionAmount)}</p>
+              <p>Gross Value: {formatCurrency(grossValue)}</p>
+              <p className="text-red-500/90 dark:text-red-400/90">- {parsedDeduction}% Deduction: {formatCurrency(deductionAmount)}</p>
             </div>
           </div>
         </div>

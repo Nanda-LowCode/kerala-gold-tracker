@@ -12,9 +12,6 @@ import RatesPendingBanner from "@/components/RatesPendingBanner";
 import WhatsAppShare from "@/components/WhatsAppShare";
 import ThemeToggle from "@/components/ThemeToggle";
 import NotificationToggle from "@/components/NotificationToggle";
-import GlobalSettingsBar from "@/components/GlobalSettingsBar";
-import { GlobalSettingsProvider } from "@/hooks/useGlobalSettings";
-import { fetchCurrencyRates } from "@/lib/fetchCurrencyRates";
 import { GoldRate } from "@/lib/types";
 import { formatCurrency } from "@/lib/format";
 import { getCityData } from "@/lib/cityData";
@@ -41,14 +38,13 @@ export const KERALA_CITIES = [
   "malappuram",
 ];
 
-export default async function DashboardLayout({
+export default function DashboardLayout({
   history,
   cityName,
 }: {
   history: GoldRate[];
   cityName: string;
 }) {
-  const initialRates = await fetchCurrencyRates();
   const today = history[0] ?? null;
   const yesterday = history[1] ?? null;
   const cityData = getCityData(cityName);
@@ -225,24 +221,20 @@ export default async function DashboardLayout({
             {/* Price Chart */}
             <PriceChart history={chartData} />
 
-            <GlobalSettingsProvider initialRates={initialRates}>
-              <GlobalSettingsBar />
+            {/* Old Gold Calculator Component */}
+            <OldGoldCalculator 
+              rate18k={today.rate_18k_1g} 
+              rate22k={today.rate_22k_1g} 
+            />
 
-              {/* Old Gold Calculator Component */}
-              <OldGoldCalculator 
-                rate18k={today.rate_18k_1g} 
-                rate22k={today.rate_22k_1g} 
+            {/* Gold Calculator Component */}
+            <div id="estimator-section">
+              <GoldCalculator
+                rate18k={today.rate_18k_1g}
+                rate22k={today.rate_22k_1g}
+                rate24k={today.rate_24k_1g}
               />
-
-              {/* Gold Calculator Component */}
-              <div id="estimator-section">
-                <GoldCalculator
-                  rate18k={today.rate_18k_1g}
-                  rate22k={today.rate_22k_1g}
-                  rate24k={today.rate_24k_1g}
-                />
-              </div>
-            </GlobalSettingsProvider>
+            </div>
 
             {/* Internal links to dedicated tool pages */}
             <p className="text-center text-sm text-zinc-500">
