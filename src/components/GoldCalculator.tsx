@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { formatCurrency } from "@/lib/format";
+import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 
 interface GoldCalculatorProps {
   rate18k: number;
@@ -18,6 +19,8 @@ export default function GoldCalculator({
   const [weightGrams, setWeightGrams] = useState<number | "">(8); // Defaults to 1 pavan (8g)
   const [makingChargePercent, setMakingChargePercent] = useState<number | "">(10);
 
+  const { weightUnit, formatGlobalPrice, weightMultiplier } = useGlobalSettings();
+
   const rates = {
     "18k": rate18k,
     "22k": rate22k,
@@ -28,8 +31,9 @@ export default function GoldCalculator({
   const parsedWeight = typeof weightGrams === "number" ? weightGrams : 0;
   const parsedMaking = typeof makingChargePercent === "number" ? makingChargePercent : 0;
 
-  const pavans = parsedWeight / 8;
-  const basePrice = parsedWeight * currentRate;
+  const actualWeightInGrams = parsedWeight * weightMultiplier;
+  const pavans = actualWeightInGrams / 8;
+  const basePrice = actualWeightInGrams * currentRate;
   const makingCharges = basePrice * (parsedMaking / 100);
   const gst = (basePrice + makingCharges) * 0.03;
   const totalPrice = basePrice + makingCharges + gst;
@@ -78,7 +82,7 @@ export default function GoldCalculator({
             <div>
               <div className="mb-2 flex items-center justify-between">
                 <label className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400" htmlFor="weight-input">
-                  Weight (Grams)
+                  Weight ({weightUnit})
                 </label>
                 <div className="rounded-full bg-amber-50 dark:bg-amber-950/30 px-2 py-0.5 text-xs font-bold text-amber-700 dark:text-amber-400 ring-1 ring-inset ring-amber-200/60 dark:ring-amber-900/50">
                   {parsedWeight > 0 ? `~ ${pavans.toFixed(2)} Pavan${pavans !== 1 ? 's' : ''}` : '0 Pavans'}
@@ -96,7 +100,7 @@ export default function GoldCalculator({
                   placeholder="e.g. 8"
                 />
                 <span className="absolute inset-y-0 right-4 flex items-center text-sm font-medium text-zinc-400 pointer-events-none">
-                  g
+                  {weightUnit === "Gram" ? "g" : ""}
                 </span>
               </div>
             </div>
@@ -145,17 +149,17 @@ export default function GoldCalculator({
             
             <div className="mb-3 flex items-center justify-between text-sm">
               <span className="text-zinc-500 dark:text-zinc-400">Gold Value ({karat.toUpperCase()})</span>
-              <span className="font-semibold text-zinc-800 dark:text-zinc-200">{formatCurrency(basePrice)}</span>
+              <span className="font-semibold text-zinc-800 dark:text-zinc-200">{formatGlobalPrice(basePrice)}</span>
             </div>
             
             <div className="mb-3 flex items-center justify-between text-sm">
               <span className="text-zinc-500 dark:text-zinc-400">Making Charges ({parsedMaking}%)</span>
-              <span className="font-semibold text-zinc-800 dark:text-zinc-200">{formatCurrency(makingCharges)}</span>
+              <span className="font-semibold text-zinc-800 dark:text-zinc-200">{formatGlobalPrice(makingCharges)}</span>
             </div>
             
             <div className="mb-4 flex items-center justify-between text-sm">
               <span className="text-zinc-500 dark:text-zinc-400">GST (3%)</span>
-              <span className="font-semibold text-zinc-800 dark:text-zinc-200">{formatCurrency(gst)}</span>
+              <span className="font-semibold text-zinc-800 dark:text-zinc-200">{formatGlobalPrice(gst)}</span>
             </div>
 
             <div className="mt-auto border-t border-zinc-200/80 dark:border-zinc-800/80 pt-4">
@@ -167,7 +171,7 @@ export default function GoldCalculator({
                   <p className="text-[10px] text-zinc-400 dark:text-zinc-500">Incl. taxes & making</p>
                 </div>
                 <p className="bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent">
-                  {formatCurrency(totalPrice)}
+                  {formatGlobalPrice(totalPrice)}
                 </p>
               </div>
             </div>

@@ -2,6 +2,9 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { createSupabaseReadClient } from "@/lib/supabase";
 import OldGoldCalculator from "@/components/OldGoldCalculator";
+import GlobalSettingsBar from "@/components/GlobalSettingsBar";
+import { GlobalSettingsProvider } from "@/hooks/useGlobalSettings";
+import { fetchCurrencyRates } from "@/lib/fetchCurrencyRates";
 
 export const revalidate = 3600;
 
@@ -38,6 +41,7 @@ async function getLatestRates() {
 
 export default async function OldGoldExchangeCalculatorPage() {
   const rates = await getLatestRates();
+  const initialRates = await fetchCurrencyRates();
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -112,10 +116,13 @@ export default async function OldGoldExchangeCalculatorPage() {
         </h1>
 
         {rates ? (
-          <OldGoldCalculator
-            rate18k={rates.rate_18k_1g}
-            rate22k={rates.rate_22k_1g}
-          />
+          <GlobalSettingsProvider initialRates={initialRates}>
+            <GlobalSettingsBar />
+            <OldGoldCalculator
+              rate18k={rates.rate_18k_1g}
+              rate22k={rates.rate_22k_1g}
+            />
+          </GlobalSettingsProvider>
         ) : (
           <div className="rounded-2xl border border-zinc-200/70 bg-white p-8 text-center shadow-md">
             <p className="text-sm text-zinc-500">
