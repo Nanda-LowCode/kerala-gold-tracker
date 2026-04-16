@@ -168,24 +168,6 @@ export default function DashboardLayout({
                 <time dateTime={today.date}>{formatDate(today.date)}</time> · {cityName}
               </p>
               
-              {cityData ? (
-                <div className="mt-4 max-w-2xl rounded-2xl border border-amber-200/50 bg-gradient-to-br from-amber-50/50 to-white p-4 text-left shadow-sm md:mt-6 dark:border-zinc-800 dark:from-zinc-900 dark:to-zinc-900/50">
-                  <h3 className="flex items-center gap-2 text-sm font-bold text-zinc-800 dark:text-zinc-200">
-                    <svg className="h-4 w-4 text-amber-500 dark:text-amber-400" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
-                    {cityData.insightTitle}
-                  </h3>
-                  <p className="mt-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400 sm:text-sm">
-                    {cityData.insightContent}
-                  </p>
-                  <p className="mt-3 border-t border-amber-100/60 pt-2 text-[10px] text-zinc-400 dark:border-zinc-800 dark:text-zinc-500 sm:text-xs">
-                    * Gold rates in Kerala are standardised across all districts by the Kerala Gold &amp; Silver Merchants Association. The daily board rate applies equally to {cityName}.
-                  </p>
-                </div>
-              ) : (
-                <p className="mt-1 text-[10px] text-zinc-400 md:mt-2 md:text-xs">
-                  Gold rates in Kerala are standardised across all districts by the Kerala Gold &amp; Silver Merchants Association.
-                </p>
-              )}
             </section>
 
             {/* Pending rates notice (hidden once today's data arrives) */}
@@ -279,6 +261,28 @@ export default function DashboardLayout({
           </>
         ) : (
           <EmptyState />
+        )}
+
+        {/* City Insight & Standardisation Notice */}
+        {cityData ? (
+          <div className="rounded-2xl border border-amber-200/50 bg-gradient-to-br from-amber-50/50 to-white p-5 text-left shadow-sm dark:border-zinc-800 dark:from-zinc-900 dark:to-zinc-900/50">
+            <h3 className="flex items-center gap-2 text-sm font-bold text-zinc-800 dark:text-zinc-200 md:text-base">
+              <svg className="h-4 w-4 md:h-5 md:w-5 text-amber-500 dark:text-amber-400" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+              {cityData.insightTitle}
+            </h3>
+            <p className="mt-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400 sm:text-sm">
+              {cityData.insightContent}
+            </p>
+            <p className="mt-3 border-t border-amber-100/60 pt-2 text-[10px] text-zinc-400 dark:border-zinc-800 dark:text-zinc-500 sm:text-xs">
+              * Gold rates in Kerala are standardised across all districts by the Kerala Gold &amp; Silver Merchants Association. The daily board rate applies equally to {cityName}.
+            </p>
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-zinc-200/50 bg-zinc-50/50 p-4 text-center dark:border-zinc-800/50 dark:bg-zinc-900/30">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 md:text-sm">
+              * Gold rates in Kerala are standardised across all districts by the Kerala Gold &amp; Silver Merchants Association.
+            </p>
+          </div>
         )}
 
         {/* FAQ — always visible for SEO */}
