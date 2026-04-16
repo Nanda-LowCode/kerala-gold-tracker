@@ -3,6 +3,16 @@ import { revalidatePath } from "next/cache";
 import * as cheerio from "cheerio";
 import { Resend } from "resend";
 import { createSupabaseAdminClient } from "@/lib/supabase";
+import webpush from "web-push";
+
+// Configure web-push with VAPID keys
+if (process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
+  webpush.setVapidDetails(
+    "mailto:" + (process.env.ALERT_EMAIL || "admin@example.com"),
+    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+    process.env.VAPID_PRIVATE_KEY
+  );
+}
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -282,6 +292,65 @@ export async function GET(request: NextRequest) {
     const cities = ["trivandrum", "kozhikode", "thrissur", "kollam", "palakkad", "kannur", "alappuzha", "kottayam", "malappuram"];
     for (const city of cities) {
       revalidatePath(`/${city}`);
+    }
+
+    // Broadcast Push Notifications
+    if (process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
+      try {
+        // Fetch yesterday's rate to calculate change
+        const yesterdayDate = new Date(Date.now() - 86400000).toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+        const { data: yesterdayData } = await supabase
+          .from("daily_gold_rates")
+          .select("rate_22k_1g")
+          .eq("city", "Kochi")
+          .eq("date", yesterdayDate)
+          .single();
+
+        let changeText = "";
+        if (yesterdayData) {
+          const diff = data.rate_22k_1g - yesterdayData.rate_22k_1g;
+          if (diff > 0) changeText = `Up by ₹${diff.toLocaleString("en-IN")}`;
+          else if (diff < 0) changeText = `Down by ₹${Math.abs(diff).toLocaleString("en-IN")}`;
+          else changeText = `No change today`;
+        }
+
+        const { data: subscriptions } = await supabase.from("push_subscriptions").select("*");
+        
+        if (subscriptions && subscriptions.length > 0) {
+          const payload = JSON.stringify({
+            title: `Gold Rate: ₹${data.rate_22k_1g.toLocaleString("en-IN")}/g`,
+            body: changeText || `Today's 22K gold rate has been updated.`,
+            url: "/"
+          });
+
+          const pushPromises = subscriptions.map(async (sub) => {
+            try {
+              await webpush.sendNotification(
+                {
+                  endpoint: sub.endpoint,
+                  keys: {
+                    p256dh: sub.p256dh,
+                    auth: sub.auth
+                  }
+                },
+                payload
+              );
+            } catch (error: any) {
+              if (error.statusCode === 410 || error.statusCode === 404) {
+                // Subscription has expired or is no longer valid
+                await supabase.from("push_subscriptions").delete().eq("endpoint", sub.endpoint);
+              } else {
+                console.error("[gold-cron] Error sending push to", sub.endpoint, error);
+              }
+            }
+          });
+
+          await Promise.allSettled(pushPromises);
+          console.log(`[gold-cron] Broadcasted push notifications to ${subscriptions.length} devices.`);
+        }
+      } catch (err) {
+        console.error("[gold-cron] Failed during Push Notification broadcast:", err);
+      }
     }
 
     return NextResponse.json({

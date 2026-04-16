@@ -11,6 +11,7 @@ import CtaBanner from "@/components/CtaBanner";
 import RatesPendingBanner from "@/components/RatesPendingBanner";
 import WhatsAppShare from "@/components/WhatsAppShare";
 import ThemeToggle from "@/components/ThemeToggle";
+import NotificationToggle from "@/components/NotificationToggle";
 import { GoldRate } from "@/lib/types";
 import { formatCurrency } from "@/lib/format";
 import { getCityData } from "@/lib/cityData";
@@ -132,6 +133,7 @@ export default function DashboardLayout({
                 Live Updates
               </span>
             </div>
+            <NotificationToggle />
             <ThemeToggle />
           </div>
         </div>
