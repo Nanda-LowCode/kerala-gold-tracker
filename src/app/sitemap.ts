@@ -27,6 +27,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const toolRoutes: MetadataRoute.Sitemap = [
     'gold-making-charge-calculator',
     'old-gold-exchange-calculator',
+    'gold-import-duty-calculator',
   ].map((tool) => ({
     url: `${baseUrl}/tools/${tool}`,
     lastModified: new Date(),
