@@ -46,15 +46,15 @@ const faqJsonLd = JSON.stringify({
 
 export default function FAQ() {
   return (
-    <section className="rounded-xl border border-amber-200 bg-white p-6 shadow-sm">
-      <h2 className="mb-4 text-lg font-semibold text-gray-800">
+    <section className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-sm">
+      <h2 className="mb-4 text-lg font-semibold text-zinc-800 dark:text-zinc-100">
         Frequently Asked Questions
       </h2>
-      <dl className="divide-y divide-gray-100">
+      <dl className="divide-y divide-zinc-100 dark:divide-zinc-800/50">
         {faqs.map((faq, i) => (
           <div key={i} className="py-4 first:pt-0 last:pb-0">
-            <dt className="text-sm font-medium text-gray-900">{faq.q}</dt>
-            <dd className="mt-1.5 text-sm leading-relaxed text-gray-600">
+            <dt className="text-sm font-medium text-zinc-900 dark:text-zinc-200">{faq.q}</dt>
+            <dd className="mt-1.5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
               {faq.a}
             </dd>
           </div>

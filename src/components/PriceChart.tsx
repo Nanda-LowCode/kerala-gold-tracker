@@ -27,7 +27,7 @@ export default function PriceChart({ history }: { history: GoldRate[] }) {
 
   if (history.length < 2) {
     return (
-      <div className="rounded-xl border border-amber-200 bg-white p-6 shadow-sm text-center text-sm text-gray-400">
+      <div className="rounded-xl border border-amber-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-sm text-center text-sm text-zinc-400 dark:text-zinc-500">
         Chart will appear once there are at least 2 days of data.
       </div>
     );
@@ -100,18 +100,18 @@ export default function PriceChart({ history }: { history: GoldRate[] }) {
   };
 
   return (
-    <div className="rounded-xl border border-amber-200 bg-white p-6 shadow-sm">
+    <div className="rounded-xl border border-amber-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-sm dark:shadow-none">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-800">Price Trend</h2>
-        <div className="flex gap-1 rounded-lg bg-gray-100 p-1">
+        <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100">Price Trend</h2>
+        <div className="flex gap-1 rounded-lg bg-zinc-100 dark:bg-zinc-800/70 p-1">
           {(["18k", "22k", "24k"] as const).map((k) => (
             <button
               key={k}
               onClick={() => setKarat(k)}
               className={`rounded-md px-3 py-1 text-sm font-medium transition ${
                 karat === k
-                  ? "bg-amber-600 text-white shadow-sm"
-                  : "text-gray-600 hover:text-gray-900"
+                  ? "bg-amber-600 dark:bg-amber-500 text-white shadow-sm"
+                  : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
               }`}
             >
               {k.toUpperCase()}

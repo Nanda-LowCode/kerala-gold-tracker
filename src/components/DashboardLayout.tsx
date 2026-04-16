@@ -10,6 +10,7 @@ import OldGoldCalculator from "@/components/OldGoldCalculator";
 import CtaBanner from "@/components/CtaBanner";
 import RatesPendingBanner from "@/components/RatesPendingBanner";
 import WhatsAppShare from "@/components/WhatsAppShare";
+import ThemeToggle from "@/components/ThemeToggle";
 import { GoldRate } from "@/lib/types";
 import { formatCurrency } from "@/lib/format";
 import { getCityData } from "@/lib/cityData";
@@ -104,31 +105,34 @@ export default function DashboardLayout({
         />
       )}
       {/* Premium sticky header */}
-      <header className="sticky top-0 z-50 border-b border-zinc-200/60 bg-white/70 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-zinc-200/60 bg-white/70 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-950/70">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-4">
           <div className="flex items-center gap-2.5">
             <span className="text-2xl leading-none">✨</span>
             <div>
-              <h1 className="text-base font-bold tracking-tight text-zinc-900 sm:text-lg">
+              <h1 className="text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-lg">
                 LiveGold{" "}
-                <span className="bg-gradient-to-r from-amber-600 to-yellow-500 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-amber-600 to-yellow-500 bg-clip-text text-transparent dark:from-amber-400 dark:to-yellow-400">
                   Kerala
                 </span>
               </h1>
-              <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-400">
+              <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
                 {cityName} · Realtime
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 rounded-full border border-green-200 bg-green-50/80 px-3 py-1.5">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
-            </span>
-            <span className="text-xs font-semibold text-green-700">
-              Live Updates
-            </span>
+          <div className="flex items-center gap-4">
+            <div className="hidden sm:flex items-center gap-2 rounded-full border border-green-200 bg-green-50/80 px-3 py-1.5 dark:border-green-900/50 dark:bg-green-950/30">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+              </span>
+              <span className="text-xs font-semibold text-green-700 dark:text-green-400">
+                Live Updates
+              </span>
+            </div>
+            <ThemeToggle />
           </div>
         </div>
       </header>
@@ -141,9 +145,9 @@ export default function DashboardLayout({
           <>
             {/* Hero: trust badge + date -> Squished aggressively for mobile */}
             <section className="flex flex-col items-center text-center">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 sm:px-3 sm:py-1 shadow-sm">
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 sm:px-3 sm:py-1 shadow-sm dark:border-emerald-900/50 dark:bg-emerald-950/30">
                 <svg
-                  className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-emerald-600"
+                  className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-emerald-600 dark:text-emerald-500"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -153,27 +157,27 @@ export default function DashboardLayout({
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-[10px] sm:text-xs font-semibold text-emerald-700">
+                <span className="text-[10px] sm:text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                   Verified Kerala Board Rate
                 </span>
               </div>
-              <h2 className="mt-1 text-lg font-bold tracking-tight text-zinc-900 md:mt-4 md:text-3xl">
+              <h2 className="mt-1 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100 md:mt-4 md:text-3xl">
                 Today&apos;s Gold Rate in {cityName}
               </h2>
-              <p className="mt-0.5 text-xs text-zinc-500 md:mt-1 md:text-sm">
+              <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400 md:mt-1 md:text-sm">
                 <time dateTime={today.date}>{formatDate(today.date)}</time> · {cityName}
               </p>
               
               {cityData ? (
-                <div className="mt-4 max-w-2xl rounded-2xl border border-amber-200/50 bg-gradient-to-br from-amber-50/50 to-white p-4 text-left shadow-sm md:mt-6">
-                  <h3 className="flex items-center gap-2 text-sm font-bold text-zinc-800">
-                    <svg className="h-4 w-4 text-amber-500" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+                <div className="mt-4 max-w-2xl rounded-2xl border border-amber-200/50 bg-gradient-to-br from-amber-50/50 to-white p-4 text-left shadow-sm md:mt-6 dark:border-zinc-800 dark:from-zinc-900 dark:to-zinc-900/50">
+                  <h3 className="flex items-center gap-2 text-sm font-bold text-zinc-800 dark:text-zinc-200">
+                    <svg className="h-4 w-4 text-amber-500 dark:text-amber-400" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
                     {cityData.insightTitle}
                   </h3>
-                  <p className="mt-2 text-xs leading-relaxed text-zinc-600 sm:text-sm">
+                  <p className="mt-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400 sm:text-sm">
                     {cityData.insightContent}
                   </p>
-                  <p className="mt-3 border-t border-amber-100/60 pt-2 text-[10px] text-zinc-400 sm:text-xs">
+                  <p className="mt-3 border-t border-amber-100/60 pt-2 text-[10px] text-zinc-400 dark:border-zinc-800 dark:text-zinc-500 sm:text-xs">
                     * Gold rates in Kerala are standardised across all districts by the Kerala Gold &amp; Silver Merchants Association. The daily board rate applies equally to {cityName}.
                   </p>
                 </div>
@@ -282,10 +286,10 @@ export default function DashboardLayout({
       </main>
 
       {/* FOOTER & INTERNAL CRAWLER LINKS FOR programmatic SEO */}
-      <footer className="border-t border-zinc-200/60 bg-white/50 pt-8 pb-12">
+      <footer className="border-t border-zinc-200/60 bg-white/50 pt-8 pb-12 dark:border-zinc-800/80 dark:bg-zinc-950/50">
         <div className="mx-auto max-w-3xl px-4">
-          <div className="mb-8 rounded-2xl bg-zinc-50/50 p-6 text-center shadow-inner">
-            <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-zinc-400">
+          <div className="mb-8 rounded-2xl bg-zinc-50/50 p-6 text-center shadow-inner dark:bg-zinc-900/50 dark:shadow-none">
+            <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
               Check Daily Rates Around Kerala
             </h3>
             <ul className="flex flex-wrap justify-center gap-2 md:gap-3">
@@ -294,8 +298,8 @@ export default function DashboardLayout({
                   href="/"
                   className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
                     cityName === "Kochi"
-                      ? "bg-amber-100 text-amber-800"
-                      : "bg-white text-zinc-600 shadow-sm ring-1 ring-zinc-200 hover:bg-zinc-50"
+                      ? "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200"
+                      : "bg-white text-zinc-600 shadow-sm ring-1 ring-zinc-200 hover:bg-zinc-50 dark:bg-zinc-900 dark:text-zinc-400 dark:ring-zinc-800 dark:hover:bg-zinc-800"
                   }`}
                 >
                   Kochi
@@ -310,8 +314,8 @@ export default function DashboardLayout({
                       href={`/${c}`}
                       className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
                         isActive
-                          ? "bg-amber-100 text-amber-800"
-                          : "bg-white text-zinc-600 shadow-sm ring-1 ring-zinc-200 hover:bg-zinc-50"
+                          ? "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200"
+                          : "bg-white text-zinc-600 shadow-sm ring-1 ring-zinc-200 hover:bg-zinc-50 dark:bg-zinc-900 dark:text-zinc-400 dark:ring-zinc-800 dark:hover:bg-zinc-800"
                       }`}
                     >
                       {formattedName}
@@ -322,32 +326,31 @@ export default function DashboardLayout({
             </ul>
           </div>
 
-          {/* Tools & Blog links */}
           <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
             <Link
               href="/tools/gold-making-charge-calculator"
-              className="rounded-xl border border-zinc-200/70 bg-white px-4 py-3 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+              className="rounded-xl border border-zinc-200/70 bg-white px-4 py-3 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/80 dark:hover:border-zinc-700"
             >
-              <p className="text-xs font-bold uppercase tracking-wider text-amber-600">Tool</p>
-              <p className="mt-1 text-sm font-semibold text-zinc-800">Making Charge Calculator</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-500">Tool</p>
+              <p className="mt-1 text-sm font-semibold text-zinc-800 dark:text-zinc-200">Making Charge Calculator</p>
             </Link>
             <Link
               href="/tools/old-gold-exchange-calculator"
-              className="rounded-xl border border-zinc-200/70 bg-white px-4 py-3 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+              className="rounded-xl border border-zinc-200/70 bg-white px-4 py-3 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/80 dark:hover:border-zinc-700"
             >
-              <p className="text-xs font-bold uppercase tracking-wider text-amber-600">Tool</p>
-              <p className="mt-1 text-sm font-semibold text-zinc-800">Old Gold Exchange Estimator</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-500">Tool</p>
+              <p className="mt-1 text-sm font-semibold text-zinc-800 dark:text-zinc-200">Old Gold Exchange Estimator</p>
             </Link>
             <Link
               href="/blog"
-              className="rounded-xl border border-zinc-200/70 bg-white px-4 py-3 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+              className="rounded-xl border border-zinc-200/70 bg-white px-4 py-3 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/80 dark:hover:border-zinc-700"
             >
-              <p className="text-xs font-bold uppercase tracking-wider text-amber-600">Learn</p>
-              <p className="mt-1 text-sm font-semibold text-zinc-800">Gold Knowledge Hub</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-500">Learn</p>
+              <p className="mt-1 text-sm font-semibold text-zinc-800 dark:text-zinc-200">Gold Knowledge Hub</p>
             </Link>
           </div>
 
-          <div className="text-center text-xs text-zinc-400">
+          <div className="text-center text-xs text-zinc-400 dark:text-zinc-500">
             <p className="font-medium">
               Data sourced from Malabar Gold & Diamonds · For reference only
             </p>
@@ -380,25 +383,25 @@ function RateCard({
 }) {
   return (
     <article
-      className={`group relative overflow-hidden rounded-2xl border bg-white transition-all hover:-translate-y-0.5 ${
+      className={`group relative overflow-hidden rounded-2xl border bg-white dark:bg-zinc-900 transition-all hover:-translate-y-0.5 ${
         compact ? "p-4 md:p-5 lg:p-6" : "p-5 md:p-6"
       } ${
         featured
-          ? "border-amber-300 ring-2 ring-amber-400/50 shadow-xl shadow-amber-300/40 hover:shadow-2xl hover:shadow-amber-400/50"
-          : "border-zinc-200/70 shadow-md shadow-amber-100/40 hover:shadow-lg hover:shadow-amber-200/50"
+          ? "border-amber-300 ring-2 ring-amber-400/50 shadow-xl shadow-amber-300/40 hover:shadow-2xl hover:shadow-amber-400/50 dark:border-amber-500/50 dark:shadow-amber-900/20"
+          : "border-zinc-200/70 shadow-md shadow-amber-100/40 hover:shadow-lg hover:shadow-amber-200/50 dark:border-zinc-800 dark:shadow-none dark:hover:border-zinc-700"
       }`}
     >
       <div
         className={`pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full blur-3xl ${
           featured
-            ? "bg-gradient-to-br from-amber-300/50 to-transparent"
-            : "bg-gradient-to-br from-amber-200/30 to-transparent"
+            ? "bg-gradient-to-br from-amber-300/50 to-transparent dark:from-amber-600/20"
+            : "bg-gradient-to-br from-amber-200/30 to-transparent dark:from-zinc-800/80"
         }`}
       />
 
       <div className="relative">
         <div className="mb-2 flex flex-col items-start gap-2 lg:flex-row lg:items-center lg:justify-between">
-          <p className={`font-semibold text-zinc-800 ${compact ? "text-sm" : "text-base"}`}>{label}</p>
+          <p className={`font-semibold text-zinc-800 dark:text-zinc-200 ${compact ? "text-sm" : "text-base"}`}>{label}</p>
           <div className="flex flex-wrap items-center gap-1.5">
             {featured && (
               <span className="shrink-0 rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-white shadow-sm ring-1 ring-inset ring-amber-600/30">
@@ -408,8 +411,8 @@ function RateCard({
             <span
               className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ring-1 ring-inset ${
                 featured
-                  ? "bg-amber-100 text-amber-800 ring-amber-300/60"
-                  : "bg-amber-50 text-amber-700 ring-amber-200/60"
+                  ? "bg-amber-100 text-amber-800 ring-amber-300/60 dark:bg-amber-900/40 dark:text-amber-200 dark:ring-amber-500/40"
+                  : "bg-amber-50 text-amber-700 ring-amber-200/60 dark:bg-zinc-800 dark:text-zinc-400 dark:ring-zinc-700"
               }`}
             >
               {purity}
@@ -418,7 +421,7 @@ function RateCard({
         </div>
 
         <p
-          className={`bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text font-bold tracking-tight text-transparent ${
+          className={`bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 dark:from-amber-400 dark:via-yellow-400 dark:to-amber-500 bg-clip-text font-bold tracking-tight text-transparent ${
             compact
               ? "mt-2 text-2xl md:text-3xl"
               : "mt-2 text-3xl md:text-4xl"
@@ -467,7 +470,7 @@ function RateCard({
 function ChangeBadge({ change }: { change: number }) {
   if (change === 0) {
     return (
-      <span className="rounded-full bg-zinc-100 px-1.5 py-0.5 sm:px-2 text-[10px] sm:text-[11px] font-semibold text-zinc-500">
+      <span className="rounded-full bg-zinc-100 px-1.5 py-0.5 sm:px-2 text-[10px] sm:text-[11px] font-semibold text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
         No change
       </span>
     );
@@ -477,8 +480,8 @@ function ChangeBadge({ change }: { change: number }) {
     <span
       className={`inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 sm:px-2 text-[10px] sm:text-[11px] font-semibold ring-1 ring-inset ${
         up
-          ? "bg-red-50 text-red-600 ring-red-200/60"
-          : "bg-green-50 text-green-600 ring-green-200/60"
+          ? "bg-red-50 text-red-600 ring-red-200/60 dark:bg-red-950/30 dark:text-red-400 dark:ring-red-900/50"
+          : "bg-green-50 text-green-600 ring-green-200/60 dark:bg-green-950/30 dark:text-green-400 dark:ring-green-900/50"
       }`}
     >
       {up ? "\u25B2" : "\u25BC"} {up ? "+" : ""}
@@ -489,8 +492,8 @@ function ChangeBadge({ change }: { change: number }) {
 
 function EmptyState() {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-3 rounded-2xl border border-zinc-200/70 bg-white p-12 text-center shadow-lg shadow-amber-100/30">
-      <div className="rounded-full bg-gradient-to-br from-amber-100 to-amber-200 p-4 shadow-inner">
+    <div className="flex flex-1 flex-col items-center justify-center gap-3 rounded-2xl border border-zinc-200/70 bg-white dark:bg-zinc-900 dark:border-zinc-800 p-12 text-center shadow-lg shadow-amber-100/30 dark:shadow-none">
+      <div className="rounded-full bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/20 dark:to-amber-800/20 p-4 shadow-inner dark:shadow-none">
         <svg
           className="h-8 w-8 text-amber-700"
           fill="none"
@@ -505,8 +508,8 @@ function EmptyState() {
           />
         </svg>
       </div>
-      <h2 className="text-lg font-bold text-zinc-800">Rates coming soon</h2>
-      <p className="max-w-xs text-sm text-zinc-500">
+      <h2 className="text-lg font-bold text-zinc-800 dark:text-zinc-200">Rates coming soon</h2>
+      <p className="max-w-xs text-sm text-zinc-500 dark:text-zinc-400">
         Gold rates will appear here once the first data update runs. Check back
         shortly!
       </p>

@@ -3,6 +3,7 @@ import { Geist } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
 import InstallPrompt from "@/components/InstallPrompt";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
 const geist = Geist({
@@ -54,14 +55,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geist.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-gradient-to-b from-amber-50 to-white font-sans text-gray-900">
-        {children}
-        <InstallPrompt />
-        <Analytics />
-        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
-          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
-        )}
+    <html lang="en" className={`${geist.variable} h-full antialiased`} suppressHydrationWarning>
+      <body className="min-h-full flex flex-col bg-gradient-to-b from-amber-50 to-white font-sans text-gray-900 dark:from-zinc-950 dark:to-zinc-950 dark:text-zinc-200 transition-colors duration-300">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+          <InstallPrompt />
+          <Analytics />
+          {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+            <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+          )}
+        </ThemeProvider>
       </body>
     </html>
   );
