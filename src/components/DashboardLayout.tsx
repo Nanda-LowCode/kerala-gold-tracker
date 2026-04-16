@@ -12,6 +12,7 @@ import RatesPendingBanner from "@/components/RatesPendingBanner";
 import WhatsAppShare from "@/components/WhatsAppShare";
 import ThemeToggle from "@/components/ThemeToggle";
 import NotificationToggle from "@/components/NotificationToggle";
+import TrendAnalysisIndicator from "@/components/TrendAnalysisIndicator";
 import { GoldRate } from "@/lib/types";
 import { formatCurrency } from "@/lib/format";
 import { getCityData } from "@/lib/cityData";
@@ -174,6 +175,11 @@ export default function DashboardLayout({
 
             {/* Pending rates notice (hidden once today's data arrives) */}
             <RatesPendingBanner latestDate={today.date} />
+
+            {/* AI Trend Analysis Pill */}
+            <div className="flex justify-center md:justify-start">
+              <TrendAnalysisIndicator history={history} />
+            </div>
 
             {/* Rate Cards: Hero 22K + split 24K/18K */}
             <div className="grid gap-3 sm:gap-4 md:grid-cols-3">
