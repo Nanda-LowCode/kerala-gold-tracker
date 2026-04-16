@@ -176,6 +176,12 @@ export default async function OldGoldExchangeCalculatorPage() {
           >
             Making Charge Calculator →
           </Link>
+          <Link
+            href="/tools/gold-import-duty-calculator"
+            className="inline-flex items-center gap-1.5 rounded-full bg-zinc-50 px-4 py-2 text-sm font-semibold text-zinc-700 ring-1 ring-inset ring-zinc-200/60 transition-colors hover:bg-zinc-100"
+          >
+            NRI Import Duty Estimator →
+          </Link>
         </div>
       </main>
 
@@ -184,7 +190,9 @@ export default async function OldGoldExchangeCalculatorPage() {
           <div className="mb-6 flex flex-wrap justify-center gap-3 text-xs font-medium">
             <Link href="/" className="text-zinc-500 hover:text-zinc-800">Today&apos;s Rate</Link>
             <span className="text-zinc-300">·</span>
-            <Link href="/tools/gold-making-charge-calculator" className="text-zinc-500 hover:text-zinc-800">Making Charge Calculator</Link>
+            <Link href="/tools/gold-making-charge-calculator" className="text-zinc-500 hover:text-zinc-800">Making Charge</Link>
+            <span className="text-zinc-300">·</span>
+            <Link href="/tools/gold-import-duty-calculator" className="text-zinc-500 hover:text-zinc-800">NRI Import Duty</Link>
             <span className="text-zinc-300">·</span>
             <Link href="/blog" className="text-zinc-500 hover:text-zinc-800">Gold Knowledge Hub</Link>
           </div>

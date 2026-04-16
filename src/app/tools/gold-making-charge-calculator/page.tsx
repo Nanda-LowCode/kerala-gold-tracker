@@ -139,6 +139,12 @@ export default async function GoldMakingChargeCalculatorPage() {
           >
             Old Gold Exchange Estimator →
           </Link>
+          <Link
+            href="/tools/gold-import-duty-calculator"
+            className="inline-flex items-center gap-1.5 rounded-full bg-zinc-50 px-4 py-2 text-sm font-semibold text-zinc-700 ring-1 ring-inset ring-zinc-200/60 transition-colors hover:bg-zinc-100"
+          >
+            NRI Import Duty Estimator →
+          </Link>
         </div>
       </main>
 
