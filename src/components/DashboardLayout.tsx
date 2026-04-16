@@ -250,13 +250,20 @@ export default function DashboardLayout({
                 className="font-semibold text-amber-700 underline decoration-amber-300/60 underline-offset-2 transition-colors hover:text-amber-900 hover:decoration-amber-500"
               >
                 Making Charge Calculator
-              </Link>{" "}
-              or{" "}
+              </Link>
+              ,{" "}
               <Link
                 href="/tools/old-gold-exchange-calculator"
                 className="font-semibold text-amber-700 underline decoration-amber-300/60 underline-offset-2 transition-colors hover:text-amber-900 hover:decoration-amber-500"
               >
                 Old Gold Exchange Estimator
+              </Link>
+              , or our new{" "}
+              <Link
+                href="/tools/gold-import-duty-calculator"
+                className="font-semibold text-amber-700 underline decoration-amber-300/60 underline-offset-2 transition-colors hover:text-amber-900 hover:decoration-amber-500"
+              >
+                NRI Import Duty Calculator
               </Link>
               .
             </p>
@@ -338,7 +345,7 @@ export default function DashboardLayout({
             </ul>
           </div>
 
-          <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4">
             <Link
               href="/tools/gold-making-charge-calculator"
               className="rounded-xl border border-zinc-200/70 bg-white px-4 py-3 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/80 dark:hover:border-zinc-700"
@@ -352,6 +359,13 @@ export default function DashboardLayout({
             >
               <p className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-500">Tool</p>
               <p className="mt-1 text-sm font-semibold text-zinc-800 dark:text-zinc-200">Old Gold Exchange Estimator</p>
+            </Link>
+            <Link
+              href="/tools/gold-import-duty-calculator"
+              className="rounded-xl border border-zinc-200/70 bg-white px-4 py-3 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/80 dark:hover:border-zinc-700"
+            >
+              <p className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-500">Tool</p>
+              <p className="mt-1 text-sm font-semibold text-zinc-800 dark:text-zinc-200">NRI Import Duty Calculator</p>
             </Link>
             <Link
               href="/blog"
