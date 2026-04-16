@@ -1,50 +1,49 @@
-const faqs = [
-  {
-    q: "What is today's gold rate in Kochi, Kerala?",
-    a: "Today's gold rate in Kochi is updated daily on this page. We display both 22 Karat (916 purity) and 24 Karat (999 purity) prices per gram and per pavan (8 grams), sourced from Malabar Gold & Diamonds.",
-  },
-  {
-    q: "How often are gold rates updated?",
-    a: "Gold rates on this site are updated twice daily — at 10:30 AM and 4:30 PM IST, Monday through Saturday. Gold markets are closed on Sundays.",
-  },
-  {
-    q: "What is the difference between 22K and 24K gold?",
-    a: "24 Karat gold is 99.9% pure gold and is softer, typically used for gold coins and bars. 22 Karat gold is 91.6% pure gold mixed with other metals for durability, making it the standard for jewelry in Kerala.",
-  },
-  {
-    q: "What is a pavan (sovereign) of gold?",
-    a: "In Kerala, a pavan (also called sovereign) is a traditional unit of gold measurement equal to 8 grams. It is the most common unit used when buying gold jewelry in Kerala.",
-  },
-  {
-    q: "Why do gold rates vary between cities in Kerala?",
-    a: "Gold rates can slightly vary between cities due to differences in local taxes, transportation costs, and jeweler margins. However, the base gold rate set by the India Bullion and Jewellers Association (IBJA) remains the same across the state.",
-  },
-  {
-    q: "What factors influence gold prices in Kerala?",
-    a: "Gold prices in Kerala are influenced by international gold prices (set in USD), the USD-INR exchange rate, domestic demand (especially during wedding and festival seasons), import duties, and GST. Global events, inflation, and central bank policies also play a role.",
-  },
-  {
-    q: "Is this the final price I pay at a jewelry shop?",
-    a: "No. The rates shown here are the base gold rates. At a jewelry shop, you will additionally pay making charges (varies by design), 3% GST on the gold value, and hallmarking charges. The final price depends on the jeweler and the complexity of the design.",
-  },
-  {
-    q: "When is the best time to buy gold in Kerala?",
-    a: "Gold prices fluctuate daily. Historically, prices tend to dip during off-seasons (outside wedding and festival periods). Many people buy on auspicious days like Akshaya Tritiya. Tracking the price trend on this page can help you find a good entry point.",
-  },
-];
+export default function FAQ({ cityName = "Kochi" }: { cityName?: string }) {
+  const faqs = [
+    {
+      q: `What is today's gold rate in ${cityName}, Kerala?`,
+      a: `Today's gold rate in ${cityName} is updated daily on this page. We display both 22 Karat (916 purity) and 24 Karat (999 purity) prices per gram and per pavan (8 grams), sourced directly.`,
+    },
+    {
+      q: `How often are gold rates updated in ${cityName}?`,
+      a: `Gold rates on this site for ${cityName} are updated twice daily — at 10:30 AM and 4:30 PM IST, Monday through Saturday. Gold markets in Kerala are closed on Sundays.`,
+    },
+    {
+      q: "What is the difference between 22K and 24K gold?",
+      a: "24 Karat gold is 99.9% pure gold and is softer, typically used for gold coins and bars. 22 Karat gold is 91.6% pure gold mixed with other metals for durability, making it the standard for jewelry.",
+    },
+    {
+      q: "What is a pavan (sovereign) of gold?",
+      a: "In Kerala, a pavan (also called sovereign) is a traditional unit of gold measurement equal to 8 grams. It is the most common unit used when buying gold jewelry in showrooms.",
+    },
+    {
+      q: `Why do gold rates vary between cities like ${cityName}?`,
+      a: `Gold rates can slightly vary between cities like ${cityName} due to differences in local taxes, transportation costs, and jeweler margins. However, the base gold rate set by the India Bullion and Jewellers Association remains the same across the state.`,
+    },
+    {
+      q: `What factors influence gold prices in ${cityName}?`,
+      a: `Gold prices in ${cityName} are influenced by international gold prices (set in USD), the USD-INR exchange rate, local domestic demand (especially during weddings), import duties, and GST.`,
+    },
+    {
+      q: "Is this the final price I pay at a jewelry shop?",
+      a: "No. The rates shown here are the base gold rates. At a jewelry shop, you will additionally pay making charges (varies by design), 3% GST on the gold value, and hallmarking charges.",
+    },
+    {
+      q: `When is the best time to buy gold in ${cityName}?`,
+      a: `Gold prices fluctuate daily. Historically, prices tend to dip during off-seasons. Many people in ${cityName} buy on auspicious days like Akshaya Tritiya. Tracking the price trend on this page can help you find a good entry point.`,
+    },
+  ];
 
-// Static JSON-LD for FAQ structured data (no user input — safe to inline)
-const faqJsonLd = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((faq) => ({
-    "@type": "Question",
-    name: faq.q,
-    acceptedAnswer: { "@type": "Answer", text: faq.a },
-  })),
-});
+  const faqJsonLd = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.q,
+      acceptedAnswer: { "@type": "Answer", text: faq.a },
+    })),
+  });
 
-export default function FAQ() {
   return (
     <section className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-sm">
       <h2 className="mb-4 text-lg font-semibold text-zinc-800 dark:text-zinc-100">
@@ -60,7 +59,6 @@ export default function FAQ() {
           </div>
         ))}
       </dl>
-      {/* eslint-disable-next-line -- static hardcoded JSON-LD, no user input */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: faqJsonLd }} />
     </section>
   );

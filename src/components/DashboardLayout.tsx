@@ -293,8 +293,8 @@ export default function DashboardLayout({
           </div>
         )}
 
-        {/* FAQ — always visible for SEO */}
-        <FAQ />
+        {/* FAQ — perfectly localised per city for SEO uniqueness and crawling priority */}
+        <FAQ cityName={cityName} />
       </main>
 
       {/* FOOTER & INTERNAL CRAWLER LINKS FOR programmatic SEO */}
