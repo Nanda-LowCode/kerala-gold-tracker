@@ -396,7 +396,6 @@ function RateCard({
   pavanRate,
   featured = false,
   compact = false,
-  showCTA = false,
 }: {
   label: string;
   purity: string;
@@ -405,7 +404,6 @@ function RateCard({
   pavanRate?: number;
   featured?: boolean;
   compact?: boolean;
-  showCTA?: boolean;
 }) {
   return (
     <article
@@ -469,25 +467,6 @@ function RateCard({
           {change !== null && <ChangeBadge change={change} />}
         </div>
 
-        {showCTA && (
-          <button
-            type="button"
-            className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-600 px-4 py-3 text-sm font-semibold text-white shadow-md shadow-amber-500/30 ring-1 ring-inset ring-white/20 transition-all hover:shadow-lg hover:shadow-amber-500/50 hover:brightness-110 active:scale-[0.98]"
-          >
-            Buy Digital Gold
-            <svg
-              className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
-        )}
       </div>
     </article>
   );

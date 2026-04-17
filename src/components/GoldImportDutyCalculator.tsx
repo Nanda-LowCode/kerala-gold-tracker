@@ -16,14 +16,17 @@ export default function GoldImportDutyCalculator({
   const [goldWeight, setGoldWeight] = useState<number>(50);
   const [currentGoldRate, setCurrentGoldRate] = useState<number>(initialGoldRate);
 
-  // Math Logic (2026 Rules)
+  // CBIC 2026 Baggage Rules:
+  // > 1 Year abroad: duty-free allowance (20g male / 40g female), 6% on excess
+  // 6–12 Months abroad: no duty-free allowance, 6% on full weight
+  // < 6 Months abroad: no duty-free allowance, 36% on full weight
   let dutyFreeAllowance = 0;
   if (stayDuration === "> 1 Year") {
     dutyFreeAllowance = gender === "Female" ? 40 : 20;
   }
 
   const taxableWeight = Math.max(0, (goldWeight || 0) - dutyFreeAllowance);
-  
+
   const taxRatePercent = stayDuration === "< 6 Months" ? 36 : 6;
   const applicableDutyPercentDisplay = `${taxRatePercent}%`;
 

@@ -14,12 +14,12 @@ export default function BlogIndex() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-zinc-200/60 bg-white/70 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-zinc-200/60 bg-white/70 backdrop-blur-xl dark:border-zinc-800/60 dark:bg-zinc-950/80">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-4">
           <Link href="/" className="flex items-center gap-2.5">
             <span className="text-2xl leading-none">✨</span>
             <div>
-              <span className="text-base font-bold tracking-tight text-zinc-900 sm:text-lg">
+              <span className="text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-lg">
                 LiveGold{" "}
                 <span className="bg-gradient-to-r from-amber-600 to-yellow-500 bg-clip-text text-transparent">
                   Kerala
@@ -29,7 +29,7 @@ export default function BlogIndex() {
           </Link>
           <Link
             href="/"
-            className="rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-semibold text-zinc-600 shadow-sm hover:bg-zinc-50"
+            className="rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-semibold text-zinc-600 shadow-sm hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
           >
             Today&apos;s Rate &rarr;
           </Link>
@@ -37,10 +37,10 @@ export default function BlogIndex() {
       </header>
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 md:py-14">
-        <h1 className="text-2xl font-bold tracking-tight text-zinc-900 md:text-3xl">
+        <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 md:text-3xl">
           Gold Knowledge Hub
         </h1>
-        <p className="mt-2 text-sm text-zinc-500">
+        <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
           Expert articles on gold rates, pricing, and buying tips in Kerala.
         </p>
 
@@ -54,7 +54,7 @@ export default function BlogIndex() {
               <Link
                 key={post.slug}
                 href={`/blog/${post.slug}`}
-                className="group rounded-2xl border border-zinc-200/70 bg-white p-5 shadow-md shadow-amber-100/30 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-amber-200/40"
+                className="group rounded-2xl border border-zinc-200/70 bg-white p-5 shadow-md shadow-amber-100/30 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-amber-200/40 dark:border-zinc-800/70 dark:bg-zinc-900 dark:shadow-none dark:hover:border-zinc-700"
               >
                 <time className="text-[11px] font-medium uppercase tracking-wider text-zinc-400">
                   {new Date(post.date + "T00:00:00").toLocaleDateString(
@@ -62,10 +62,10 @@ export default function BlogIndex() {
                     { year: "numeric", month: "long", day: "numeric" }
                   )}
                 </time>
-                <h2 className="mt-1.5 text-lg font-bold text-zinc-900 group-hover:text-amber-700">
+                <h2 className="mt-1.5 text-lg font-bold text-zinc-900 group-hover:text-amber-700 dark:text-zinc-100 dark:group-hover:text-amber-400">
                   {post.title}
                 </h2>
-                <p className="mt-1 text-sm leading-relaxed text-zinc-500">
+                <p className="mt-1 text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
                   {post.description}
                 </p>
                 <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-amber-600">
@@ -88,14 +88,16 @@ export default function BlogIndex() {
         )}
       </main>
 
-      <footer className="border-t border-zinc-200/60 bg-white/50 pt-6 pb-8">
+      <footer className="border-t border-zinc-200/60 bg-white/50 pt-6 pb-8 dark:border-zinc-800/60 dark:bg-zinc-950/50">
         <div className="mx-auto max-w-3xl px-4">
           <div className="mb-6 flex flex-wrap justify-center gap-3 text-xs font-medium">
-            <Link href="/" className="text-zinc-500 hover:text-zinc-800">Today&apos;s Rate</Link>
-            <span className="text-zinc-300">·</span>
-            <Link href="/tools/gold-making-charge-calculator" className="text-zinc-500 hover:text-zinc-800">Making Charge Calculator</Link>
-            <span className="text-zinc-300">·</span>
-            <Link href="/tools/old-gold-exchange-calculator" className="text-zinc-500 hover:text-zinc-800">Old Gold Exchange</Link>
+            <Link href="/" className="text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200">Today&apos;s Rate</Link>
+            <span className="text-zinc-300 dark:text-zinc-700">·</span>
+            <Link href="/tools/gold-making-charge-calculator" className="text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200">Making Charge Calculator</Link>
+            <span className="text-zinc-300 dark:text-zinc-700">·</span>
+            <Link href="/tools/old-gold-exchange-calculator" className="text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200">Old Gold Exchange</Link>
+            <span className="text-zinc-300 dark:text-zinc-700">·</span>
+            <Link href="/tools/gold-import-duty-calculator" className="text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200">NRI Import Duty</Link>
           </div>
           <div className="text-center text-xs text-zinc-400">
             <p>&copy; 2026 LiveGold Kerala</p>
