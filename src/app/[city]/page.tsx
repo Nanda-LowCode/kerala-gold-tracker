@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import DashboardLayout, { KERALA_CITIES } from "@/components/DashboardLayout";
 import { getHistory } from "../page";
 import { getCityData } from "@/lib/cityData";
@@ -42,8 +43,9 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
 
 export default async function CityPage({ params }: { params: Promise<{ city: string }> }) {
   const p = await params;
+  if (!KERALA_CITIES.includes(p.city)) notFound();
   const cityName = p.city.charAt(0).toUpperCase() + p.city.slice(1);
   const history = await getHistory();
-  
+
   return <DashboardLayout history={history} cityName={cityName} />;
 }

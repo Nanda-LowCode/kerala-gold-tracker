@@ -35,7 +35,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.9,
   }))
 
-  // 4. Blog posts
+  // 4. Blog index
+  const blogIndexRoute: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    },
+  ]
+
+  // 5. Blog posts
   const blogRoutes: MetadataRoute.Sitemap = getAllPosts().map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
     lastModified: new Date(post.date),
@@ -43,5 +53,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }))
 
-  return [...rootRoute, ...toolRoutes, ...cityRoutes, ...blogRoutes]
+  return [...rootRoute, ...toolRoutes, ...cityRoutes, ...blogIndexRoute, ...blogRoutes]
 }

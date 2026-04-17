@@ -93,7 +93,7 @@ export default function TrendAnalysisIndicator({ history }: { history: GoldRate[
       </div>
       <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-2">
         <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 opacity-80 shrink-0">
-          AI Trend Logic
+          Price Trend
         </span>
         <span className="hidden sm:inline text-zinc-300 dark:text-zinc-700">|</span>
         <span className={`text-sm font-semibold tracking-tight ${st.text}`}>

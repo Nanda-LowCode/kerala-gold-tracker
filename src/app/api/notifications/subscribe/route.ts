@@ -1,19 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createSupabaseAdminClient } from "@/lib/supabase";
+import { createSupabaseReadClient } from "@/lib/supabase";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { endpoint, keys } = body;
 
-    if (!endpoint || !keys?.p256dh || !keys?.auth) {
+    if (
+      !endpoint || typeof endpoint !== "string" || endpoint.length > 512 ||
+      !keys?.p256dh || typeof keys.p256dh !== "string" || keys.p256dh.length > 100 ||
+      !keys?.auth || typeof keys.auth !== "string" || keys.auth.length > 100
+    ) {
       return NextResponse.json(
         { error: "Invalid subscription payload" },
         { status: 400 }
       );
     }
 
-    const supabase = createSupabaseAdminClient();
+    const supabase = createSupabaseReadClient();
 
     // Insert user's subscription info so we can broadcast later
     const { error } = await supabase.from("push_subscriptions").upsert(

@@ -6,7 +6,7 @@ export default function FAQ({ cityName = "Kochi" }: { cityName?: string }) {
     },
     {
       q: `How often are gold rates updated in ${cityName}?`,
-      a: `Gold rates on this site for ${cityName} are updated twice daily — at 10:30 AM and 4:30 PM IST, Monday through Saturday. Gold markets in Kerala are closed on Sundays.`,
+      a: `Gold rates on this site for ${cityName} are updated daily at 10:15 AM IST, Monday through Saturday. Gold markets in Kerala are closed on Sundays.`,
     },
     {
       q: "What is the difference between 22K and 24K gold?",

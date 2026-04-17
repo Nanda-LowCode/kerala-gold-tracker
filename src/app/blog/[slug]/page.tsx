@@ -30,10 +30,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPost({ params }: Props) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const allPosts = getAllPosts();
+  const post = allPosts.find((p) => p.slug === slug) ? getPostBySlug(slug) : null;
   if (!post) notFound();
 
-  const allPosts = getAllPosts();
   const relatedPosts = allPosts
     .filter((p: PostMeta) => p.slug !== slug)
     .slice(0, 3);

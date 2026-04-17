@@ -1,6 +1,7 @@
 "use client";
 
 export default function Error({
+  error,
   reset,
 }: {
   error: Error & { digest?: string };
@@ -35,6 +36,11 @@ export default function Error({
       >
         Try Again
       </button>
+      {process.env.NODE_ENV === "development" && (
+        <pre className="mt-4 max-w-lg overflow-auto rounded-lg bg-zinc-100 p-3 text-left text-xs text-zinc-600">
+          {error.message}
+        </pre>
+      )}
     </main>
   );
 }

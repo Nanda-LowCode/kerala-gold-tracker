@@ -1,19 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createSupabaseAdminClient } from "@/lib/supabase";
+import { createSupabaseReadClient } from "@/lib/supabase";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { endpoint } = body;
 
-    if (!endpoint) {
+    if (!endpoint || typeof endpoint !== "string" || endpoint.length > 512) {
       return NextResponse.json(
         { error: "Endpoint is required" },
         { status: 400 }
       );
     }
 
-    const supabase = createSupabaseAdminClient();
+    const supabase = createSupabaseReadClient();
 
     const { error } = await supabase
       .from("push_subscriptions")

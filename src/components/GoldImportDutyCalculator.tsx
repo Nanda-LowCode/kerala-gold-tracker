@@ -7,9 +7,9 @@ type Gender = "Male" | "Female";
 type StayDuration = "> 1 Year" | "6 to 12 Months" | "< 6 Months";
 
 export default function GoldImportDutyCalculator({
-  initialGoldRate = 7500, // Reasonable default if live scraper fails
+  initialGoldRate,
 }: {
-  initialGoldRate?: number;
+  initialGoldRate: number;
 }) {
   const [gender, setGender] = useState<Gender>("Male");
   const [stayDuration, setStayDuration] = useState<StayDuration>("> 1 Year");

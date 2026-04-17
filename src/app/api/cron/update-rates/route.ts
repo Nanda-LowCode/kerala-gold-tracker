@@ -248,7 +248,7 @@ async function sendFailureAlert(errors: string[]): Promise<void> {
 
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (!process.env.CRON_SECRET || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -363,8 +363,7 @@ export async function GET(request: NextRequest) {
       fallback_errors: errors.length > 0 ? errors : undefined,
     });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    console.error("Cron update-rates failed:", message);
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("Cron update-rates failed:", err instanceof Error ? err.message : err);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

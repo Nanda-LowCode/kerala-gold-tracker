@@ -50,7 +50,7 @@ export default function OgImage() {
             lineHeight: 1.4,
           }}
         >
-          Today&apos;s 22K &amp; 24K Gold Rate in Kerala
+          {"Today's 22K & 24K Gold Rate in Kerala"}
         </div>
         <div
           style={{

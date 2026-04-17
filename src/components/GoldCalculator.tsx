@@ -14,7 +14,7 @@ export default function GoldCalculator({
   rate22k,
   rate24k,
 }: GoldCalculatorProps) {
-  const [karat, setKarat] = useState<"18k" | "22k" | "24k">("18k");
+  const [karat, setKarat] = useState<"18k" | "22k" | "24k">("22k");
   const [weightGrams, setWeightGrams] = useState<number | "">(8); // Defaults to 1 pavan (8g)
   const [makingChargePercent, setMakingChargePercent] = useState<number | "">(10);
 

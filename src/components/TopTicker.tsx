@@ -1,5 +1,6 @@
 import React from 'react';
 import { GoldRate } from "@/lib/types";
+import { formatCurrency } from "@/lib/format";
 
 export default function TopTicker({ history, cityName = "Kochi" }: { history: GoldRate[]; cityName?: string }) {
   if (!history || history.length < 2) return null;
@@ -28,13 +29,7 @@ export default function TopTicker({ history, cityName = "Kochi" }: { history: Go
     });
   };
 
-  const formatINR = (amount: number) => {
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
+  const formatINR = formatCurrency;
 
   const monthNameShort = new Date(history[0].date + "T00:00:00").toLocaleDateString(
     "en-IN",

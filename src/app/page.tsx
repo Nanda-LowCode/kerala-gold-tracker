@@ -16,7 +16,10 @@ export async function getHistory(): Promise<GoldRate[]> {
       .order("date", { ascending: false })
       .limit(30);
 
-    if (error || !data) return [];
+    if (error || !data) {
+      console.error("[getHistory] Supabase query failed:", error?.message);
+      return [];
+    }
     return data as GoldRate[];
   } catch {
     return [];
