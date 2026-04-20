@@ -36,18 +36,21 @@ export interface Database {
           p256dh: string;
           auth: string;
           created_at: string | null;
+          target_rate: number | null;
         };
         Insert: {
           endpoint: string;
           p256dh: string;
           auth: string;
           created_at?: string | null;
+          target_rate?: number | null;
         };
         Update: {
           endpoint?: string;
           p256dh?: string;
           auth?: string;
           created_at?: string | null;
+          target_rate?: number | null;
         };
         Relationships: [];
       };

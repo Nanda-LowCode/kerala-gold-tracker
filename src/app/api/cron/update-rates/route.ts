@@ -315,8 +315,38 @@ export async function GET(request: NextRequest) {
         }
 
         const { data: subscriptions } = await supabase.from("push_subscriptions").select("*");
-        
+
         if (subscriptions && subscriptions.length > 0) {
+          // Fire price-drop alerts first for users who set a target rate
+          const alertSubs = subscriptions.filter(
+            (s) => s.target_rate !== null && s.target_rate !== undefined && data.rate_22k_1g <= s.target_rate
+          );
+          if (alertSubs.length > 0) {
+            await Promise.allSettled(
+              alertSubs.map(async (sub) => {
+                try {
+                  await webpush.sendNotification(
+                    { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
+                    JSON.stringify({
+                      title: `🎯 Gold Alert: ₹${data.rate_22k_1g.toLocaleString("en-IN")}/g`,
+                      body: `22K gold has dropped to your target! Today's rate is ₹${data.rate_22k_1g.toLocaleString("en-IN")}/g.`,
+                      url: "/",
+                    })
+                  );
+                  // Clear the target so it doesn't re-fire tomorrow
+                  await supabase.from("push_subscriptions").update({ target_rate: null }).eq("endpoint", sub.endpoint);
+                } catch (error: unknown) {
+                  const e = error as { statusCode?: number };
+                  if (e.statusCode === 410 || e.statusCode === 404) {
+                    await supabase.from("push_subscriptions").delete().eq("endpoint", sub.endpoint);
+                  }
+                }
+              })
+            );
+            console.log(`[gold-cron] Fired price-drop alerts to ${alertSubs.length} users.`);
+          }
+
+          // General daily broadcast to all subscribers
           const payload = JSON.stringify({
             title: `Gold Rate: ₹${data.rate_22k_1g.toLocaleString("en-IN")}/g`,
             body: changeText || `Today's 22K gold rate has been updated.`,
@@ -335,9 +365,9 @@ export async function GET(request: NextRequest) {
                 },
                 payload
               );
-            } catch (error: any) {
-              if (error.statusCode === 410 || error.statusCode === 404) {
-                // Subscription has expired or is no longer valid
+            } catch (error: unknown) {
+              const e = error as { statusCode?: number };
+              if (e.statusCode === 410 || e.statusCode === 404) {
                 await supabase.from("push_subscriptions").delete().eq("endpoint", sub.endpoint);
               } else {
                 console.error("[gold-cron] Error sending push to", sub.endpoint, error);

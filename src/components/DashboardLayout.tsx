@@ -13,6 +13,7 @@ import WhatsAppShare from "@/components/WhatsAppShare";
 import ThemeToggle from "@/components/ThemeToggle";
 import NotificationToggle from "@/components/NotificationToggle";
 import TrendAnalysisIndicator from "@/components/TrendAnalysisIndicator";
+import PriceAlertInput from "@/components/PriceAlertInput";
 import { GoldRate } from "@/lib/types";
 import { formatCurrency } from "@/lib/format";
 import { getCityData } from "@/lib/cityData";
@@ -170,7 +171,14 @@ export default function DashboardLayout({
               <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400 md:mt-1 md:text-sm">
                 <time dateTime={today.date}>{formatDate(today.date)}</time> · {cityName}
               </p>
-              
+              {cityName !== "Kochi" && (
+                <p className="mt-2 flex items-center gap-1.5 rounded-full border border-blue-100 bg-blue-50/60 px-3 py-1 text-[11px] text-blue-600 dark:border-blue-900/40 dark:bg-blue-950/30 dark:text-blue-400">
+                  <svg className="h-3 w-3 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                  Kerala gold rate is uniform across all districts (Kerala Board Rate)
+                </p>
+              )}
             </section>
 
             {/* Pending rates notice (hidden once today's data arrives) */}
@@ -241,6 +249,9 @@ export default function DashboardLayout({
                 rate24k={today.rate_24k_1g}
               />
             </div>
+
+            {/* Price Drop Alert — only visible to push-subscribed users */}
+            <PriceAlertInput currentRate={today.rate_22k_1g} />
 
             {/* Internal links to dedicated tool pages */}
             <p className="text-center text-sm text-zinc-500">
