@@ -9,6 +9,7 @@ import {
   LineElement,
   Tooltip,
   Filler,
+  type TooltipItem,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { GoldRate } from "@/lib/types";
@@ -85,8 +86,8 @@ export default function PriceChart({ history }: { history: GoldRate[] }) {
         displayColors: false,
         cornerRadius: 8,
         callbacks: {
-          title: (context: any[]) => context[0].label,
-          label: (context: any) => `₹${(context.parsed.y ?? 0).toLocaleString("en-IN")}/g`,
+          title: (context: TooltipItem<"line">[]) => context[0].label,
+          label: (context: TooltipItem<"line">) => `₹${(context.parsed.y ?? 0).toLocaleString("en-IN")}/g`,
         },
       },
     },

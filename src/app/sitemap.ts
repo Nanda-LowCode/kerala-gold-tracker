@@ -53,5 +53,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }))
 
-  return [...rootRoute, ...toolRoutes, ...cityRoutes, ...blogIndexRoute, ...blogRoutes]
+  // 6. Static info pages
+  const staticRoutes: MetadataRoute.Sitemap = [
+    { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.5 },
+    { url: `${baseUrl}/silver-rate-kerala`, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 0.85 },
+  ]
+
+  return [...rootRoute, ...toolRoutes, ...staticRoutes, ...cityRoutes, ...blogIndexRoute, ...blogRoutes]
 }

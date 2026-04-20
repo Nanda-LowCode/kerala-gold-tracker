@@ -398,13 +398,23 @@ export default function DashboardLayout({
               <p className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-500">Learn</p>
               <p className="mt-1 text-sm font-semibold text-zinc-800 dark:text-zinc-200">Gold Knowledge Hub</p>
             </Link>
+            <Link
+              href="/silver-rate-kerala"
+              className="rounded-xl border border-zinc-200/70 bg-white px-4 py-3 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/80 dark:hover:border-zinc-700"
+            >
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Rates</p>
+              <p className="mt-1 text-sm font-semibold text-zinc-800 dark:text-zinc-200">Silver Rate Kerala</p>
+            </Link>
           </div>
 
           <div className="text-center text-xs text-zinc-400 dark:text-zinc-500">
             <p className="font-medium">
-              Data sourced from Malabar Gold & Diamonds · For reference only
+              Data sourced from Malabar Gold &amp; Diamonds · For reference only
             </p>
-            <p className="mt-1.5">© 2026 LiveGold Kerala</p>
+            <p className="mt-1.5">
+              © 2026 LiveGold Kerala ·{" "}
+              <Link href="/about" className="hover:text-zinc-600 dark:hover:text-zinc-300">About</Link>
+            </p>
           </div>
         </div>
       </footer>
