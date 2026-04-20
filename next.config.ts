@@ -1,6 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.livegoldkerala.com" }],
+        destination: "https://livegoldkerala.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
