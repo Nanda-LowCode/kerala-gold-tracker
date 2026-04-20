@@ -12,7 +12,7 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://livegoldkerala.com"),
+  metadataBase: new URL("https://www.livegoldkerala.com"),
   manifest: "/manifest.json",
   themeColor: "#fbbf24",
   title: {
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "LiveGold Kerala | Verified Today's Gold Rate",
     description: "Check today's 22 Karat and 24 Karat gold rate in Kochi, Kerala. Updated daily.",
-    url: "https://livegoldkerala.com",
+    url: "https://www.livegoldkerala.com",
     siteName: "LiveGold Kerala",
     locale: "en_IN",
     type: "website",

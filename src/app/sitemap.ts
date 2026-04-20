@@ -3,7 +3,7 @@ import { KERALA_CITIES } from '@/components/DashboardLayout'
 import { getAllPosts } from '@/lib/mdx'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://livegoldkerala.com'
+  const baseUrl = 'https://www.livegoldkerala.com'
 
   // 1. The main homepage route (Default Kochi)
   const rootRoute: MetadataRoute.Sitemap = [
