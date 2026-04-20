@@ -11,6 +11,7 @@ export interface Database {
           rate_22k_1g: number;
           rate_24k_1g: number;
           consensus_sources: string | null;
+          rate_silver_1g: number | null;
         };
         Insert: {
           date: string;
@@ -19,6 +20,7 @@ export interface Database {
           rate_22k_1g: number;
           rate_24k_1g: number;
           consensus_sources?: string | null;
+          rate_silver_1g?: number | null;
         };
         Update: {
           date?: string;
@@ -27,6 +29,7 @@ export interface Database {
           rate_22k_1g?: number;
           rate_24k_1g?: number;
           consensus_sources?: string | null;
+          rate_silver_1g?: number | null;
         };
         Relationships: [];
       };

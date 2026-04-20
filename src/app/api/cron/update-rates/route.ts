@@ -137,6 +137,63 @@ const fetchMalabar: FetcherFn = async () => {
   }
 };
 
+// ─── Fetcher #3: BankBazaar Silver ───────────────────────────────────────────
+
+async function fetchSilverBankBazaar(): Promise<number> {
+  const html = await fetchHtml("https://www.bankbazaar.com/silver-rate-kerala.html");
+  const $ = cheerio.load(html);
+
+  let rate: number | null = null;
+
+  // Strategy A: find h2 with "Silver Rate", walk to next table, first data row
+  $("h2").each((_, heading) => {
+    if (rate !== null) return;
+    if (!/silver\s+rate/i.test($(heading).text())) return;
+
+    let sibling = $(heading).next();
+    while (sibling.length) {
+      let table: ReturnType<typeof $> | null = null;
+      if (sibling.is("table")) table = sibling;
+      else {
+        const inner = sibling.find("table");
+        if (inner.length) table = inner.first();
+      }
+      if (table && table.length) {
+        const price = table.find("tr").eq(1).find("td").eq(1).text().trim();
+        if (price) {
+          try {
+            const parsed = parsePrice(price);
+            if (parsed >= 50 && parsed <= 10000) rate = parsed;
+          } catch {}
+        }
+        break;
+      }
+      sibling = sibling.next();
+    }
+  });
+
+  // Strategy B: any table with a "1 gram" row, Today column
+  if (rate === null) {
+    $("table").each((_, el) => {
+      if (rate !== null) return;
+      $(el).find("tr").each((i, row) => {
+        if (rate !== null || i === 0) return;
+        const cells = $(row).find("td");
+        if (cells.length < 2) return;
+        const label = cells.eq(0).text().trim().toLowerCase();
+        if (!label.includes("gram") || label.includes("kg")) return;
+        try {
+          const parsed = parsePrice(cells.eq(1).text().trim());
+          if (parsed >= 50 && parsed <= 10000) rate = parsed;
+        } catch {}
+      });
+    });
+  }
+
+  if (rate === null) throw new Error("BankBazaar silver: could not extract 1g rate");
+  return rate;
+}
+
 // ─── Fetcher #2: BankBazaar (Fallback — HTML scrape) ────────────────────────
 
 const fetchBankBazaar: FetcherFn = async () => {
@@ -253,7 +310,17 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const { data, errors } = await fetchWithFallbacks();
+    const [{ data, errors }, silverRate] = await Promise.all([
+      fetchWithFallbacks(),
+      fetchSilverBankBazaar().catch((err) => {
+        console.warn("[gold-cron] Silver fetch failed:", err instanceof Error ? err.message : String(err));
+        return null;
+      }),
+    ]);
+
+    if (silverRate !== null) {
+      console.log(`[gold-cron] Silver rate: ₹${silverRate}/g`);
+    }
 
     if (!data) {
       console.error("[gold-cron] All sources failed!", errors);
@@ -279,6 +346,7 @@ export async function GET(request: NextRequest) {
         rate_22k_1g: data.rate_22k_1g,
         rate_24k_1g: data.rate_24k_1g,
         consensus_sources: data.source,
+        ...(silverRate !== null && { rate_silver_1g: silverRate }),
       },
       { onConflict: "date,city" }
     );
@@ -389,6 +457,7 @@ export async function GET(request: NextRequest) {
       rate_18k_1g: rate18k,
       rate_22k_1g: data.rate_22k_1g,
       rate_24k_1g: data.rate_24k_1g,
+      rate_silver_1g: silverRate,
       source: data.source,
       fallback_errors: errors.length > 0 ? errors : undefined,
     });

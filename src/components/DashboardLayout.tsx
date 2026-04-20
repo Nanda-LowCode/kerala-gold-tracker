@@ -14,6 +14,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import NotificationToggle from "@/components/NotificationToggle";
 import TrendAnalysisIndicator from "@/components/TrendAnalysisIndicator";
 import PriceAlertInput from "@/components/PriceAlertInput";
+import SilverRateCard from "@/components/SilverRateCard";
 import { GoldRate } from "@/lib/types";
 import { formatCurrency } from "@/lib/format";
 import { getCityData } from "@/lib/cityData";
@@ -57,6 +58,10 @@ export default function DashboardLayout({
     today && yesterday ? today.rate_22k_1g - yesterday.rate_22k_1g : null;
   const change24k =
     today && yesterday ? today.rate_24k_1g - yesterday.rate_24k_1g : null;
+  const changeSilver =
+    today?.rate_silver_1g && yesterday?.rate_silver_1g
+      ? today.rate_silver_1g - yesterday.rate_silver_1g
+      : null;
   const chartData = [...history].reverse();
 
   const jsonLd = today
@@ -220,6 +225,14 @@ export default function DashboardLayout({
                 />
               </div>
             </div>
+
+            {/* Silver Rate Card */}
+            {today.rate_silver_1g && (
+              <SilverRateCard
+                ratePerGram={today.rate_silver_1g}
+                change={changeSilver}
+              />
+            )}
 
             {/* WhatsApp viral share button */}
             {change22k !== null && (

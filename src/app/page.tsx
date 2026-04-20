@@ -11,7 +11,7 @@ export async function getHistory(): Promise<GoldRate[]> {
     const supabase = createSupabaseReadClient();
     const { data, error } = await supabase
       .from("daily_gold_rates")
-      .select("date, city, rate_18k_1g, rate_22k_1g, rate_24k_1g")
+      .select("date, city, rate_18k_1g, rate_22k_1g, rate_24k_1g, rate_silver_1g")
       .eq("city", "Kochi")
       .order("date", { ascending: false })
       .limit(30);
