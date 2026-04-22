@@ -77,6 +77,7 @@ export default function DashboardLayout({
         "@type": "Product",
         name: `22K Gold Rate in ${cityName}, Kerala`,
         description: `Today's 22 Karat (916) gold rate per gram and per pavan (8g) in ${cityName}, Kerala. Updated daily at 10:15 AM IST.`,
+        image: "https://www.livegoldkerala.com/opengraph-image",
         brand: { "@type": "Brand", name: "Live Gold Kerala" },
         offers: {
           "@type": "Offer",
