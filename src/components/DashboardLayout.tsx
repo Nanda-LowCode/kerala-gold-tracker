@@ -122,12 +122,12 @@ export default function DashboardLayout({
           <div className="flex items-center gap-2.5">
             <span className="text-2xl leading-none">✨</span>
             <div>
-              <h1 className="text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-lg">
+              <p className="text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-lg">
                 LiveGold{" "}
                 <span className="bg-gradient-to-r from-amber-600 to-yellow-500 bg-clip-text text-transparent dark:from-amber-400 dark:to-yellow-400">
                   Kerala
                 </span>
-              </h1>
+              </p>
               <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
                 {cityName} · Realtime
               </p>
@@ -174,9 +174,9 @@ export default function DashboardLayout({
                   Verified Kerala Board Rate
                 </span>
               </div>
-              <h2 className="mt-1 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100 md:mt-4 md:text-3xl">
+              <h1 className="mt-1 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100 md:mt-4 md:text-3xl">
                 Today&apos;s Gold Rate in {cityName}
-              </h2>
+              </h1>
               <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400 md:mt-1 md:text-sm">
                 <time dateTime={`${today.date}T10:15:00+05:30`}>{formatDate(today.date)}</time> · Updated 10:15 AM IST · {cityName}
               </p>

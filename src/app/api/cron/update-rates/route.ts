@@ -369,6 +369,18 @@ export async function GET(request: NextRequest) {
       revalidatePath(`/${city}`);
     }
 
+    // Ping IndexNow so Bing/Yandex reindex immediately
+    if (process.env.INDEXNOW_KEY) {
+      const key = process.env.INDEXNOW_KEY;
+      const base = "https://www.livegoldkerala.com";
+      const urlList = [base, ...cities.map((c) => `${base}/${c}`)];
+      fetch("https://api.indexnow.org/indexnow", {
+        method: "POST",
+        headers: { "Content-Type": "application/json; charset=utf-8" },
+        body: JSON.stringify({ host: "www.livegoldkerala.com", key, urlList }),
+      }).catch((err) => console.warn("[gold-cron] IndexNow ping failed:", err));
+    }
+
     // Broadcast Push Notifications
     if (process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
       try {
