@@ -123,9 +123,13 @@ export default function GoldCalculator({
                   <input
                     type="number"
                     min="0"
-                    max="100"
+                    max="40"
                     value={makingChargePercent}
-                    onChange={(e) => setMakingChargePercent(e.target.value === "" ? "" : parseFloat(e.target.value))}
+                    onChange={(e) => {
+                      if (e.target.value === "") { setMakingChargePercent(""); return; }
+                      const v = parseFloat(e.target.value);
+                      setMakingChargePercent(isNaN(v) ? "" : Math.min(40, Math.max(0, v)));
+                    }}
                     className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-950/50 px-3 py-1.5 text-center text-sm font-semibold text-zinc-900 dark:text-zinc-100 shadow-sm transition-colors focus:border-amber-400 focus:outline-none focus:ring-4 focus:ring-amber-500/10 dark:focus:ring-amber-500/20"
                   />
                   <span className="absolute inset-y-0 right-2 flex items-center text-xs font-bold text-zinc-400 pointer-events-none">
