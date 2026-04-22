@@ -338,18 +338,25 @@ export async function GET(request: NextRequest) {
     const supabase = createSupabaseAdminClient();
     const today = getTodayIST();
 
-    const { error } = await supabase.from("daily_gold_rates").upsert(
-      {
-        date: today,
-        city: "Kochi",
-        rate_18k_1g: rate18k,
-        rate_22k_1g: data.rate_22k_1g,
-        rate_24k_1g: data.rate_24k_1g,
-        consensus_sources: data.source,
-        ...(silverRate !== null && { rate_silver_1g: silverRate }),
-      },
+    const goldPayload = {
+      date: today,
+      city: "Kochi",
+      rate_18k_1g: rate18k,
+      rate_22k_1g: data.rate_22k_1g,
+      rate_24k_1g: data.rate_24k_1g,
+      consensus_sources: data.source,
+    };
+
+    let { error } = await supabase.from("daily_gold_rates").upsert(
+      { ...goldPayload, ...(silverRate !== null && { rate_silver_1g: silverRate }) },
       { onConflict: "date,city" }
     );
+
+    // If silver column doesn't exist yet (DB migration pending), retry gold-only
+    if (error && silverRate !== null) {
+      console.warn("[gold-cron] Upsert with silver failed, retrying gold-only:", error.message);
+      ({ error } = await supabase.from("daily_gold_rates").upsert(goldPayload, { onConflict: "date,city" }));
+    }
 
     if (error) {
       throw new Error(`Supabase upsert failed: ${error.message}`);
