@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "LiveGold Kerala | Verified Today's Gold Rate",
-    description: "Latest 22K and 24K gold rates in Kochi. Updated twice daily.",
+    description: "Latest 22K and 24K gold rates in Kochi. Updated daily at 10:15 AM IST.",
   },
   verification: {
     google: "RJTBoklRKLnaK24UcIkOxVTLH4tgXkXCjjRgCR-JDek",
@@ -57,6 +57,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geist.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col bg-gradient-to-b from-amber-50 to-white font-sans text-gray-900 dark:from-zinc-950 dark:to-zinc-950 dark:text-zinc-200 transition-colors duration-300">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: `{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.livegoldkerala.com/#organization","name":"Live Gold Kerala","url":"https://www.livegoldkerala.com"},{"@type":"WebSite","@id":"https://www.livegoldkerala.com/#website","url":"https://www.livegoldkerala.com","name":"Live Gold Kerala","publisher":{"@id":"https://www.livegoldkerala.com/#organization"}}]}` }} />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           {children}
           <InstallPrompt />

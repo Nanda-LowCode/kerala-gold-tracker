@@ -12,6 +12,12 @@ export const CITY_DATA: Record<string, CityData> = {
     insightTitle: "Trivandrum's Evolving Gold Market",
     insightContent: "As the capital city, Trivandrum hosts a diverse and fast-paced jewelry market, especially around MG Road and Chalai. While the base rate follows the Kerala board, buyers here often seek a mix of traditional Travancore heritage designs and modern aesthetics.",
   },
+  ernakulam: {
+    id: "ernakulam",
+    metaDescriptionPrefix: "Today's gold rates in Ernakulam (Kochi district).",
+    insightTitle: "Ernakulam — Kerala's Commercial Gold Hub",
+    insightContent: "Ernakulam, the commercial twin of Kochi, hosts some of Kerala's busiest gold showrooms along MG Road, Broadway, and Jewellery Junction. NRI demand is exceptionally high here, with buyers from the Gulf routinely investing in 24K bars and 22K bridal sets. The city's cosmopolitan character drives strong appetite for both traditional Keralan designs and modern lightweight ornaments.",
+  },
   kozhikode: {
     id: "kozhikode",
     metaDescriptionPrefix: "Get the current daily gold price in Kozhikode.",

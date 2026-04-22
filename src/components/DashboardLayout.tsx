@@ -31,6 +31,7 @@ function formatDate(dateStr: string): string {
 // Major districts for our dynamic SEO routing
 export const KERALA_CITIES = [
   "trivandrum",
+  "ernakulam",
   "kozhikode",
   "thrissur",
   "kollam",
@@ -64,54 +65,56 @@ export default function DashboardLayout({
       : null;
   const chartData = [...history].reverse();
 
-  const jsonLd = today
+  const citySlug = cityName.toLowerCase() === "kochi" ? "" : `/${cityName.toLowerCase()}`;
+  const pageUrl = `https://www.livegoldkerala.com${citySlug}`;
+  const priceValidUntil = today
+    ? new Date(new Date(today.date + "T00:00:00").getTime() + 86400000).toISOString().slice(0, 10)
+    : "";
+
+  const productJsonLd = today
     ? {
         "@context": "https://schema.org",
-        "@type": "WebPage",
-        name: `Today's Gold Rate in ${cityName}, Kerala`,
-        description: `Check today's 22 Karat and 24 Karat gold rate in ${cityName}.`,
-        mainEntity: {
-          "@type": "FinancialProduct",
-          name: `Gold Rate ${cityName}`,
-          offers: {
-            "@type": "AggregateOffer",
-            priceCurrency: "INR",
-            lowPrice: today.rate_18k_1g,
-            highPrice: today.rate_24k_1g,
-            offerCount: 3,
-            offers: [
-              {
-                "@type": "Offer",
-                name: "22K Gold 1 Gram",
-                price: today.rate_22k_1g,
-                priceCurrency: "INR",
-              },
-              {
-                "@type": "Offer",
-                name: "24K Gold 1 Gram",
-                price: today.rate_24k_1g,
-                priceCurrency: "INR",
-              },
-              {
-                "@type": "Offer",
-                name: "22K Gold 1 Pavan",
-                price: today.rate_22k_1g * 8,
-                priceCurrency: "INR",
-              },
-            ],
-          },
+        "@type": "Product",
+        name: `22K Gold Rate in ${cityName}, Kerala`,
+        description: `Today's 22 Karat (916) gold rate per gram and per pavan (8g) in ${cityName}, Kerala. Updated daily at 10:15 AM IST.`,
+        brand: { "@type": "Brand", name: "Live Gold Kerala" },
+        offers: {
+          "@type": "Offer",
+          url: pageUrl,
+          priceCurrency: "INR",
+          price: today.rate_22k_1g.toFixed(2),
+          priceValidUntil,
+          availability: "https://schema.org/InStock",
+          seller: { "@type": "Organization", name: "Live Gold Kerala", url: "https://www.livegoldkerala.com" },
         },
+        additionalProperty: [
+          { "@type": "PropertyValue", name: "Purity", value: "22K (916 Hallmark)" },
+          { "@type": "PropertyValue", name: "Price per Pavan (8g)", value: `₹${(today.rate_22k_1g * 8).toLocaleString("en-IN")}` },
+          { "@type": "PropertyValue", name: "24K Rate per Gram", value: `₹${today.rate_24k_1g.toLocaleString("en-IN")}` },
+          { "@type": "PropertyValue", name: "18K Rate per Gram", value: `₹${today.rate_18k_1g.toLocaleString("en-IN")}` },
+        ],
+        dateModified: `${today.date}T10:15:00+05:30`,
       }
     : null;
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.livegoldkerala.com" },
+      { "@type": "ListItem", position: 2, name: "Gold Rate Kerala", item: "https://www.livegoldkerala.com" },
+      ...(cityName.toLowerCase() !== "kochi"
+        ? [{ "@type": "ListItem", position: 3, name: `Gold Rate ${cityName}`, item: pageUrl }]
+        : []),
+    ],
+  };
+
   return (
     <>
-      {today && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+      {productJsonLd && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }} />
       )}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       {/* Premium sticky header */}
       <header className="sticky top-0 z-50 border-b border-zinc-200/60 bg-white/70 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-950/70">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-4">
@@ -174,7 +177,7 @@ export default function DashboardLayout({
                 Today&apos;s Gold Rate in {cityName}
               </h2>
               <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400 md:mt-1 md:text-sm">
-                <time dateTime={today.date}>{formatDate(today.date)}</time> · {cityName}
+                <time dateTime={`${today.date}T10:15:00+05:30`}>{formatDate(today.date)}</time> · Updated 10:15 AM IST · {cityName}
               </p>
               {cityName !== "Kochi" && (
                 <p className="mt-2 flex items-center gap-1.5 rounded-full border border-blue-100 bg-blue-50/60 px-3 py-1 text-[11px] text-blue-600 dark:border-blue-900/40 dark:bg-blue-950/30 dark:text-blue-400">
@@ -413,7 +416,10 @@ export default function DashboardLayout({
             </p>
             <p className="mt-1.5">
               © 2026 LiveGold Kerala ·{" "}
-              <Link href="/about" className="hover:text-zinc-600 dark:hover:text-zinc-300">About</Link>
+              <Link href="/about" className="hover:text-zinc-600 dark:hover:text-zinc-300">About</Link>{" "}·{" "}
+              <Link href="/contact" className="hover:text-zinc-600 dark:hover:text-zinc-300">Contact</Link>{" "}·{" "}
+              <Link href="/privacy" className="hover:text-zinc-600 dark:hover:text-zinc-300">Privacy</Link>{" "}·{" "}
+              <Link href="/terms" className="hover:text-zinc-600 dark:hover:text-zinc-300">Terms</Link>
             </p>
           </div>
         </div>

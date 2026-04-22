@@ -5,6 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
+      disallow: ['/api/', '/admin/', '/search'],
     },
     sitemap: 'https://www.livegoldkerala.com/sitemap.xml',
   }
