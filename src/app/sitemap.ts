@@ -25,6 +25,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // 3. Tool pages
   const toolRoutes: MetadataRoute.Sitemap = [
+    'pavan-to-gram-calculator',
     'gold-making-charge-calculator',
     'old-gold-exchange-calculator',
     'gold-import-duty-calculator',
