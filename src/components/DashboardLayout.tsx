@@ -40,6 +40,10 @@ export const KERALA_CITIES = [
   "alappuzha",
   "kottayam",
   "malappuram",
+  "pathanamthitta",
+  "idukki",
+  "wayanad",
+  "kasaragod",
 ];
 
 export default function DashboardLayout({

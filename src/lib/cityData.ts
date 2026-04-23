@@ -66,6 +66,30 @@ export const CITY_DATA: Record<string, CityData> = {
     insightTitle: "NRI Demand & High-Purity Focus",
     insightContent: "Malappuram boasts one of the highest volumes of gold trade per capita in the region, fueled largely by substantial Gulf remittances. Buyers here are extremely price-conscious but demand the absolute highest quality 916 hallmarked ornaments.",
   },
+  pathanamthitta: {
+    id: "pathanamthitta",
+    metaDescriptionPrefix: "Today's gold rates in Pathanamthitta.",
+    insightTitle: "Pathanamthitta — Kerala's Pilgrim Gold Market",
+    insightContent: "Pathanamthitta, the pilgrim capital of Kerala, sees uniquely high gold demand driven by Sabarimala pilgrims and a deeply Christian diaspora with strong Gulf connections. Religious jewellery — chains, rings, and crosses in 22K — are particularly popular alongside heavy bridal sets. The district's large NRI population ensures consistent investment demand throughout the year.",
+  },
+  idukki: {
+    id: "idukki",
+    metaDescriptionPrefix: "Today's gold rates in Idukki.",
+    insightTitle: "Idukki — Plantation Wealth & Gold",
+    insightContent: "Idukki's plantation economy — tea, cardamom, and rubber — generates steady surplus income that flows heavily into gold investment. Buyers here favour solid 22K jewellery and 24K coins as a reliable store of wealth, with purchases often timed around harvest seasons and major festival periods like Onam and Vishu.",
+  },
+  wayanad: {
+    id: "wayanad",
+    metaDescriptionPrefix: "Today's gold rates in Wayanad.",
+    insightTitle: "Wayanad — Tribal & Agricultural Gold Traditions",
+    insightContent: "Wayanad's gold market reflects its unique tribal and agricultural heritage. Traditional adornments remain culturally significant, with demand centred around local jewellers in Kalpetta and Mananthavady. The district's growing tourism economy is also driving demand for lightweight modern designs among younger buyers.",
+  },
+  kasaragod: {
+    id: "kasaragod",
+    metaDescriptionPrefix: "Today's gold rates in Kasaragod.",
+    insightTitle: "Kasaragod — Gulf Gateway to Kerala",
+    insightContent: "As Kerala's northernmost district, Kasaragod serves as a key entry point for Gulf returnees bringing gold into the state. The Tulu-speaking coastal communities here have a strong tradition of heavy gold adornment, and NRI-driven investment in 24K bars and coins is notably high year-round. Proximity to Karnataka also draws cross-border buyers.",
+  },
   kochi: {
     id: "kochi",
     metaDescriptionPrefix: "Today's latest gold rates in Kochi.",

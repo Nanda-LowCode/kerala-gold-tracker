@@ -28,6 +28,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'gold-making-charge-calculator',
     'old-gold-exchange-calculator',
     'gold-import-duty-calculator',
+    'hallmark-gold-calculator',
   ].map((tool) => ({
     url: `${baseUrl}/tools/${tool}`,
     lastModified: new Date(),
@@ -57,9 +58,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.5 },
     { url: `${baseUrl}/silver-rate-kerala`, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 0.85 },
+    { url: `${baseUrl}/gold-rate-history`, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 0.75 },
+    { url: `${baseUrl}/gold-rate-yesterday-kerala`, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 0.7 },
     { url: `${baseUrl}/contact`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.4 },
     { url: `${baseUrl}/privacy`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.3 },
     { url: `${baseUrl}/terms`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.3 },
+    { url: `${baseUrl}/disclaimer`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.3 },
   ]
 
   return [...rootRoute, ...toolRoutes, ...staticRoutes, ...cityRoutes, ...blogIndexRoute, ...blogRoutes]

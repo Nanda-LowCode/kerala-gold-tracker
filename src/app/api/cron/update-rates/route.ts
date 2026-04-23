@@ -364,7 +364,7 @@ export async function GET(request: NextRequest) {
 
     // Clear Next.js cache for all pages
     revalidatePath("/");
-    const cities = ["trivandrum", "kozhikode", "thrissur", "kollam", "palakkad", "kannur", "alappuzha", "kottayam", "malappuram"];
+    const cities = ["trivandrum", "ernakulam", "kozhikode", "thrissur", "kollam", "palakkad", "kannur", "alappuzha", "kottayam", "malappuram", "pathanamthitta", "idukki", "wayanad", "kasaragod"];
     for (const city of cities) {
       revalidatePath(`/${city}`);
     }
