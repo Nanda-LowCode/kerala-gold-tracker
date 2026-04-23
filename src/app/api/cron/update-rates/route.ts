@@ -253,31 +253,115 @@ const fetchBankBazaar: FetcherFn = async () => {
   return result;
 };
 
-// ─── Waterfall ───────────────────────────────────────────────────────────────
+// ─── Fetcher #4: GoodReturns (Kerala gold rate page) ─────────────────────────
+
+const fetchGoodReturns: FetcherFn = async () => {
+  const html = await fetchHtml("https://www.goodreturns.in/gold-rates/kerala.html");
+  const $ = cheerio.load(html);
+
+  let rate22k: number | null = null;
+  let rate24k: number | null = null;
+
+  // Strategy A: table rows whose first cell mentions 22/24 carat
+  $("table").each((_, table) => {
+    if (rate22k && rate24k) return;
+    $(table).find("tr").each((_, row) => {
+      if (rate22k && rate24k) return;
+      const cells = $(row).find("td");
+      if (cells.length < 2) return;
+      const label = cells.eq(0).text().trim().toLowerCase();
+      const valueText = cells.eq(1).text().trim();
+      if (!valueText) return;
+      try {
+        const parsed = parsePrice(valueText);
+        if (!rate22k && label.includes("22") && parsed >= 3000 && parsed <= 30000) rate22k = parsed;
+        if (!rate24k && label.includes("24") && parsed >= 3000 && parsed <= 35000) rate24k = parsed;
+      } catch {}
+    });
+  });
+
+  // Strategy B: elements with data-gold-type or class hints
+  if (!rate22k || !rate24k) {
+    $("[class*='gold']").each((_, el) => {
+      if (rate22k && rate24k) return;
+      const text = $(el).text().trim().toLowerCase();
+      const priceEl = $(el).find("[class*='price'], [class*='rate'], td").first();
+      if (!priceEl.length) return;
+      try {
+        const parsed = parsePrice(priceEl.text().trim());
+        if (!rate22k && text.includes("22") && parsed >= 3000 && parsed <= 30000) rate22k = parsed;
+        if (!rate24k && text.includes("24") && parsed >= 3000 && parsed <= 35000) rate24k = parsed;
+      } catch {}
+    });
+  }
+
+  if (!rate22k || !rate24k) {
+    throw new Error(`GoodReturns: could not extract rates (22K=${rate22k}, 24K=${rate24k})`);
+  }
+
+  const result: GoldRateResult = { rate_22k_1g: rate22k, rate_24k_1g: rate24k, source: "goodreturns" };
+  validateRates(result);
+  return result;
+};
+
+// ─── Parallel fetch with stale detection ─────────────────────────────────────
 
 const FETCHERS: { name: string; fn: FetcherFn }[] = [
   { name: "Malabar Gold", fn: fetchMalabar },
   { name: "BankBazaar", fn: fetchBankBazaar },
+  { name: "GoodReturns", fn: fetchGoodReturns },
 ];
 
-async function fetchWithFallbacks(): Promise<{ data: GoldRateResult | null; errors: string[] }> {
+async function fetchWithConsensus(
+  yesterdayRate22k: number | null
+): Promise<{ data: GoldRateResult | null; errors: string[]; winner: string }> {
+  console.log("[gold-cron] Fetching all sources in parallel...");
+
+  const settled = await Promise.allSettled(FETCHERS.map((f) => f.fn()));
+
+  const successful: Array<{ name: string; data: GoldRateResult }> = [];
   const errors: string[] = [];
 
-  for (const { name, fn } of FETCHERS) {
-    try {
-      console.log(`[gold-cron] Trying source: ${name}...`);
-      const data = await fn();
-      console.log(`[gold-cron] Success from ${name}: 22K=${data.rate_22k_1g}, 24K=${data.rate_24k_1g}`);
-      return { data, errors };
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      const warning = `[gold-cron] ${name} failed: ${message}`;
-      console.warn(warning);
-      errors.push(warning);
+  settled.forEach((result, i) => {
+    if (result.status === "fulfilled") {
+      const d = result.value;
+      console.log(`[gold-cron] ${FETCHERS[i].name}: 22K=₹${d.rate_22k_1g}, 24K=₹${d.rate_24k_1g}`);
+      successful.push({ name: FETCHERS[i].name, data: d });
+    } else {
+      const msg = `[gold-cron] ${FETCHERS[i].name} failed: ${result.reason instanceof Error ? result.reason.message : String(result.reason)}`;
+      console.warn(msg);
+      errors.push(msg);
+    }
+  });
+
+  if (successful.length === 0) return { data: null, errors, winner: "none" };
+
+  // Stale detection: if some sources match yesterday but others don't → those are stale
+  if (yesterdayRate22k !== null) {
+    const fresh = successful.filter((s) => s.data.rate_22k_1g !== yesterdayRate22k);
+    const stale = successful.filter((s) => s.data.rate_22k_1g === yesterdayRate22k);
+
+    if (fresh.length > 0 && stale.length > 0) {
+      stale.forEach((s) =>
+        console.warn(`[gold-cron] ${s.name} is STALE — matches yesterday's ₹${yesterdayRate22k}`)
+      );
+      // Prefer Malabar if it's fresh; otherwise take first fresh source
+      const chosen = fresh.find((s) => s.name === "Malabar Gold") ?? fresh[0];
+      console.log(`[gold-cron] Winner: ${chosen.name} (fresh, stale sources skipped)`);
+      return { data: chosen.data, errors, winner: chosen.name };
+    }
+
+    if (stale.length === successful.length) {
+      console.log(
+        `[gold-cron] All sources match yesterday (₹${yesterdayRate22k}) — genuine no-change day or all still stale`
+      );
     }
   }
 
-  return { data: null, errors };
+  // No stale conflict: prefer Malabar as most authoritative
+  const chosen = successful.find((s) => s.name === "Malabar Gold") ?? successful[0];
+  console.log(`[gold-cron] Winner: ${chosen.name}`);
+  return { data: chosen.data, errors, winner: chosen.name };
 }
 
 // ─── Alerting ────────────────────────────────────────────────────────────────
@@ -310,13 +394,20 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const [{ data, errors }, silverRate] = await Promise.all([
-      fetchWithFallbacks(),
+    const supabase = createSupabaseAdminClient();
+    const yesterdayDate = new Date(Date.now() - 86400000).toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+
+    // Yesterday's rate (stale detection) + silver run in parallel; gold sources run in parallel inside fetchWithConsensus
+    const [{ data: yesterdayRow }, silverRate] = await Promise.all([
+      supabase.from("daily_gold_rates").select("rate_22k_1g").eq("city", "Kochi").eq("date", yesterdayDate).single(),
       fetchSilverBankBazaar().catch((err) => {
         console.warn("[gold-cron] Silver fetch failed:", err instanceof Error ? err.message : String(err));
         return null;
       }),
     ]);
+
+    const yesterdayRate22k: number | null = yesterdayRow?.rate_22k_1g ?? null;
+    const { data, errors, winner } = await fetchWithConsensus(yesterdayRate22k);
 
     if (silverRate !== null) {
       console.log(`[gold-cron] Silver rate: ₹${silverRate}/g`);
@@ -334,8 +425,6 @@ export async function GET(request: NextRequest) {
     // Calculate 18K from 24K (75% purity = 18/24)
     const rate18k = Math.round(data.rate_24k_1g * (18 / 24));
 
-    // Upsert into Supabase
-    const supabase = createSupabaseAdminClient();
     const today = getTodayIST();
 
     const goldPayload = {
@@ -384,18 +473,9 @@ export async function GET(request: NextRequest) {
     // Broadcast Push Notifications
     if (process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
       try {
-        // Fetch yesterday's rate to calculate change
-        const yesterdayDate = new Date(Date.now() - 86400000).toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
-        const { data: yesterdayData } = await supabase
-          .from("daily_gold_rates")
-          .select("rate_22k_1g")
-          .eq("city", "Kochi")
-          .eq("date", yesterdayDate)
-          .single();
-
         let changeText = "";
-        if (yesterdayData) {
-          const diff = data.rate_22k_1g - yesterdayData.rate_22k_1g;
+        if (yesterdayRate22k !== null) {
+          const diff = data.rate_22k_1g - yesterdayRate22k;
           if (diff > 0) changeText = `Up by ₹${diff.toLocaleString("en-IN")}`;
           else if (diff < 0) changeText = `Down by ₹${Math.abs(diff).toLocaleString("en-IN")}`;
           else changeText = `No change today`;
@@ -477,7 +557,8 @@ export async function GET(request: NextRequest) {
       rate_22k_1g: data.rate_22k_1g,
       rate_24k_1g: data.rate_24k_1g,
       rate_silver_1g: silverRate,
-      source: data.source,
+      source: winner,
+      stale_detection: yesterdayRate22k !== null ? { yesterday_rate: yesterdayRate22k, is_same: data.rate_22k_1g === yesterdayRate22k } : null,
       fallback_errors: errors.length > 0 ? errors : undefined,
     });
   } catch (err) {
