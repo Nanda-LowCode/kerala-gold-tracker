@@ -312,10 +312,23 @@ const FETCHERS: { name: string; fn: FetcherFn }[] = [
   { name: "GoodReturns", fn: fetchGoodReturns },
 ];
 
+/**
+ * BankBazaar updates ~10:15–10:30 AM IST; Malabar Gold updates ~10:45–11:30 AM IST.
+ * Before 11 AM IST → prefer BankBazaar (early estimate).
+ * At/after 11 AM IST → prefer Malabar Gold (official rate).
+ */
+function getPreferredSource(): string {
+  const hourIST = parseInt(
+    new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata", hour: "numeric", hour12: false })
+  );
+  return hourIST < 11 ? "BankBazaar" : "Malabar Gold";
+}
+
 async function fetchWithConsensus(
   yesterdayRate22k: number | null
 ): Promise<{ data: GoldRateResult | null; errors: string[]; winner: string }> {
-  console.log("[gold-cron] Fetching all sources in parallel...");
+  const preferred = getPreferredSource();
+  console.log(`[gold-cron] Preferred source at this hour: ${preferred}. Fetching all in parallel...`);
 
   const settled = await Promise.allSettled(FETCHERS.map((f) => f.fn()));
 
@@ -345,21 +358,21 @@ async function fetchWithConsensus(
       stale.forEach((s) =>
         console.warn(`[gold-cron] ${s.name} is STALE — matches yesterday's ₹${yesterdayRate22k}`)
       );
-      // Prefer Malabar if it's fresh; otherwise take first fresh source
-      const chosen = fresh.find((s) => s.name === "Malabar Gold") ?? fresh[0];
+      // Among fresh sources, pick the time-appropriate preferred one
+      const chosen = fresh.find((s) => s.name === preferred) ?? fresh[0];
       console.log(`[gold-cron] Winner: ${chosen.name} (fresh, stale sources skipped)`);
       return { data: chosen.data, errors, winner: chosen.name };
     }
 
     if (stale.length === successful.length) {
       console.log(
-        `[gold-cron] All sources match yesterday (₹${yesterdayRate22k}) — genuine no-change day or all still stale`
+        `[gold-cron] All sources match yesterday (₹${yesterdayRate22k}) — genuine no-change or all still stale`
       );
     }
   }
 
-  // No stale conflict: prefer Malabar as most authoritative
-  const chosen = successful.find((s) => s.name === "Malabar Gold") ?? successful[0];
+  // No stale conflict: use time-appropriate preferred source
+  const chosen = successful.find((s) => s.name === preferred) ?? successful[0];
   console.log(`[gold-cron] Winner: ${chosen.name}`);
   return { data: chosen.data, errors, winner: chosen.name };
 }
