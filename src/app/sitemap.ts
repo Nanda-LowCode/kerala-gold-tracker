@@ -67,5 +67,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/disclaimer`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.3 },
   ]
 
-  return [...rootRoute, ...toolRoutes, ...staticRoutes, ...cityRoutes, ...blogIndexRoute, ...blogRoutes]
+  // 7. Culture hub pages
+  const cultureRoutes: MetadataRoute.Sitemap = [
+    { url: `${baseUrl}/culture`,           lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.85 },
+    { url: `${baseUrl}/culture/festivals`, lastModified: new Date(), changeFrequency: 'weekly' as const,  priority: 0.8 },
+    { url: `${baseUrl}/culture/temples`,   lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.8 },
+    { url: `${baseUrl}/culture/weddings`,  lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.8 },
+  ]
+
+  return [...rootRoute, ...toolRoutes, ...staticRoutes, ...cityRoutes, ...blogIndexRoute, ...blogRoutes, ...cultureRoutes]
 }
