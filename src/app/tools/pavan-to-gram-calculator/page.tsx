@@ -218,7 +218,7 @@ export default async function PavanToGramCalculatorPage() {
       <footer className="border-t border-zinc-200/60 bg-white/50 pt-6 pb-8 dark:border-zinc-800/80 dark:bg-zinc-950/50">
         <div className="mx-auto max-w-3xl px-4 text-center text-xs text-zinc-400 dark:text-zinc-500">
           <p className="font-medium">
-            AKGSMA official Kerala rates · Data via Malabar Gold &amp; BankBazaar · For reference only
+            AKGSMA · For reference only
           </p>
           <p className="mt-1.5">© 2026 LiveGold Kerala</p>
         </div>

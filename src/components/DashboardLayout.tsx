@@ -417,7 +417,7 @@ export default function DashboardLayout({
 
           <div className="text-center text-xs text-zinc-400 dark:text-zinc-500">
             <p className="font-medium">
-              AKGSMA official Kerala rates · Data via Malabar Gold &amp; BankBazaar · For reference only
+              AKGSMA · For reference only
             </p>
             <p className="mt-1.5">
               © 2026 LiveGold Kerala ·{" "}
