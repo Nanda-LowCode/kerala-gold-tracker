@@ -23,6 +23,8 @@ type Temple = {
   name_ml: string | null;
   district: string | null;
   deity: string | null;
+  lat: number | null;
+  lng: number | null;
 };
 
 async function getTemples(): Promise<Temple[]> {
@@ -30,12 +32,17 @@ async function getTemples(): Promise<Temple[]> {
     const supabase = createSupabaseReadClient();
     const { data } = await supabase
       .from("temples")
-      .select("slug, name_en, name_ml, district, deity")
+      .select("slug, name_en, name_ml, district, deity, lat, lng")
       .order("name_en", { ascending: true });
     return (data ?? []) as Temple[];
   } catch {
     return [];
   }
+}
+
+function mapsUrl(t: Temple): string {
+  if (t.lat && t.lng) return `https://maps.google.com/?q=${t.lat},${t.lng}`;
+  return `https://maps.google.com/?q=${encodeURIComponent((t.name_en ?? "") + " temple Kerala")}`;
 }
 
 // Highlight content for the 3 anchor temples
@@ -130,9 +137,21 @@ export default async function TemplesPage() {
                   <p className="text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
                     {info.summary}
                   </p>
-                  <span className="text-xs font-semibold text-amber-600 dark:text-amber-400">
-                    Read more →
-                  </span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-amber-600 dark:text-amber-400">
+                      Read more →
+                    </span>
+                    <a
+                      href={mapsUrl(t)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="inline-flex items-center gap-1 text-[10px] font-medium text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+                    >
+                      <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                      Google Maps
+                    </a>
+                  </div>
                 </Link>
               );
             })}
@@ -159,6 +178,16 @@ export default async function TemplesPage() {
                   {t.deity && (
                     <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-500">{t.deity}</p>
                   )}
+                  <a
+                    href={mapsUrl(t)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="mt-2 inline-flex items-center gap-1 text-[10px] font-medium text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+                  >
+                    <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                    Google Maps
+                  </a>
                 </Link>
               ))}
             </div>
