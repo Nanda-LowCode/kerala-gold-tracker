@@ -13,6 +13,16 @@ const CSP = [
 ].join("; ");
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "livegoldkerala.com" }],
+        destination: "https://www.livegoldkerala.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
