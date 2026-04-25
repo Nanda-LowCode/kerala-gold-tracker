@@ -118,16 +118,15 @@ export default async function TemplesPage() {
             {featured.map((t) => {
               const info = FEATURED[t.slug];
               return (
-                <Link
+                <div
                   key={t.slug}
-                  href={`/culture/temples/${t.slug}`}
-                  className="group flex flex-col gap-2 rounded-2xl border border-zinc-200/70 bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+                  className="flex flex-col gap-2 rounded-2xl border border-zinc-200/70 bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="font-bold text-zinc-900 group-hover:text-amber-700 dark:text-zinc-100 dark:group-hover:text-amber-400">
+                      <Link href={`/culture/temples/${t.slug}`} className="font-bold text-zinc-900 hover:text-amber-700 dark:text-zinc-100 dark:hover:text-amber-400">
                         {t.name_en}
-                      </p>
+                      </Link>
                       <p className="text-xs text-zinc-400">{t.name_ml} · {t.district}</p>
                     </div>
                     <span className="shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
@@ -138,21 +137,20 @@ export default async function TemplesPage() {
                     {info.summary}
                   </p>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-amber-600 dark:text-amber-400">
+                    <Link href={`/culture/temples/${t.slug}`} className="text-xs font-semibold text-amber-600 hover:underline dark:text-amber-400">
                       Read more →
-                    </span>
+                    </Link>
                     <a
                       href={mapsUrl(t)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
                       className="inline-flex items-center gap-1 text-[10px] font-medium text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
                     >
                       <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
                       Google Maps
                     </a>
                   </div>
-                </Link>
+                </div>
               );
             })}
           </div>
@@ -166,14 +164,13 @@ export default async function TemplesPage() {
             </h2>
             <div className="grid gap-3 sm:grid-cols-2">
               {others.map((t) => (
-                <Link
+                <div
                   key={t.slug}
-                  href={`/culture/temples/${t.slug}`}
-                  className="group rounded-xl border border-zinc-200/60 bg-white px-4 py-3 shadow-sm transition-colors hover:border-amber-200 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-amber-800/40"
+                  className="rounded-xl border border-zinc-200/60 bg-white px-4 py-3 shadow-sm transition-colors hover:border-amber-200 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-amber-800/40"
                 >
-                  <p className="font-medium text-zinc-800 group-hover:text-amber-700 dark:text-zinc-200 dark:group-hover:text-amber-400">
+                  <Link href={`/culture/temples/${t.slug}`} className="font-medium text-zinc-800 hover:text-amber-700 dark:text-zinc-200 dark:hover:text-amber-400">
                     {t.name_en}
-                  </p>
+                  </Link>
                   <p className="mt-0.5 text-xs text-zinc-400">{t.name_ml} · {t.district}</p>
                   {t.deity && (
                     <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-500">{t.deity}</p>
@@ -182,13 +179,12 @@ export default async function TemplesPage() {
                     href={mapsUrl(t)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
                     className="mt-2 inline-flex items-center gap-1 text-[10px] font-medium text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
                   >
                     <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
                     Google Maps
                   </a>
-                </Link>
+                </div>
               ))}
             </div>
           </section>
