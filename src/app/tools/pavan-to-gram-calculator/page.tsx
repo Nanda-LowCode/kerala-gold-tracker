@@ -71,8 +71,53 @@ const REFERENCE_ROWS = [
 export default async function PavanToGramCalculatorPage() {
   const rates = await getLatestRates();
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Pavan to Gram Gold Calculator — Kerala",
+    description:
+      "Convert between pavan, sovereign, gram, and tola and instantly see the gold value at today's Kerala board rate.",
+    url: "https://www.livegoldkerala.com/tools/pavan-to-gram-calculator",
+    applicationCategory: "FinanceApplication",
+    operatingSystem: "All",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
+  };
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "How many grams is 1 pavan of gold?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "1 pavan (also called sovereign) equals exactly 8 grams of gold. It is the standard unit used across Kerala, Tamil Nadu, and Karnataka jewellery showrooms.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What is a tola in gold measurement?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "1 tola equals 11.664 grams of gold. It is a traditional Mughal-era unit still used in North India and Gulf wholesale markets.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What is the difference between pavan and sovereign?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Pavan and sovereign are identical in South India — both equal 8 grams. The term sovereign comes from the British gold sovereign coin and is used interchangeably with pavan.",
+        },
+      },
+    ],
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <header className="border-b border-zinc-200/60 bg-white/70 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-950/70">
         <div className="mx-auto flex max-w-3xl items-center gap-2.5 px-4 py-4">
           <span className="text-2xl leading-none">⚖️</span>

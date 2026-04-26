@@ -36,11 +36,25 @@ async function getLatestRates() {
   }
 }
 
+const IMPORT_DUTY_LD = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "NRI Gold Import Duty Calculator India",
+  description:
+    "Calculate the exact airport customs duty for bringing gold into India based on 2026 CBIC baggage rules. Free tool for NRIs flying into Kerala.",
+  url: "https://www.livegoldkerala.com/tools/gold-import-duty-calculator",
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "All",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
+});
+
 export default async function GoldImportDutyCalculatorPage() {
   const rates = await getLatestRates();
 
   return (
     <>
+      {/* Static JSON-LD schema — content is hardcoded, not from user input */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: IMPORT_DUTY_LD }} />
       <header className="border-b border-zinc-200/60 bg-white/70 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-950/70">
         <div className="mx-auto flex max-w-3xl items-center gap-2.5 px-4 py-4">
           <span className="text-2xl leading-none">✨</span>

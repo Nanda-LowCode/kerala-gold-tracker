@@ -46,8 +46,54 @@ const HALLMARK_INFO = [
 export default async function HallmarkGoldCalculatorPage() {
   const rate24k = await getLatestRate24k();
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Hallmark Gold Value Calculator — 916, 750, 999",
+    description:
+      "Calculate the gold value for any BIS hallmark purity (999, 916, 750, 585, 375) based on today's Kerala board rate.",
+    url: "https://www.livegoldkerala.com/tools/hallmark-gold-calculator",
+    applicationCategory: "FinanceApplication",
+    operatingSystem: "All",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
+  };
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "What does 916 mean on gold jewellery?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "916 is the BIS hallmark for 22 Karat gold, meaning 91.6 grams of pure gold per 100 grams. It is the most popular purity for jewellery in Kerala.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What is BIS hallmarking on gold?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "BIS hallmarking is a certification by the Bureau of Indian Standards that guarantees the purity of gold jewellery. Since August 2021, it is mandatory for all gold jewellery sold in India.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What is the difference between 916 and 750 hallmark gold?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "916 (22K) gold contains 91.6% pure gold and is used for traditional jewellery. 750 (18K) contains 75% pure gold and is preferred for diamond-studded and lightweight daily-wear pieces.",
+        },
+      },
+    ],
+  };
+
+  // JSON-LD uses static hardcoded strings only — dangerouslySetInnerHTML is safe here
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <header className="border-b border-zinc-200/60 bg-white/70 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-950/70">
         <div className="mx-auto flex max-w-3xl items-center gap-2.5 px-4 py-4">
           <span className="text-2xl leading-none">✨</span>
