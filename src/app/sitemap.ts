@@ -1,29 +1,31 @@
 import { MetadataRoute } from 'next'
 import { KERALA_CITIES } from '@/components/DashboardLayout'
 import { getAllPosts } from '@/lib/mdx'
+import { createSupabaseReadClient } from '@/lib/supabase'
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://www.livegoldkerala.com'
+const BASE = 'https://www.livegoldkerala.com'
 
-  // 1. The main homepage route (Default Kochi)
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // Fetch dynamic slugs from DB in parallel
+  const supabase = createSupabaseReadClient()
+  const [templesRes, ornamentsRes] = await Promise.all([
+    supabase.from('temples').select('slug'),
+    supabase.from('ornaments').select('slug'),
+  ])
+  const templeSlugs = (templesRes.data ?? []).map((r) => r.slug)
+  const ornamentSlugs = (ornamentsRes.data ?? []).map((r) => r.slug)
+
   const rootRoute: MetadataRoute.Sitemap = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 1.0,
-    },
+    { url: BASE, lastModified: new Date(), changeFrequency: 'daily', priority: 1.0 },
   ]
 
-  // 2. The dynamic programmatic SEO city pages
   const cityRoutes: MetadataRoute.Sitemap = KERALA_CITIES.map((city) => ({
-    url: `${baseUrl}/${city}`,
+    url: `${BASE}/${city}`,
     lastModified: new Date(),
     changeFrequency: 'daily',
     priority: 0.8,
   }))
 
-  // 3. Tool pages
   const toolRoutes: MetadataRoute.Sitemap = [
     'pavan-to-gram-calculator',
     'gold-making-charge-calculator',
@@ -31,71 +33,75 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'gold-import-duty-calculator',
     'hallmark-gold-calculator',
   ].map((tool) => ({
-    url: `${baseUrl}/tools/${tool}`,
+    url: `${BASE}/tools/${tool}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.9,
   }))
 
-  // 4. Blog index
-  const blogIndexRoute: MetadataRoute.Sitemap = [
-    {
-      url: `${baseUrl}/blog`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.7,
-    },
+  const blogRoutes: MetadataRoute.Sitemap = [
+    { url: `${BASE}/blog`, lastModified: new Date(), changeFrequency: 'weekly' as const, priority: 0.7 },
+    ...getAllPosts().map((post) => ({
+      url: `${BASE}/blog/${post.slug}`,
+      lastModified: new Date(post.date),
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    })),
   ]
 
-  // 5. Blog posts
-  const blogRoutes: MetadataRoute.Sitemap = getAllPosts().map((post) => ({
-    url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: new Date(post.date),
-    changeFrequency: 'monthly',
-    priority: 0.6,
-  }))
-
-  // 6. Static info pages
   const staticRoutes: MetadataRoute.Sitemap = [
-    { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.5 },
-    { url: `${baseUrl}/silver-rate-kerala`, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 0.85 },
-    { url: `${baseUrl}/gold-rate-history`, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 0.75 },
-    { url: `${baseUrl}/gold-rate-yesterday-kerala`, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 0.7 },
-    { url: `${baseUrl}/contact`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.4 },
-    { url: `${baseUrl}/privacy`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.3 },
-    { url: `${baseUrl}/terms`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.3 },
-    { url: `${baseUrl}/disclaimer`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.3 },
+    { url: `${BASE}/about`,                      lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.5 },
+    { url: `${BASE}/silver-rate-kerala`,          lastModified: new Date(), changeFrequency: 'daily'   as const, priority: 0.85 },
+    { url: `${BASE}/gold-rate-history`,           lastModified: new Date(), changeFrequency: 'daily'   as const, priority: 0.75 },
+    { url: `${BASE}/gold-rate-yesterday-kerala`,  lastModified: new Date(), changeFrequency: 'daily'   as const, priority: 0.7 },
+    { url: `${BASE}/contact`,                     lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.4 },
+    { url: `${BASE}/privacy`,                     lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.3 },
+    { url: `${BASE}/terms`,                       lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.3 },
+    { url: `${BASE}/disclaimer`,                  lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.3 },
   ]
 
-  // 7. Culture hub pages
   const cultureRoutes: MetadataRoute.Sitemap = [
-    { url: `${baseUrl}/culture`,                               lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.85 },
-    { url: `${baseUrl}/culture/festivals`,                     lastModified: new Date(), changeFrequency: 'weekly' as const,  priority: 0.8 },
-    { url: `${baseUrl}/culture/temples`,                       lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.8 },
-    { url: `${baseUrl}/culture/weddings`,                      lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.8 },
-    { url: `${baseUrl}/culture/ornaments`,                     lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.75 },
-    { url: `${baseUrl}/culture/weddings/budget-calculator`,    lastModified: new Date(), changeFrequency: 'daily' as const,   priority: 0.85 },
+    { url: `${BASE}/culture`,                              lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.85 },
+    { url: `${BASE}/culture/festivals`,                    lastModified: new Date(), changeFrequency: 'weekly'  as const, priority: 0.8 },
+    { url: `${BASE}/culture/temples`,                      lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.8 },
+    { url: `${BASE}/culture/weddings`,                     lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.8 },
+    { url: `${BASE}/culture/ornaments`,                    lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.75 },
+    { url: `${BASE}/culture/weddings/budget-calculator`,   lastModified: new Date(), changeFrequency: 'daily'   as const, priority: 0.85 },
     // Wedding community pages
-    { url: `${baseUrl}/culture/weddings/hindu/nair`,           lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 },
-    { url: `${baseUrl}/culture/weddings/hindu/namboothiri`,    lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 },
-    { url: `${baseUrl}/culture/weddings/hindu/ezhava`,         lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 },
-    { url: `${baseUrl}/culture/weddings/christian/syrian`,     lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 },
-    { url: `${baseUrl}/culture/weddings/christian/latin`,      lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 },
-    { url: `${baseUrl}/culture/weddings/christian/marthoma`,   lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 },
-    { url: `${baseUrl}/culture/weddings/muslim/mappila`,       lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 },
-    { url: `${baseUrl}/culture/weddings/muslim/sunni`,         lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 },
+    { url: `${BASE}/culture/weddings/hindu/nair`,          lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 },
+    { url: `${BASE}/culture/weddings/hindu/namboothiri`,   lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 },
+    { url: `${BASE}/culture/weddings/hindu/ezhava`,        lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 },
+    { url: `${BASE}/culture/weddings/christian/syrian`,    lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 },
+    { url: `${BASE}/culture/weddings/christian/latin`,     lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 },
+    { url: `${BASE}/culture/weddings/christian/marthoma`,  lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 },
+    { url: `${BASE}/culture/weddings/muslim/mappila`,      lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 },
+    { url: `${BASE}/culture/weddings/muslim/sunni`,        lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.7 },
     // Glossary terms
-    { url: `${baseUrl}/culture/weddings/glossary/thali`,       lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.65 },
-    { url: `${baseUrl}/culture/weddings/glossary/minnu`,       lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.65 },
-    { url: `${baseUrl}/culture/weddings/glossary/mahr`,        lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.65 },
-    { url: `${baseUrl}/culture/weddings/glossary/talikettu`,   lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.65 },
-    { url: `${baseUrl}/culture/weddings/glossary/minnukettu`,  lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.65 },
-    { url: `${baseUrl}/culture/weddings/glossary/nikah`,       lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.65 },
-    { url: `${baseUrl}/culture/weddings/glossary/valayidal`,   lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.65 },
-    { url: `${baseUrl}/culture/weddings/glossary/manthrakodi`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.65 },
-    { url: `${baseUrl}/culture/weddings/glossary/kumbla`,      lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.65 },
-    { url: `${baseUrl}/culture/weddings/glossary/malarthi`,    lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.65 },
+    { url: `${BASE}/culture/weddings/glossary/thali`,      lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.65 },
+    { url: `${BASE}/culture/weddings/glossary/minnu`,      lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.65 },
+    { url: `${BASE}/culture/weddings/glossary/mahr`,       lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.65 },
+    { url: `${BASE}/culture/weddings/glossary/talikettu`,  lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.65 },
+    { url: `${BASE}/culture/weddings/glossary/minnukettu`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.65 },
+    { url: `${BASE}/culture/weddings/glossary/nikah`,      lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.65 },
+    { url: `${BASE}/culture/weddings/glossary/valayidal`,  lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.65 },
+    { url: `${BASE}/culture/weddings/glossary/manthrakodi`,lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.65 },
+    { url: `${BASE}/culture/weddings/glossary/kumbla`,     lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.65 },
+    { url: `${BASE}/culture/weddings/glossary/malarthi`,   lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.65 },
+    // Individual temple pages (from DB)
+    ...templeSlugs.map((slug) => ({
+      url: `${BASE}/culture/temples/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.75,
+    })),
+    // Individual ornament pages (from DB)
+    ...ornamentSlugs.map((slug) => ({
+      url: `${BASE}/culture/ornaments/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    })),
   ]
 
-  return [...rootRoute, ...toolRoutes, ...staticRoutes, ...cityRoutes, ...blogIndexRoute, ...blogRoutes, ...cultureRoutes]
+  return [...rootRoute, ...toolRoutes, ...staticRoutes, ...cityRoutes, ...blogRoutes, ...cultureRoutes]
 }
