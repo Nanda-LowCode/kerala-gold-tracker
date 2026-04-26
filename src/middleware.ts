@@ -35,6 +35,12 @@ export function middleware(request: NextRequest) {
   // Only intercept the homepage
   if (pathname !== "/") return NextResponse.next();
 
+  // Let crawlers see the canonical homepage content — don't geo-redirect bots
+  const ua = request.headers.get("user-agent") ?? "";
+  if (/googlebot|bingbot|slurp|duckduckbot|baiduspider|yandex|facebookexternalhit/i.test(ua)) {
+    return NextResponse.next();
+  }
+
   const rawCity = request.headers.get("x-vercel-ip-city");
   if (!rawCity) return NextResponse.next();
 
