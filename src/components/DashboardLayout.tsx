@@ -209,9 +209,8 @@ export default function DashboardLayout({
               <TrendAnalysisIndicator history={history} />
             </div>
 
-            {/* Rate Cards: Hero 22K + 24K / 21K / 18K */}
-            <div className="grid gap-3 sm:gap-4 md:grid-cols-4">
-              {/* 22K hero — full width on mobile, first col on desktop */}
+            {/* Rate Cards: 22K hero + rate board */}
+            <div className="flex flex-col gap-3 sm:gap-4">
               <RateCard
                 label="22 Karat Gold"
                 purity="916 Hallmark"
@@ -220,33 +219,13 @@ export default function DashboardLayout({
                 pavanRate={today.rate_22k_1g * 8}
                 featured
               />
-              {/* 24K, 21K, 18K side-by-side on mobile */}
-              <div className="grid grid-cols-3 gap-3 sm:gap-4 md:contents">
-                <RateCard
-                  label="24 Karat"
-                  purity="999 Fine"
-                  ratePerGram={today.rate_24k_1g}
-                  change={change24k}
-                  pavanRate={today.rate_24k_1g * 8}
-                  compact
-                />
-                <RateCard
-                  label="21 Karat"
-                  purity="875"
-                  ratePerGram={rate21k}
-                  change={change21k}
-                  pavanRate={rate21k * 8}
-                  compact
-                />
-                <RateCard
-                  label="18 Karat"
-                  purity="750"
-                  ratePerGram={today.rate_18k_1g}
-                  change={change18k}
-                  pavanRate={today.rate_18k_1g * 8}
-                  compact
-                />
-              </div>
+              <RateBoard
+                rows={[
+                  { label: "24 Karat", purity: "999 Fine", ratePerGram: today.rate_24k_1g, pavanRate: today.rate_24k_1g * 8, change: change24k },
+                  { label: "21 Karat", purity: "875 · Gulf imports", ratePerGram: rate21k, pavanRate: rate21k * 8, change: change21k },
+                  { label: "18 Karat", purity: "750", ratePerGram: today.rate_18k_1g, pavanRate: today.rate_18k_1g * 8, change: change18k },
+                ]}
+              />
             </div>
 
             {/* Silver Rate Card */}
@@ -555,6 +534,64 @@ function ChangeBadge({ change }: { change: number }) {
       {up ? "\u25B2" : "\u25BC"} {up ? "+" : ""}
       {change.toLocaleString("en-IN")}
     </span>
+  );
+}
+
+function RateBoard({
+  rows,
+}: {
+  rows: {
+    label: string;
+    purity: string;
+    ratePerGram: number;
+    pavanRate: number;
+    change: number | null;
+  }[];
+}) {
+  return (
+    <article className="overflow-hidden rounded-2xl border border-zinc-200/70 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-md shadow-amber-100/30 dark:shadow-none">
+      {/* Header */}
+      <div className="flex items-center justify-between border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50/60 dark:bg-zinc-800/30 px-5 py-2.5">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+          Other Karat Rates Today
+        </p>
+        <p className="text-[10px] text-zinc-400 dark:text-zinc-500">Per gram · Per pavan</p>
+      </div>
+
+      <div className="divide-y divide-zinc-100 dark:divide-zinc-800/70">
+        {rows.map((row) => (
+          <div key={row.label} className="flex items-center gap-4 px-5 py-3.5">
+            {/* Purity label */}
+            <div className="min-w-[90px]">
+              <p className="text-sm font-bold text-zinc-800 dark:text-zinc-200">{row.label}</p>
+              <p className="text-[10px] font-medium text-zinc-400 dark:text-zinc-500">{row.purity}</p>
+            </div>
+
+            {/* Rates */}
+            <div className="flex flex-1 items-baseline gap-2">
+              <p className="bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 dark:from-amber-400 dark:via-yellow-400 dark:to-amber-500 bg-clip-text text-xl font-extrabold tracking-tight text-transparent">
+                {formatCurrency(row.ratePerGram)}
+              </p>
+              <p className="text-xs text-zinc-400 dark:text-zinc-500">
+                / g
+              </p>
+              <p className="hidden sm:block text-xs text-zinc-400 dark:text-zinc-500">
+                · {formatCurrency(row.pavanRate)} / pavan
+              </p>
+            </div>
+
+            {/* Change badge */}
+            <div className="shrink-0">
+              {row.change !== null ? (
+                <ChangeBadge change={row.change} />
+              ) : (
+                <span className="text-xs text-zinc-300 dark:text-zinc-600">—</span>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </article>
   );
 }
 
