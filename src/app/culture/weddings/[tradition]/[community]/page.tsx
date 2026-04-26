@@ -372,58 +372,75 @@ export default async function CommunityWeddingPage({
         </div>
 
         {/* Ornament defaults from DB */}
-        {defaults.length > 0 && (
-          <section className="space-y-3">
-            <h2 className="text-base font-bold text-zinc-800 dark:text-zinc-100">
-              Common bridal ornaments
-            </h2>
-            <p className="text-xs text-zinc-400 dark:text-zinc-500">
-              Default weights used in the wedding budget calculator. Indicative community averages — actual choices vary by family.
-            </p>
-            <div className="overflow-x-auto rounded-2xl border border-zinc-200/70 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-zinc-100 dark:border-zinc-800">
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-400">Ornament</th>
-                    <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-400">Default (pavan)</th>
-                    <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-400">Required</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
-                  {defaults.map((d, i) => (
-                    <tr key={i} className="hover:bg-amber-50/30 dark:hover:bg-zinc-800/50">
-                      <td className="px-4 py-2.5">
-                        <p className="font-medium text-zinc-800 dark:text-zinc-200">{d.ornaments?.name_en}</p>
-                        {d.ornaments?.name_ml && (
-                          <p className="text-xs text-zinc-400">{d.ornaments.name_ml}</p>
-                        )}
-                        {d.notes && (
-                          <p className="text-xs text-zinc-400 mt-0.5">{d.notes}</p>
-                        )}
-                      </td>
-                      <td className="px-4 py-2.5 text-right font-semibold text-amber-700 dark:text-amber-400">
-                        {d.default_pavan ?? "—"}
-                      </td>
-                      <td className="px-4 py-2.5 text-right">
-                        {d.is_required ? (
-                          <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">Yes</span>
-                        ) : (
-                          <span className="text-xs text-zinc-400">Optional</span>
-                        )}
-                      </td>
+        <section className="space-y-3">
+          <h2 className="text-base font-bold text-zinc-800 dark:text-zinc-100">
+            Common bridal ornaments
+          </h2>
+          {defaults.length > 0 ? (
+            <>
+              <p className="text-xs text-zinc-400 dark:text-zinc-500">
+                Default weights used in the wedding budget calculator. Indicative community averages — actual choices vary by family.
+              </p>
+              <div className="overflow-x-auto rounded-2xl border border-zinc-200/70 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-zinc-100 dark:border-zinc-800">
+                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-400">Ornament</th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-400">Default (pavan)</th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-400">Required</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
+                    {defaults.map((d, i) => (
+                      <tr key={i} className="hover:bg-amber-50/30 dark:hover:bg-zinc-800/50">
+                        <td className="px-4 py-2.5">
+                          <p className="font-medium text-zinc-800 dark:text-zinc-200">{d.ornaments?.name_en}</p>
+                          {d.ornaments?.name_ml && (
+                            <p className="text-xs text-zinc-400">{d.ornaments.name_ml}</p>
+                          )}
+                          {d.notes && (
+                            <p className="text-xs text-zinc-400 mt-0.5">{d.notes}</p>
+                          )}
+                        </td>
+                        <td className="px-4 py-2.5 text-right font-semibold text-amber-700 dark:text-amber-400">
+                          {d.default_pavan ?? "—"}
+                        </td>
+                        <td className="px-4 py-2.5 text-right">
+                          {d.is_required ? (
+                            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">Yes</span>
+                          ) : (
+                            <span className="text-xs text-zinc-400">Optional</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <Link
+                href="/culture/weddings/budget-calculator"
+                className="inline-flex items-center gap-1.5 rounded-full bg-amber-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-700"
+              >
+                Open budget calculator →
+              </Link>
+            </>
+          ) : (
+            <div className="rounded-2xl border border-dashed border-zinc-200/70 bg-zinc-50/40 px-6 py-8 text-center dark:border-zinc-700/50 dark:bg-zinc-900/20">
+              <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                Ornament defaults for this community are being compiled.
+              </p>
+              <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
+                Use the budget calculator with custom weights in the meantime.
+              </p>
+              <Link
+                href="/culture/weddings/budget-calculator"
+                className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-amber-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-700"
+              >
+                Open budget calculator →
+              </Link>
             </div>
-            <Link
-              href="/culture/weddings/budget-calculator"
-              className="inline-flex items-center gap-1.5 rounded-full bg-amber-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-700"
-            >
-              Open budget calculator →
-            </Link>
-          </section>
-        )}
+          )}
+        </section>
 
         {/* Key terms */}
         {info.keyTerms && (
