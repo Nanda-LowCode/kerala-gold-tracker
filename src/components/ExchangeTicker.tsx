@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 
 interface FXRates {
-  usd_inr: number;
-  aed_inr: number;
-  qar_inr: number;
-  omr_inr: number;
+  usd_inr: number | null;
+  aed_inr: number | null;
+  qar_inr: number | null;
+  omr_inr: number | null;
   date: string;
 }
 
@@ -27,11 +27,13 @@ export default function ExchangeTicker() {
       .then((r) => r.json())
       .then((data) => {
         const usd = data.usd as Record<string, number>;
+        const safe = (divisor: number | undefined) =>
+          divisor && divisor > 0 ? usd.inr / divisor : null;
         setRates({
-          usd_inr: usd.inr,
-          aed_inr: usd.inr / usd.aed,
-          qar_inr: usd.inr / usd.qar,
-          omr_inr: usd.inr / usd.omr,
+          usd_inr: usd.inr > 0 ? usd.inr : null,
+          aed_inr: safe(usd.aed),
+          qar_inr: safe(usd.qar),
+          omr_inr: safe(usd.omr),
           date: data.date as string,
         });
       })
@@ -62,6 +64,7 @@ export default function ExchangeTicker() {
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {PAIRS.map((p) => {
           const rate = rates[p.key];
+          if (rate === null) return null;
           return (
             <div
               key={p.key}
