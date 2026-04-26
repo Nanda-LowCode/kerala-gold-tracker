@@ -15,6 +15,7 @@ import NotificationToggle from "@/components/NotificationToggle";
 import TrendAnalysisIndicator from "@/components/TrendAnalysisIndicator";
 import PriceAlertInput from "@/components/PriceAlertInput";
 import SilverRateCard from "@/components/SilverRateCard";
+import ExchangeTicker from "@/components/ExchangeTicker";
 import { GoldRate } from "@/lib/types";
 import { formatCurrency } from "@/lib/format";
 import { getCityData } from "@/lib/cityData";
@@ -57,8 +58,13 @@ export default function DashboardLayout({
   const yesterday = history[1] ?? null;
   const cityData = getCityData(cityName);
 
+  const rate21k = today ? today.rate_22k_1g * (21 / 22) : 0;
+  const yesterday21k = yesterday ? yesterday.rate_22k_1g * (21 / 22) : null;
+
   const change18k =
     today && yesterday ? today.rate_18k_1g - yesterday.rate_18k_1g : null;
+  const change21k =
+    today && yesterday21k !== null ? rate21k - yesterday21k : null;
   const change22k =
     today && yesterday ? today.rate_22k_1g - yesterday.rate_22k_1g : null;
   const change24k =
@@ -96,6 +102,7 @@ export default function DashboardLayout({
           { "@type": "PropertyValue", name: "Purity", value: "22K (916 Hallmark)" },
           { "@type": "PropertyValue", name: "Price per Pavan (8g)", value: `₹${(today.rate_22k_1g * 8).toLocaleString("en-IN")}` },
           { "@type": "PropertyValue", name: "24K Rate per Gram", value: `₹${today.rate_24k_1g.toLocaleString("en-IN")}` },
+          { "@type": "PropertyValue", name: "21K Rate per Gram", value: `₹${Math.round(today.rate_22k_1g * 21 / 22).toLocaleString("en-IN")}` },
           { "@type": "PropertyValue", name: "18K Rate per Gram", value: `₹${today.rate_18k_1g.toLocaleString("en-IN")}` },
         ],
         dateModified: `${today.date}T10:15:00+05:30`,
@@ -202,8 +209,8 @@ export default function DashboardLayout({
               <TrendAnalysisIndicator history={history} />
             </div>
 
-            {/* Rate Cards: Hero 22K + split 24K/18K */}
-            <div className="grid gap-3 sm:gap-4 md:grid-cols-3">
+            {/* Rate Cards: Hero 22K + 24K / 21K / 18K */}
+            <div className="grid gap-3 sm:gap-4 md:grid-cols-4">
               {/* 22K hero — full width on mobile, first col on desktop */}
               <RateCard
                 label="22 Karat Gold"
@@ -213,10 +220,10 @@ export default function DashboardLayout({
                 pavanRate={today.rate_22k_1g * 8}
                 featured
               />
-              {/* 24K & 18K side-by-side on mobile */}
-              <div className="grid grid-cols-2 gap-3 sm:gap-4 md:contents">
+              {/* 24K, 21K, 18K side-by-side on mobile */}
+              <div className="grid grid-cols-3 gap-3 sm:gap-4 md:contents">
                 <RateCard
-                  label="24 Karat Gold"
+                  label="24 Karat"
                   purity="999 Fine"
                   ratePerGram={today.rate_24k_1g}
                   change={change24k}
@@ -224,7 +231,15 @@ export default function DashboardLayout({
                   compact
                 />
                 <RateCard
-                  label="18 Karat Gold"
+                  label="21 Karat"
+                  purity="875"
+                  ratePerGram={rate21k}
+                  change={change21k}
+                  pavanRate={rate21k * 8}
+                  compact
+                />
+                <RateCard
+                  label="18 Karat"
                   purity="750"
                   ratePerGram={today.rate_18k_1g}
                   change={change18k}
@@ -241,6 +256,9 @@ export default function DashboardLayout({
                 change={changeSilver}
               />
             )}
+
+            {/* Live Exchange Rate Ticker — USD/AED/QAR/OMR to INR */}
+            <ExchangeTicker />
 
             {/* WhatsApp viral share button */}
             {change22k !== null && (
