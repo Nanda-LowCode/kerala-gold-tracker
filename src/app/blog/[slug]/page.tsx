@@ -43,8 +43,26 @@ export default async function BlogPost({ params }: Props) {
     { weekday: "long", year: "numeric", month: "long", day: "numeric" }
   );
 
+  // Escape < and > so MDX content can never break out of the <script> tag
+  const articleJsonLd = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.description,
+    datePublished: post.date,
+    url: `https://www.livegoldkerala.com/blog/${slug}`,
+    author: { "@type": "Organization", name: "LiveGold Kerala", url: "https://www.livegoldkerala.com" },
+    publisher: {
+      "@type": "Organization",
+      name: "LiveGold Kerala",
+      url: "https://www.livegoldkerala.com",
+      logo: { "@type": "ImageObject", url: "https://www.livegoldkerala.com/opengraph-image" },
+    },
+  }).replace(/</g, "\\u003c").replace(/>/g, "\\u003e");
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: articleJsonLd }} />
       <header className="sticky top-0 z-50 border-b border-zinc-200/60 bg-white/70 backdrop-blur-xl dark:border-zinc-800/60 dark:bg-zinc-950/80">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-4">
           <Link href="/" className="flex items-center gap-2.5">
