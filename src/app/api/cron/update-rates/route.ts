@@ -224,10 +224,10 @@ const fetchIBJA: FetcherFn = async () => {
     throw new Error(`IBJA: could not parse rates (916=${raw916}, 999=${raw999})`);
   }
 
-  // IBJA is wholesale. Kerala retail consistently runs ~2.4–2.5% above IBJA AM rate.
-  const RETAIL_MARKUP = 1.025;
-  const rate22k = Math.round(wholesale22k * RETAIL_MARKUP);
-  const rate24k = Math.round(wholesale24k * RETAIL_MARKUP);
+  // IBJA wholesale ≈ Kerala retail (verified June 2026: markup is ~0%).
+  // No markup applied — use IBJA rate directly as fallback approximation.
+  const rate22k = Math.round(wholesale22k);
+  const rate24k = Math.round(wholesale24k);
 
   const result: GoldRateResult = { rate_22k_1g: rate22k, rate_24k_1g: rate24k, source: "ibja" };
   validateRates(result);
