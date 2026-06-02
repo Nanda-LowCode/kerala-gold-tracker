@@ -29,7 +29,7 @@ const CITY_MAP: Record<string, string> = {
   kasaragod: "kasaragod",
 };
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Only intercept the homepage
