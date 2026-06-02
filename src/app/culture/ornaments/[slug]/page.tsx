@@ -72,7 +72,7 @@ export async function generateMetadata({
     title: `${ornament.name_en} (${ornament.name_ml ?? ornament.transliteration ?? ornament.slug}) — Kerala Gold Ornament | LiveGold Kerala`,
     description: desc,
     alternates: { canonical: `/culture/ornaments/${slug}` },
-    ...(isStub && { robots: { index: false } }),
+    ...(isStub ? { robots: { index: false } } : {}),
     openGraph: {
       title: `${ornament.name_en} — Kerala Gold Ornament`,
       description: desc,

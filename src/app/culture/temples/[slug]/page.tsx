@@ -63,7 +63,7 @@ export async function generateMetadata({
     title: `${temple.name_en} — Sacred Gold Traditions | LiveGold Kerala`,
     description,
     alternates: { canonical: `/culture/temples/${slug}` },
-    ...(isStub && { robots: { index: false } }),
+    ...(isStub ? { robots: { index: false } } : {}),
     openGraph: {
       title: `${temple.name_en} — Sacred Gold Traditions`,
       description,
