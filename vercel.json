@@ -1,0 +1,16 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/update-rates",
+      "schedule": "30 4 * * *"
+    },
+    {
+      "path": "/api/cron/update-rates",
+      "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/update-rates",
+      "schedule": "30 7 * * *"
+    }
+  ]
+}

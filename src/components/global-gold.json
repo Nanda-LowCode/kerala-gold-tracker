@@ -1,0 +1,67 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "lastUpdated": "2026-04-22",
+    "units": "Metric Tonnes",
+    "sources": [
+      "World Gold Council (WGC) - Demand Trends",
+      "US Geological Survey (USGS) - Mineral Summaries"
+    ]
+  },
+  "data": [
+    {
+      "iso3": "CHN",
+      "countryName": "China",
+      "lat": 35.8617,
+      "lng": 104.1954,
+      "demand": 825,
+      "production": 370,
+      "reserves": 3000
+    },
+    {
+      "iso3": "IND",
+      "countryName": "India",
+      "lat": 20.5937,
+      "lng": 78.9629,
+      "demand": 747,
+      "production": 2,
+      "reserves": 70
+    },
+    {
+      "iso3": "USA",
+      "countryName": "United States",
+      "lat": 37.0902,
+      "lng": -95.7129,
+      "demand": 130,
+      "production": 170,
+      "reserves": 3000
+    },
+    {
+      "iso3": "AUS",
+      "countryName": "Australia",
+      "lat": -25.2744,
+      "lng": 133.7751,
+      "demand": 35,
+      "production": 310,
+      "reserves": 12000
+    },
+    {
+      "iso3": "ARE",
+      "countryName": "United Arab Emirates",
+      "lat": 23.4241,
+      "lng": 53.8478,
+      "demand": 55,
+      "production": 0,
+      "reserves": 0
+    },
+    {
+      "iso3": "CHE",
+      "countryName": "Switzerland",
+      "lat": 46.8182,
+      "lng": 8.2275,
+      "demand": 45,
+      "production": 0,
+      "reserves": 0
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Enable class-based dark mode compatible with next-themes */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --font-sans: var(--font-geist);
+}
+
+body {
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
