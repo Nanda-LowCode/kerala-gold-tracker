@@ -19,6 +19,7 @@ if (process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
 interface GoldRateResult {
   rate_22k_1g: number;
   rate_24k_1g: number;
+  rate_18k_1g?: number;
   source: string;
 }
 
@@ -206,7 +207,30 @@ const fetchBankBazaar: FetcherFn = async () => {
   return result;
 };
 
-// ─── Fetcher #2: IBJA (India Bullion & Jewellers Association — wholesale benchmark) ──
+// ─── Fetcher #2: AKGSMA (All Kerala Gold & Silver Merchants Association — official board rate) ──
+
+const fetchAKGSMA: FetcherFn = async () => {
+  const html = await fetchHtml("https://akgsma.com/");
+  const text = cheerio.load(html).text();
+
+  // Page format: "22K916 (1gm) - ₹ 14320"
+  const m22 = text.match(/22[Kk]\S*\s*\(1\s*gm\)\s*-\s*₹\s*([\d,]+)/i);
+  if (!m22) throw new Error("AKGSMA: 22K rate not found in page");
+
+  const rate22k = parsePrice(m22[1]);
+  // AKGSMA does not publish 24K; derive from 22K via purity ratio
+  const rate24k = Math.round(rate22k * (24 / 22));
+
+  // Extract 18K directly — AKGSMA publishes it officially
+  const m18 = text.match(/18[Kk]\S*\s*\(1\s*gm\)\s*-\s*₹\s*([\d,]+)/i);
+  const rate18k = m18 ? parsePrice(m18[1]) : undefined;
+
+  const result: GoldRateResult = { rate_22k_1g: rate22k, rate_24k_1g: rate24k, rate_18k_1g: rate18k, source: "akgsma" };
+  validateRates(result);
+  return result;
+};
+
+// ─── Fetcher #3: IBJA (India Bullion & Jewellers Association — wholesale benchmark) ──
 
 const fetchIBJA: FetcherFn = async () => {
   const html = await fetchHtml("https://ibjarates.com/");
@@ -237,21 +261,20 @@ const fetchIBJA: FetcherFn = async () => {
 // ─── Parallel fetch with stale detection ─────────────────────────────────────
 
 const FETCHERS: { name: string; fn: FetcherFn }[] = [
+  { name: "AKGSMA", fn: fetchAKGSMA },
   { name: "BankBazaar", fn: fetchBankBazaar },
   { name: "IBJA", fn: fetchIBJA },
 ];
 
-/**
- * BankBazaar updates ~10:00–10:30 AM IST (direct retail rate — preferred).
- * IBJA publishes AM rate ~11:00 AM IST (wholesale + 2.5% markup — fallback).
- * BankBazaar is always preferred; IBJA kicks in automatically if BankBazaar fails.
- */
+// AKGSMA is the official Kerala board — always preferred.
+// BankBazaar mirrors AKGSMA and is the first fallback.
+// IBJA (wholesale, no markup) is the last resort.
 function getPreferredSource(): string {
-  return "BankBazaar";
+  return "AKGSMA";
 }
 
 // Priority order when the preferred source is unavailable
-const SOURCE_PRIORITY = ["BankBazaar", "IBJA"];
+const SOURCE_PRIORITY = ["AKGSMA", "BankBazaar", "IBJA"];
 
 async function fetchWithConsensus(
   yesterdayRate22k: number | null
@@ -403,8 +426,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Calculate 18K from 24K (75% purity = 18/24)
-    const rate18k = Math.round(data.rate_24k_1g * (18 / 24));
+    // 18K: use AKGSMA's official rate if available (extracted in the AKGSMA fetcher), else derive
+    const rate18k = data.rate_18k_1g ?? Math.round(data.rate_24k_1g * (18 / 24));
 
     const today = getTodayIST();
 
