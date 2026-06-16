@@ -283,15 +283,8 @@ export default async function DashboardLayout({
               )}
             </section>
 
-            {/* Pending rates notice (hidden once today's data arrives) */}
-            <RatesPendingBanner latestDate={today.date} />
-
-            {/* AI Trend Analysis Pill */}
-            <div className="flex justify-center md:justify-start">
-              <TrendAnalysisIndicator history={history} />
-            </div>
-
-            {/* Rate Cards: 22K hero + rate board */}
+            {/* Rate Cards: 22K hero + rate board — lead with the number users came for,
+                so today's rate is the first thing visible above the fold on mobile. */}
             <div className="flex flex-col gap-3 sm:gap-4">
               <RateCard
                 label="22 Karat Gold"
@@ -314,6 +307,15 @@ export default async function DashboardLayout({
             <p className="-mt-1 text-[11px] leading-relaxed text-zinc-400 dark:text-zinc-500">
               22K &amp; 18K are the official AKGSMA Kerala board rates. 24K is derived from the 916 rate by purity (22K&nbsp;&times;&nbsp;24&frasl;22), reflecting pure-gold value.
             </p>
+
+            {/* Pending rates notice (hidden once today's data arrives) — below the rate
+                so users see the number first, then the "yesterday's rate" caveat. */}
+            <RatesPendingBanner latestDate={today.date} />
+
+            {/* AI Trend Analysis Pill — secondary context, sits under the headline number */}
+            <div className="flex justify-center md:justify-start">
+              <TrendAnalysisIndicator history={history} />
+            </div>
 
             {/* Silver Rate Card */}
             {today.rate_silver_1g && (
