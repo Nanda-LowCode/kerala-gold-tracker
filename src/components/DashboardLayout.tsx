@@ -37,6 +37,7 @@ export const KERALA_CITIES = [
   "trivandrum",
   "ernakulam",
   "kozhikode",
+  "calicut",
   "thrissur",
   "kollam",
   "palakkad",
@@ -73,10 +74,16 @@ async function getRecentNewsWithVerdicts(limit = 3) {
 export default async function DashboardLayout({
   history,
   cityName,
+  displayName,
 }: {
   history: GoldRate[];
   cityName: string;
+  /** Region label shown in the H1/headings. Defaults to cityName; the homepage
+   *  passes "Kerala" so it claims the high-volume Kerala head terms while still
+   *  using Kochi as the reference data city. */
+  displayName?: string;
 }) {
+  const region = displayName ?? cityName;
   const today = history[0] ?? null;
   const yesterday = history[1] ?? null;
   const cityData = getCityData(cityName);
@@ -218,7 +225,11 @@ export default async function DashboardLayout({
       {/* Top Ticker - highly integrated below header */}
       {today && <TopTicker history={history} cityName={cityName} />}
 
-      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-4 px-4 py-3 md:gap-8 md:py-10">
+      {/* Below xl this is a single centered column (mobile/laptop unchanged).
+          At xl it becomes a 3-col grid: the primary funnel keeps its tuned
+          ~2/3 width and the secondary rail fills the previously-empty space. */}
+      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-4 px-4 py-3 md:gap-8 md:py-10 xl:grid xl:max-w-6xl xl:grid-cols-3 xl:items-start xl:gap-8">
+        <div className="flex flex-col gap-4 md:gap-8 xl:col-span-2">
         {today ? (
           <>
             {/* Hero: trust badge + date -> Squished aggressively for mobile */}
@@ -240,11 +251,28 @@ export default async function DashboardLayout({
                 </span>
               </div>
               <h1 className="mt-1 text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 md:mt-4 md:text-3xl">
-                Today&apos;s Gold Rate in {cityName}
+                Today&apos;s Gold Rate in {region}
               </h1>
               <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400 md:mt-1 md:text-sm">
-                <time dateTime={`${today.date}T10:00:00+05:30`}>{formatDate(today.date)}</time> · Updated by 10 AM IST · {cityName}
+                <time dateTime={`${today.date}T10:00:00+05:30`}>{formatDate(today.date)}</time> · Updated by 10 AM IST · {region}
               </p>
+              {/* At-a-glance daily trend signal — the "reason to come back" cue */}
+              {change22k !== null && yesterday && (
+                <p
+                  className={`mt-2 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold ${
+                    change22k > 0
+                      ? "border-rose-200 bg-rose-50 text-rose-600 dark:border-rose-900/40 dark:bg-rose-950/30 dark:text-rose-400"
+                      : change22k < 0
+                        ? "border-emerald-200 bg-emerald-50 text-emerald-600 dark:border-emerald-900/40 dark:bg-emerald-950/30 dark:text-emerald-400"
+                        : "border-zinc-200 bg-zinc-50 text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900/40 dark:text-zinc-400"
+                  }`}
+                >
+                  <span aria-hidden>{change22k > 0 ? "▲" : change22k < 0 ? "▼" : "—"}</span>
+                  {change22k === 0
+                    ? "No change since yesterday"
+                    : `${change22k > 0 ? "Up" : "Down"} ₹${Math.abs(change22k).toLocaleString("en-IN")}/g (22K) since yesterday · ${((Math.abs(change22k) / yesterday.rate_22k_1g) * 100).toFixed(2)}%`}
+                </p>
+              )}
               {cityName !== "Kochi" && (
                 <p className="mt-2 flex items-center gap-1.5 rounded-full border border-blue-100 bg-blue-50/60 px-3 py-1 text-[11px] text-blue-600 dark:border-blue-900/40 dark:bg-blue-950/30 dark:text-blue-400">
                   <svg className="h-3 w-3 shrink-0" viewBox="0 0 20 20" fill="currentColor">
@@ -281,6 +309,11 @@ export default async function DashboardLayout({
                 ]}
               />
             </div>
+
+            {/* Data-trust note — explains the 24K derivation so it doesn't look "wrong" vs aggregators */}
+            <p className="-mt-1 text-[11px] leading-relaxed text-zinc-400 dark:text-zinc-500">
+              22K &amp; 18K are the official AKGSMA Kerala board rates. 24K is derived from the 916 rate by purity (22K&nbsp;&times;&nbsp;24&frasl;22), reflecting pure-gold value.
+            </p>
 
             {/* Silver Rate Card */}
             {today.rate_silver_1g && (
@@ -357,6 +390,12 @@ export default async function DashboardLayout({
         ) : (
           <EmptyState />
         )}
+        </div>
+
+        {/* Secondary rail — daily updates, articles, trust note & FAQ.
+            Below xl it stacks under the primary funnel (mobile order unchanged);
+            at xl it becomes a sticky sidebar that fills the desktop width. */}
+        <aside className="flex flex-col gap-4 md:gap-8 xl:col-span-1 xl:sticky xl:top-24 xl:self-start">
 
         {/* Daily news section — fresh-content signal for SEO */}
         <RecentDailyUpdates entries={recentNewsEntries} />
@@ -375,7 +414,7 @@ export default async function DashboardLayout({
               {cityData.insightContent}
             </p>
             <p className="mt-3 border-t border-amber-100/60 pt-2 text-[10px] text-zinc-400 dark:border-zinc-800 dark:text-zinc-500 sm:text-xs">
-              * Gold rates in Kerala are standardised across all districts by the Kerala Gold &amp; Silver Merchants Association. The daily board rate applies equally to {cityName}.
+              * Gold rates in Kerala are standardised across all districts by the Kerala Gold &amp; Silver Merchants Association. The daily board rate applies equally to {region}.
             </p>
           </div>
         ) : (
@@ -387,7 +426,8 @@ export default async function DashboardLayout({
         )}
 
         {/* FAQ — perfectly localised per city for SEO uniqueness and crawling priority */}
-        <FAQ cityName={cityName} />
+        <FAQ cityName={region} />
+        </aside>
       </main>
 
       {/* FOOTER & INTERNAL CRAWLER LINKS FOR programmatic SEO */}

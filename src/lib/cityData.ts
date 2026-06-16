@@ -209,6 +209,20 @@ export const CITY_DATA: Record<string, CityData> = {
       a: "Dussera (Navaratri, Sep-Oct) is uniquely significant in Kasaragod for the Tulu-speaking community — it is observed here more seriously than in any other Kerala district. Gulf returnee influx drives buying during Eid, summer (May-Jun), and the December holiday period. Kasaragod's wedding season bridges both Kannada and Malayalam traditions, extending the peak from Oct through Feb — wider than most Kerala districts. Onam remains an important buying occasion for the sizeable Malayalam-speaking population.",
     },
   },
+  calicut: {
+    id: "calicut",
+    metaDescriptionPrefix: "Today's gold rate in Calicut (Kozhikode).",
+    insightTitle: "Calicut — Malabar's Historic Gold Capital",
+    insightContent: "Calicut (officially Kozhikode) is the heart of the Malabar gold trade, with a centuries-old craftsmanship tradition centred on SM Street. The same Kerala board rate applies here as across the state, but Calicut is distinctive for heavier classic Malabar designs and strong Gulf-NRI investment demand from the large expatriate community in the UAE, Saudi Arabia and Oman.",
+    localMarketFaq: {
+      q: "Where are the best places to buy gold in Calicut?",
+      a: "SM Street (Mittai Theruvu) near Mananchira is Calicut's oldest gold trading hub — the place for traditional Malabar filigree and antique-finish designs. Mavoor Road and GH Road carry the major chain showrooms (Malabar Gold, Bhima, Joyalukkas, Kalyan). Palayam and Nadakkav serve mid-market buyers. Calicut is especially known for heavier 'Malabar gold' ornaments with distinct North Kerala craftsmanship rarely found in the south of the state.",
+    },
+    buyingOccasionFaq: {
+      q: "When is the best time to buy gold in Calicut?",
+      a: "Eid-ul-Fitr and Eid-ul-Adha are the biggest gold-buying events in Calicut, given the large Mappila Muslim community. Wedding purchases follow the Islamic calendar. Onam and the post-monsoon harvest months (Sep-Oct) are significant for other communities. Gulf returnees from the UAE, Qatar and Oman typically make their largest purchases during summer and winter holiday visits.",
+    },
+  },
   kochi: {
     id: "kochi",
     metaDescriptionPrefix: "Today's latest gold rates in Kochi.",

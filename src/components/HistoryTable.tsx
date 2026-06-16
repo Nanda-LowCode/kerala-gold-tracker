@@ -13,7 +13,7 @@ function formatDate(dateStr: string): string {
   });
 }
 
-const rangeOptions = [7, 14, 30] as const;
+const rangeOptions = [7, 14, 30, 90] as const;
 type Range = (typeof rangeOptions)[number];
 
 export default function HistoryTable({ history }: { history: GoldRate[] }) {
