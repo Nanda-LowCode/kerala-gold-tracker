@@ -26,6 +26,12 @@ const nextConfig: NextConfig = {
         destination: "https://www.livegoldkerala.com/:path*",
         permanent: true,
       },
+      // Consolidate cannibalising city "today's rate" blog posts into the
+      // canonical city pages (which carry the live daily rate). Keeps ranking
+      // signal on one URL per city instead of splitting it across two.
+      { source: "/blog/gold-rate-kozhikode-today", destination: "/kozhikode", permanent: true },
+      { source: "/blog/gold-rate-thrissur-today", destination: "/thrissur", permanent: true },
+      { source: "/blog/gold-rate-trivandrum-today", destination: "/trivandrum", permanent: true },
     ];
   },
   async headers() {

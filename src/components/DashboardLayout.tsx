@@ -308,6 +308,26 @@ export default async function DashboardLayout({
               22K &amp; 18K are the official AKGSMA Kerala board rates. 24K is derived from the 916 rate by purity (22K&nbsp;&times;&nbsp;24&frasl;22), reflecting pure-gold value.
             </p>
 
+            {/* City-specific market overview — surfaces unique, keyword-relevant content
+                HIGH on city pages (the homepage uses the Kerala framing instead). This is
+                what lifts city pages out of the duplicate-content trap. */}
+            {cityName !== "Kochi" && cityData && (
+              <section className="rounded-2xl border border-zinc-200/70 bg-white p-5 text-left shadow-sm dark:border-zinc-800 dark:bg-zinc-900 md:p-6">
+                <h2 className="text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-100 md:text-lg">
+                  Gold Rate in {cityName} Today — {cityData.insightTitle}
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+                  {cityData.insightContent}
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+                  Today&apos;s 22K (916 hallmark) gold rate in {cityName} is ₹{today.rate_22k_1g.toLocaleString("en-IN")} per
+                  gram — that&apos;s ₹{(today.rate_22k_1g * 8).toLocaleString("en-IN")} per pavan (8&nbsp;g) — with 24K at
+                  ₹{today.rate_24k_1g.toLocaleString("en-IN")} per gram. These are the official Kerala Gold &amp; Silver
+                  Merchants Association board rates, which apply uniformly across {cityName} and the rest of Kerala.
+                </p>
+              </section>
+            )}
+
             {/* Pending rates notice (hidden once today's data arrives) — below the rate
                 so users see the number first, then the "yesterday's rate" caveat. */}
             <RatesPendingBanner latestDate={today.date} />
@@ -405,8 +425,10 @@ export default async function DashboardLayout({
         {/* Blog links — direct crawl path from indexed homepage to blog articles */}
         <RecentArticles />
 
-        {/* City Insight & Standardisation Notice — editorial trust note before FAQ */}
-        {cityData ? (
+        {/* Insight & Standardisation Notice. The rich block is homepage-only — city
+            pages now carry their unique overview HIGH in the primary column, so here
+            they get the lighter standardisation note (no duplicate content). */}
+        {cityName === "Kochi" && cityData ? (
           <div className="rounded-2xl border border-amber-200/50 bg-gradient-to-br from-amber-50/50 to-white p-5 text-left shadow-sm dark:border-zinc-800 dark:from-zinc-900 dark:to-zinc-900/50">
             <h3 className="flex items-center gap-2 text-sm font-bold text-zinc-800 dark:text-zinc-200 md:text-base">
               <svg className="h-4 w-4 md:h-5 md:w-5 text-amber-500 dark:text-amber-400" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>

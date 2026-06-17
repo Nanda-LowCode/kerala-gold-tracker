@@ -4,6 +4,14 @@ import matter from "gray-matter";
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");
 
+// City "today's rate" posts that now 301 to their city pages (see next.config.ts).
+// Excluded from the blog index, related posts, and sitemap to end cannibalisation.
+const RETIRED_SLUGS = new Set([
+  "gold-rate-kozhikode-today",
+  "gold-rate-thrissur-today",
+  "gold-rate-trivandrum-today",
+]);
+
 export interface PostMeta {
   title: string;
   date: string;
@@ -22,6 +30,10 @@ export function getAllPosts(): PostMeta[] {
   return fs
     .readdirSync(BLOG_DIR)
     .filter((f) => f.endsWith(".mdx"))
+    // Hidden from the blog index/sitemap: these city "today's rate" posts are
+    // 301-redirected to their city pages (see next.config.ts) to avoid
+    // cannibalising them. Files kept in-repo so the change is reversible.
+    .filter((f) => !RETIRED_SLUGS.has(f.replace(/\.mdx$/, "")))
     .map((filename) => {
       const raw = fs.readFileSync(path.join(BLOG_DIR, filename), "utf-8");
       const { data } = matter(raw);
