@@ -10,6 +10,7 @@ import OldGoldCalculator from "@/components/OldGoldCalculator";
 import CtaBanner from "@/components/CtaBanner";
 import RatesPendingBanner from "@/components/RatesPendingBanner";
 import WhatsAppShare from "@/components/WhatsAppShare";
+import WhatsAppFollow from "@/components/WhatsAppFollow";
 import ThemeToggle from "@/components/ThemeToggle";
 import NotificationToggle from "@/components/NotificationToggle";
 import TrendAnalysisIndicator from "@/components/TrendAnalysisIndicator";
@@ -381,6 +382,9 @@ export default async function DashboardLayout({
                 </div>
               </section>
             )}
+
+            {/* Follow on WhatsApp — daily-rate retention loop (renders only when configured) */}
+            <WhatsAppFollow />
 
             {/* CTA Banner — drives scroll to calculator */}
             <CtaBanner />

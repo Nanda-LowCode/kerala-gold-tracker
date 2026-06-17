@@ -283,7 +283,8 @@ export default async function NewsDay({ params }: RouteParams) {
           {next ? <NavCard direction="next" date={next} /> : <div />}
         </nav>
 
-        {/* CTA */}
+        {/* CTA + internal links — these daily pages rank well, so they pass
+            authority to the city pages and money guides linked from here. */}
         <section className="rounded-2xl border border-amber-200/60 bg-gradient-to-br from-amber-50 to-white p-5 shadow-md shadow-amber-200/40 dark:border-amber-900/40 dark:from-amber-950/20 dark:to-zinc-900 dark:shadow-none">
           <p className="text-sm text-zinc-700 dark:text-zinc-300">
             See today&apos;s live rate on the{" "}
@@ -294,11 +295,32 @@ export default async function NewsDay({ params }: RouteParams) {
             <Link href="/tools/gold-making-charge-calculator" className="font-semibold text-amber-700 underline decoration-amber-300/60 underline-offset-2 hover:text-amber-900 hover:decoration-amber-500">
               making charge calculator
             </Link>{" "}
+            · read about{" "}
+            <Link href="/blog/gold-tax-gst-kerala-2026" className="font-semibold text-amber-700 underline decoration-amber-300/60 underline-offset-2 hover:text-amber-900 hover:decoration-amber-500">
+              gold tax &amp; GST in Kerala
+            </Link>{" "}
             · or browse the full{" "}
             <Link href="/news" className="font-semibold text-amber-700 underline decoration-amber-300/60 underline-offset-2 hover:text-amber-900 hover:decoration-amber-500">
               daily archive
             </Link>
             .
+          </p>
+          <p className="mt-3 border-t border-amber-200/50 pt-3 text-xs text-zinc-500 dark:border-amber-900/30 dark:text-zinc-400">
+            Gold rate by city:{" "}
+            {[
+              ["Kozhikode", "/kozhikode"],
+              ["Thrissur", "/thrissur"],
+              ["Ernakulam", "/ernakulam"],
+              ["Trivandrum", "/trivandrum"],
+              ["Kollam", "/kollam"],
+            ].map(([name, href], i) => (
+              <span key={href}>
+                {i > 0 && " · "}
+                <Link href={href} className="font-medium text-amber-700 hover:underline dark:text-amber-400">
+                  {name}
+                </Link>
+              </span>
+            ))}
           </p>
         </section>
       </main>
