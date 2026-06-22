@@ -1,17 +1,18 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { getHistory } from "../page";
+import PriceChart from "@/components/PriceChart";
 
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Gold Rate History Kerala — Last 30 Days | LiveGold Kerala",
+  title: "Kerala Gold Rate History — Daily 22K & 24K Price Archive | LiveGold Kerala",
   description:
-    "View gold rate history in Kerala for the last 30 days. Daily 22K and 24K gold prices per gram and per pavan (sovereign). Compare price trends at a glance.",
+    "Kerala gold rate history: daily 22K and 24K board rates per gram and per pavan. Browse the trend chart, see the all-time high and low, and download the full dataset as CSV.",
   alternates: { canonical: "/gold-rate-history" },
   openGraph: {
-    title: "Gold Rate History Kerala — Last 30 Days",
-    description: "Daily 22K and 24K gold prices in Kerala for the past 30 days.",
+    title: "Kerala Gold Rate History — Daily 22K & 24K Price Archive",
+    description: "Daily Kerala board gold rates with trend chart and a downloadable CSV dataset.",
     url: "https://www.livegoldkerala.com/gold-rate-history",
   },
 };
@@ -32,6 +33,13 @@ function formatCur(n: number) {
 export default async function GoldRateHistoryPage() {
   const history = await getHistory();
   const today = history[0] ?? null;
+
+  // All-time stats over whatever history is available (deepens with the backfill).
+  const rates22 = history.map((h) => h.rate_22k_1g);
+  const allHigh = rates22.length ? Math.max(...rates22) : null;
+  const allLow = rates22.length ? Math.min(...rates22) : null;
+  const chartData = [...history].reverse(); // chronological for the chart
+  const visible = history.slice(0, 90); // cap the table; full data in the CSV
 
   return (
     <>
@@ -54,19 +62,21 @@ export default async function GoldRateHistoryPage() {
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 md:py-12">
         <h1 className="text-2xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100 md:text-3xl">
-          Gold Rate History — Kerala (Last 30 Days)
+          Kerala Gold Rate History
         </h1>
         <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-          Daily board rates set by the Kerala Gold &amp; Silver Merchants Association. Uniform across all districts.
+          Daily 22K &amp; 24K board rates from the Kerala Gold &amp; Silver Merchants Association —
+          {history.length > 0 ? ` ${history.length} days tracked.` : " uniform across all districts."} Trend
+          chart, all-time high/low, and a free CSV download below.
         </p>
 
         {today && (
           <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {[
               { label: "22K Today", value: formatCur(today.rate_22k_1g) + "/g" },
-              { label: "24K Today", value: formatCur(today.rate_24k_1g) + "/g" },
               { label: "22K per Pavan", value: formatCur(today.rate_22k_1g * 8) },
-              { label: "24K per Pavan", value: formatCur(today.rate_24k_1g * 8) },
+              { label: "All-time High (22K/g)", value: allHigh !== null ? formatCur(allHigh) : "—" },
+              { label: "All-time Low (22K/g)", value: allLow !== null ? formatCur(allLow) : "—" },
             ].map((stat) => (
               <div key={stat.label} className="rounded-xl border border-amber-200/50 bg-amber-50/40 p-3 dark:border-zinc-700 dark:bg-zinc-900">
                 <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">{stat.label}</p>
@@ -75,6 +85,33 @@ export default async function GoldRateHistoryPage() {
             ))}
           </div>
         )}
+
+        {/* Trend chart — multi-range, deepens as data accrues / after backfill */}
+        {chartData.length >= 2 && (
+          <div className="mt-8">
+            <PriceChart history={chartData} />
+          </div>
+        )}
+
+        {/* Download + attribution — this is what makes the page link-worthy */}
+        <section className="mt-8 flex flex-col gap-3 rounded-2xl border border-amber-200/60 bg-gradient-to-br from-amber-50 to-white p-5 shadow-sm dark:border-amber-900/40 dark:from-amber-950/20 dark:to-zinc-900 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm font-bold text-zinc-800 dark:text-zinc-100">Download the full dataset</p>
+            <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+              Free Kerala gold-rate history (CSV). Using it? A link back to livegoldkerala.com is appreciated.
+            </p>
+          </div>
+          <a
+            href="/api/gold-rate-history"
+            download
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-amber-500/25 transition-all hover:brightness-110"
+          >
+            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
+              <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+            </svg>
+            Download CSV
+          </a>
+        </section>
 
         <div className="mt-8 overflow-x-auto rounded-2xl border border-zinc-200/70 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
           <table className="w-full text-sm">
@@ -88,7 +125,7 @@ export default async function GoldRateHistoryPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
-              {history.map((row, i) => {
+              {visible.map((row, i) => {
                 const prev = history[i + 1];
                 const change = prev ? row.rate_22k_1g - prev.rate_22k_1g : null;
                 const isToday = i === 0;
@@ -134,6 +171,9 @@ export default async function GoldRateHistoryPage() {
 
         <p className="mt-4 text-xs text-zinc-400 dark:text-zinc-500">
           * Rates are the official Kerala board rate per gram. Pavan = 8 grams.
+          {history.length > visible.length
+            ? ` Table shows the most recent ${visible.length} days — download the CSV above for the full ${history.length}-day history.`
+            : ""}
         </p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
