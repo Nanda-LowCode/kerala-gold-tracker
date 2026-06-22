@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
@@ -12,10 +12,14 @@ const geist = Geist({
   subsets: ["latin"],
 });
 
+// Next 16: themeColor belongs in the viewport export, not metadata.
+export const viewport: Viewport = {
+  themeColor: "#fbbf24",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.livegoldkerala.com"),
   manifest: "/manifest.json",
-  themeColor: "#fbbf24",
   title: {
     default: "Today's Gold Rate in Kochi, Kerala | LiveGold Kerala",
     template: "%s | LiveGold Kerala",
