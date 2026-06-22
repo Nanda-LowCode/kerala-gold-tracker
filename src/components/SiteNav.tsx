@@ -15,6 +15,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Today", href: "/" },
   { label: "Daily News", href: "/news", prefix: true },
   { label: "Calculators", href: "/tools", prefix: true },
+  { label: "Jewellers", href: "/jewellers", prefix: true },
   { label: "Knowledge", href: "/blog", prefix: true },
   { label: "Culture", href: "/culture", prefix: true },
 ];

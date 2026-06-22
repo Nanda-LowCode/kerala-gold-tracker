@@ -62,6 +62,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const LAUNCH_DATE = new Date('2026-04-10')
 
   const staticRoutes: MetadataRoute.Sitemap = [
+    { url: `${BASE}/jewellers`,                   lastModified: new Date(),   changeFrequency: 'monthly' as const, priority: 0.8 },
     { url: `${BASE}/about`,                      lastModified: LAUNCH_DATE,  changeFrequency: 'monthly' as const, priority: 0.5 },
     { url: `${BASE}/silver-rate-kerala`,          lastModified: new Date(),   changeFrequency: 'daily'   as const, priority: 0.85 },
     { url: `${BASE}/gold-rate-history`,           lastModified: new Date(),   changeFrequency: 'daily'   as const, priority: 0.75 },
