@@ -13,14 +13,12 @@ import WhatsAppShare from "@/components/WhatsAppShare";
 import WhatsAppFollow from "@/components/WhatsAppFollow";
 import ThemeToggle from "@/components/ThemeToggle";
 import NotificationToggle from "@/components/NotificationToggle";
-import TrendAnalysisIndicator from "@/components/TrendAnalysisIndicator";
 import PriceAlertInput from "@/components/PriceAlertInput";
 import SilverRateCard from "@/components/SilverRateCard";
 import ExchangeTicker from "@/components/ExchangeTicker";
 import { RateCard, RateBoard } from "@/components/RateCards";
 import { VerdictDot } from "@/components/VerdictPill";
 import { GoldRate } from "@/lib/types";
-import { formatCurrency } from "@/lib/format";
 import { getCityData } from "@/lib/cityData";
 import { getAllPosts } from "@/lib/mdx";
 
@@ -193,18 +191,7 @@ export default async function DashboardLayout({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       {/* Page action bar — page-specific actions only; site brand lives in SiteNav */}
       <header className="sticky top-0 z-40 border-b border-zinc-200/60 bg-white/70 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-950/70">
-        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-2.5">
-          <div className="flex items-center gap-2 rounded-full border border-green-200 bg-green-50/80 px-2.5 py-1 dark:border-green-900/50 dark:bg-green-950/30">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
-            </span>
-            <span className="text-[10px] sm:text-xs font-semibold text-green-700 dark:text-green-400">
-              <span className="hidden sm:inline">Live Updates · </span>
-              {cityName}
-            </span>
-          </div>
-
+        <div className="mx-auto flex max-w-3xl items-center justify-end gap-3 px-4 py-2.5">
           <div className="flex items-center gap-3">
             <a
               href="/api/og/gold-rate-card"
@@ -222,9 +209,6 @@ export default async function DashboardLayout({
           </div>
         </div>
       </header>
-
-      {/* Top Ticker - highly integrated below header */}
-      {today && <TopTicker history={history} cityName={cityName} />}
 
       {/* Below xl this is a single centered column (mobile/laptop unchanged).
           At xl it becomes a 3-col grid: the primary funnel keeps its tuned
@@ -272,14 +256,6 @@ export default async function DashboardLayout({
                   {change22k === 0
                     ? "No change since yesterday"
                     : `${change22k > 0 ? "Up" : "Down"} ₹${Math.abs(change22k).toLocaleString("en-IN")}/g (22K) since yesterday · ${((Math.abs(change22k) / yesterday.rate_22k_1g) * 100).toFixed(2)}%`}
-                </p>
-              )}
-              {cityName !== "Kochi" && (
-                <p className="mt-2 flex items-center gap-1.5 rounded-full border border-blue-100 bg-blue-50/60 px-3 py-1 text-[11px] text-blue-600 dark:border-blue-900/40 dark:bg-blue-950/30 dark:text-blue-400">
-                  <svg className="h-3 w-3 shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                  </svg>
-                  Kerala gold rate is uniform across all districts (Kerala Board Rate)
                 </p>
               )}
             </section>
@@ -333,11 +309,6 @@ export default async function DashboardLayout({
                 so users see the number first, then the "yesterday's rate" caveat. */}
             <RatesPendingBanner latestDate={today.date} />
 
-            {/* AI Trend Analysis Pill — secondary context, sits under the headline number */}
-            <div className="flex justify-center md:justify-start">
-              <TrendAnalysisIndicator history={history} />
-            </div>
-
             {/* Silver Rate Card */}
             {today.rate_silver_1g && (
               <SilverRateCard
@@ -388,6 +359,10 @@ export default async function DashboardLayout({
 
             {/* CTA Banner — drives scroll to calculator */}
             <CtaBanner />
+
+            {/* Month High/Low — secondary context, moved down from the top so the
+                page leads with today's rate, not month extremes. */}
+            {today && <TopTicker history={history} cityName={cityName} />}
 
             {/* Price Chart */}
             <PriceChart history={chartData} />
