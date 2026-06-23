@@ -1,0 +1,46 @@
+name: Daily Gold Rate Video
+
+# Renders a vertical (1080x1920) "Kerala Gold Rate Today" reel from the live
+# Supabase data and uploads it as a workflow artifact you can download & post
+# to Instagram Reels / YouTube Shorts / WhatsApp status.
+#
+# Runs after the rate cron updates each morning. Adjust the cron as needed.
+# Requires two repo secrets: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY.
+
+on:
+  schedule:
+    - cron: "30 5 * * *" # ~11:00 AM IST — after the daily rate update
+  workflow_dispatch: {} # allow manual runs from the Actions tab
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Remotion deps
+        working-directory: remotion
+        run: npm install
+
+      - name: Fetch today's rate
+        working-directory: remotion
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        run: npm run fetch
+
+      - name: Render reel
+        working-directory: remotion
+        run: npm run render
+
+      - name: Upload video
+        uses: actions/upload-artifact@v4
+        with:
+          name: kerala-gold-reel-${{ github.run_id }}
+          path: remotion/out/kerala-gold-reel.mp4
+          if-no-files-found: error
+          retention-days: 14
