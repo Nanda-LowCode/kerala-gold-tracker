@@ -9,11 +9,11 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: "Kerala Gold Rate History — Daily 22K & 24K Price Archive | LiveGold Kerala",
   description:
-    "Kerala gold rate history: daily 22K and 24K board rates per gram and per pavan. Browse the trend chart, see the all-time high and low, and download the full dataset as CSV.",
+    "Kerala gold rate history: daily 22K and 24K board rates per gram and per pavan. Browse the trend chart, see the all-time high and low, and explore the rate archive year by year.",
   alternates: { canonical: "/gold-rate-history" },
   openGraph: {
     title: "Kerala Gold Rate History — Daily 22K & 24K Price Archive",
-    description: "Daily Kerala board gold rates with trend chart and a downloadable CSV dataset.",
+    description: "Daily Kerala board gold rates with a trend chart and a year-by-year price archive.",
     url: "https://www.livegoldkerala.com/gold-rate-history",
   },
 };
@@ -40,7 +40,7 @@ export default async function GoldRateHistoryPage() {
   const allHigh = rates22.length ? Math.max(...rates22) : null;
   const allLow = rates22.length ? Math.min(...rates22) : null;
   const chartData = [...history].reverse(); // chronological for the chart
-  const visible = history.slice(0, 90); // cap the table; full data in the CSV
+  const visible = history.slice(0, 90); // cap the on-page table; older data lives on the year pages
 
   // Year list for the "browse by year" links (full range, incl. backfilled years).
   const supabase = createSupabaseReadClient();
@@ -82,7 +82,7 @@ export default async function GoldRateHistoryPage() {
         <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
           Daily 22K &amp; 24K board rates from the Kerala Gold &amp; Silver Merchants Association —
           {history.length > 0 ? ` ${history.length} days tracked.` : " uniform across all districts."} Trend
-          chart, all-time high/low, and a free CSV download below.
+          chart, all-time high/low, and a year-by-year archive below.
         </p>
 
         {today && (
@@ -107,26 +107,6 @@ export default async function GoldRateHistoryPage() {
             <PriceChart history={chartData} />
           </div>
         )}
-
-        {/* Download + attribution — this is what makes the page link-worthy */}
-        <section className="mt-8 flex flex-col gap-3 rounded-2xl border border-amber-200/60 bg-gradient-to-br from-amber-50 to-white p-5 shadow-sm dark:border-amber-900/40 dark:from-amber-950/20 dark:to-zinc-900 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm font-bold text-zinc-800 dark:text-zinc-100">Download the full dataset</p>
-            <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
-              Free Kerala gold-rate history (CSV). Using it? A link back to livegoldkerala.com is appreciated.
-            </p>
-          </div>
-          <a
-            href="/api/gold-rate-history"
-            download
-            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-amber-500/25 transition-all hover:brightness-110"
-          >
-            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
-              <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
-            </svg>
-            Download CSV
-          </a>
-        </section>
 
         {/* Browse by year — historical archive pages */}
         {years.length > 1 && (
@@ -207,7 +187,7 @@ export default async function GoldRateHistoryPage() {
         <p className="mt-4 text-xs text-zinc-400 dark:text-zinc-500">
           * Rates are the official Kerala board rate per gram. Pavan = 8 grams.
           {history.length > visible.length
-            ? ` Table shows the most recent ${visible.length} days — download the CSV above for the full ${history.length}-day history.`
+            ? ` Table shows the most recent ${visible.length} days — use the year links above to browse the full ${history.length}-day archive.`
             : ""}
         </p>
 

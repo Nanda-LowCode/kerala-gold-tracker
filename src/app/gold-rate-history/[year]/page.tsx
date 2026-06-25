@@ -208,8 +208,6 @@ export default async function YearHistoryPage({ params }: RouteParams) {
 
         <p className="mt-4 text-xs text-zinc-400 dark:text-zinc-500">
           * Monthly figures are averages of the daily Kerala board rate (22K per gram). Pavan = 8 grams.
-          Download the full daily dataset{" "}
-          <a href="/api/gold-rate-history" download className="font-semibold text-amber-700 hover:underline dark:text-amber-400">as CSV</a>.
         </p>
 
         {/* Year navigation */}
