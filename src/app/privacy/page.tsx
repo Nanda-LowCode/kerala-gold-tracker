@@ -15,7 +15,7 @@ export default function PrivacyPage() {
         ← Back to Gold Rates
       </Link>
       <h1 className="mt-4 text-2xl font-bold text-zinc-900 dark:text-zinc-100">Privacy Policy</h1>
-      <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">Last updated: 22 April 2026</p>
+      <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">Last updated: 25 June 2026</p>
 
       <div className="prose prose-zinc dark:prose-invert mt-8 max-w-none text-sm leading-relaxed">
         <h2>What we collect</h2>
@@ -31,6 +31,30 @@ export default function PrivacyPage() {
           We use Google Analytics 4 to understand aggregate site usage (page views, session
           duration, city page popularity). This data is anonymised and not linked to any individual.
           You can opt out via your browser&apos;s privacy settings or a GA opt-out extension.
+        </p>
+        <p>
+          We also use Microsoft Clarity to understand how visitors interact with the site through
+          behavioural metrics, heatmaps, and session replays. Clarity automatically masks sensitive
+          content and helps us improve the site&apos;s usability. Microsoft may use this data in
+          accordance with its{" "}
+          <a
+            href="https://privacy.microsoft.com/privacystatement"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-amber-700 underline dark:text-amber-400"
+          >
+            privacy statement
+          </a>
+          . See how Microsoft collects and uses Clarity data in their{" "}
+          <a
+            href="https://learn.microsoft.com/en-us/clarity/setup-and-installation/privacy-disclosure"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-amber-700 underline dark:text-amber-400"
+          >
+            Clarity disclosure
+          </a>
+          .
         </p>
 
         <h2>Cookies</h2>
@@ -48,6 +72,7 @@ export default function PrivacyPage() {
         <h2>Third-party services</h2>
         <ul>
           <li>Google Analytics — aggregate usage analytics</li>
+          <li>Microsoft Clarity — heatmaps and session replay (usability analytics)</li>
           <li>Vercel — hosting and edge delivery</li>
           <li>Supabase — database for gold rates and push subscriptions</li>
         </ul>
