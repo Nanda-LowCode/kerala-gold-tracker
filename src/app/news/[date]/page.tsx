@@ -22,13 +22,16 @@ async function getDayWithHistory(
   const supabase = createSupabaseReadClient();
   const { data, error } = await supabase
     .from("daily_gold_rates")
-    .select("date, city, rate_18k_1g, rate_22k_1g, rate_24k_1g, rate_silver_1g")
+    .select("date, city, rate_18k_1g, rate_22k_1g, rate_24k_1g, rate_silver_1g, consensus_sources")
     .eq("city", "Kochi")
     .lte("date", date)
     .order("date", { ascending: false })
     .limit(31);
   if (error || !data || data.length === 0) return null;
   if (data[0].date !== date) return null;
+  // Estimated backfill dates aren't real daily updates — they live in the
+  // /gold-rate-history/[year] pages, not as individual news articles.
+  if ((data[0] as { consensus_sources?: string | null }).consensus_sources === "backfill-yahoo-calibrated") return null;
   return { today: data[0] as GoldRate, history: data as GoldRate[] };
 }
 
@@ -65,7 +68,9 @@ export async function generateStaticParams() {
   const { data } = await supabase
     .from("daily_gold_rates")
     .select("date")
-    .eq("city", "Kochi");
+    .eq("city", "Kochi")
+    // Real board-rate dates only — estimated backfill lives in the year pages.
+    .neq("consensus_sources", "backfill-yahoo-calibrated");
   return (data ?? []).map((row: { date: string }) => ({ date: row.date }));
 }
 

@@ -13,13 +13,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = createSupabaseReadClient()
   const [ornamentsRes, newsDatesRes] = await Promise.all([
     supabase.from('ornaments').select('slug, description_en, symbolism_en'),
-    supabase.from('daily_gold_rates').select('date').eq('city', 'Kochi'),
+    supabase.from('daily_gold_rates').select('date, consensus_sources').eq('city', 'Kochi'),
   ])
   // Only include ornaments that have real content (not stubs)
   const ornamentSlugs = (ornamentsRes.data ?? [])
     .filter((r) => r.description_en || r.symbolism_en)
     .map((r) => r.slug)
-  const newsDates = (newsDatesRes.data ?? []).map((r: { date: string }) => r.date)
+  const allRateRows = (newsDatesRes.data ?? []) as { date: string; consensus_sources: string | null }[]
+  // News pages: real board-rate dates only (exclude estimated backfill).
+  const newsDates = allRateRows
+    .filter((r) => r.consensus_sources !== 'backfill-yahoo-calibrated')
+    .map((r) => r.date)
 
   const rootRoute: MetadataRoute.Sitemap = [
     { url: BASE, lastModified: new Date(), changeFrequency: 'daily', priority: 1.0 },
@@ -126,8 +130,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ]
 
-  // Historical year pages (/gold-rate-history/[year]) — one per year of data.
-  const years = [...new Set(newsDates.map((d: string) => d.slice(0, 4)))].sort()
+  // Historical year pages (/gold-rate-history/[year]) — one per year of data
+  // (includes backfilled years, unlike the news routes above).
+  const years = [...new Set(allRateRows.map((r) => r.date.slice(0, 4)))].sort()
   const yearRoutes: MetadataRoute.Sitemap = years.map((y) => ({
     url: `${BASE}/gold-rate-history/${y}`,
     lastModified: new Date(),
