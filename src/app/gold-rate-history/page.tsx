@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { getHistory } from "../page";
 import PriceChart from "@/components/PriceChart";
+import { createSupabaseReadClient } from "@/lib/supabase";
 
 export const revalidate = 3600;
 
@@ -40,6 +41,20 @@ export default async function GoldRateHistoryPage() {
   const allLow = rates22.length ? Math.min(...rates22) : null;
   const chartData = [...history].reverse(); // chronological for the chart
   const visible = history.slice(0, 90); // cap the table; full data in the CSV
+
+  // Year list for the "browse by year" links (full range, incl. backfilled years).
+  const supabase = createSupabaseReadClient();
+  const { data: firstRow } = await supabase
+    .from("daily_gold_rates")
+    .select("date")
+    .eq("city", "Kochi")
+    .order("date", { ascending: true })
+    .limit(1);
+  const startYear = firstRow?.[0]?.date
+    ? new Date(firstRow[0].date + "T00:00:00").getFullYear()
+    : new Date().getFullYear();
+  const years: number[] = [];
+  for (let y = new Date().getFullYear(); y >= startYear; y--) years.push(y);
 
   return (
     <>
@@ -112,6 +127,26 @@ export default async function GoldRateHistoryPage() {
             Download CSV
           </a>
         </section>
+
+        {/* Browse by year — historical archive pages */}
+        {years.length > 1 && (
+          <section className="mt-8">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+              Gold rate by year
+            </h2>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {years.map((y) => (
+                <Link
+                  key={y}
+                  href={`/gold-rate-history/${y}`}
+                  className="rounded-full border border-zinc-200 bg-white px-4 py-1.5 text-sm font-semibold text-zinc-700 shadow-sm transition-colors hover:border-amber-300 hover:text-amber-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-amber-700 dark:hover:text-amber-400"
+                >
+                  {y}
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
         <div className="mt-8 overflow-x-auto rounded-2xl border border-zinc-200/70 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
           <table className="w-full text-sm">

@@ -126,5 +126,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ]
 
-  return [...rootRoute, ...toolRoutes, ...staticRoutes, ...cityRoutes, ...blogRoutes, ...cultureRoutes, ...newsRoutes]
+  // Historical year pages (/gold-rate-history/[year]) — one per year of data.
+  const years = [...new Set(newsDates.map((d: string) => d.slice(0, 4)))].sort()
+  const yearRoutes: MetadataRoute.Sitemap = years.map((y) => ({
+    url: `${BASE}/gold-rate-history/${y}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  }))
+
+  return [...rootRoute, ...toolRoutes, ...staticRoutes, ...cityRoutes, ...blogRoutes, ...cultureRoutes, ...newsRoutes, ...yearRoutes]
 }
