@@ -8,8 +8,9 @@ import { formatCurrency } from "@/lib/format";
 function formatDate(dateStr: string): string {
   return new Date(dateStr + "T00:00:00").toLocaleDateString("en-IN", {
     weekday: "short",
-    month: "short",
     day: "numeric",
+    month: "short",
+    year: "numeric",
   });
 }
 
