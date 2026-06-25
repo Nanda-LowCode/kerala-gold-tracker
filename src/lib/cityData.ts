@@ -243,3 +243,33 @@ export function getCityData(cityId: string): CityData | null {
   const normalized = cityId.toLowerCase();
   return CITY_DATA[normalized] || null;
 }
+
+/**
+ * Notable towns in each district. The Kerala board rate is uniform statewide,
+ * so listing a district's towns on its city page gives town-level "gold rate
+ * today {town}" searches (Vadakara, Kunnamkulam, Muvattupuzha, etc.) a relevant
+ * page to rank — without spinning up thin duplicate town pages. Curated to
+ * include the towns that show real search demand in Search Console.
+ */
+export const DISTRICT_TOWNS: Record<string, string[]> = {
+  trivandrum: ["Neyyattinkara", "Attingal", "Nedumangad", "Varkala", "Kazhakkoottam", "Kovalam"],
+  kollam: ["Karunagappally", "Kottarakkara", "Punalur", "Paravur", "Chavara", "Kundara"],
+  pathanamthitta: ["Adoor", "Thiruvalla", "Pandalam", "Ranni", "Mallappally", "Konni"],
+  alappuzha: ["Cherthala", "Kayamkulam", "Mavelikkara", "Chengannur", "Haripad", "Ambalapuzha"],
+  kottayam: ["Pala", "Changanassery", "Ettumanoor", "Kanjirappally", "Vaikom", "Erattupetta"],
+  idukki: ["Thodupuzha", "Munnar", "Kattappana", "Nedumkandam", "Adimali"],
+  ernakulam: ["Muvattupuzha", "Aluva", "Angamaly", "Perumbavoor", "Kothamangalam", "Tripunithura", "Kalady"],
+  kochi: ["Tripunithura", "Aluva", "Perumbavoor", "Muvattupuzha", "Angamaly", "Kakkanad", "Fort Kochi"],
+  thrissur: ["Kunnamkulam", "Chalakudy", "Irinjalakuda", "Chavakkad", "Kodungallur", "Guruvayur", "Wadakkanchery"],
+  palakkad: ["Ottapalam", "Shoranur", "Chittur", "Mannarkkad", "Pattambi", "Cherpulassery"],
+  malappuram: ["Nilambur", "Tirur", "Manjeri", "Perinthalmanna", "Ponnani", "Kottakkal", "Tanur"],
+  kozhikode: ["Vadakara", "Koyilandy", "Ramanattukara", "Feroke", "Mukkam", "Thamarassery", "Koduvally"],
+  calicut: ["Vadakara", "Koyilandy", "Ramanattukara", "Feroke", "Mukkam", "Thamarassery", "Koduvally"],
+  wayanad: ["Kalpetta", "Mananthavady", "Sulthan Bathery", "Meppadi"],
+  kannur: ["Thalassery", "Payyanur", "Iritty", "Taliparamba", "Mattannur", "Kuthuparamba"],
+  kasaragod: ["Kanhangad", "Nileshwar", "Uppala", "Bekal", "Cheruvathur"],
+};
+
+export function getCityTowns(cityId: string): string[] {
+  return DISTRICT_TOWNS[cityId.toLowerCase()] ?? [];
+}

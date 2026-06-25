@@ -19,7 +19,7 @@ import ExchangeTicker from "@/components/ExchangeTicker";
 import { RateCard, RateBoard } from "@/components/RateCards";
 import { VerdictDot } from "@/components/VerdictPill";
 import { GoldRate } from "@/lib/types";
-import { getCityData } from "@/lib/cityData";
+import { getCityData, getCityTowns } from "@/lib/cityData";
 import { getAllPosts } from "@/lib/mdx";
 
 function formatDate(dateStr: string): string {
@@ -86,6 +86,7 @@ export default async function DashboardLayout({
   const today = history[0] ?? null;
   const yesterday = history[1] ?? null;
   const cityData = getCityData(cityName);
+  const cityTowns = getCityTowns(cityName);
   const recentNewsEntries = await getRecentNewsWithVerdicts(3);
 
   const rate21k = today ? today.rate_22k_1g * (21 / 22) : 0;
@@ -302,6 +303,14 @@ export default async function DashboardLayout({
                   ₹{today.rate_24k_1g.toLocaleString("en-IN")} per gram. These are the official Kerala Gold &amp; Silver
                   Merchants Association board rates, which apply uniformly across {cityName} and the rest of Kerala.
                 </p>
+                {cityTowns.length > 0 && (
+                  <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+                    The same board rate applies right across {cityName} district, so the gold rate today
+                    in {cityTowns.slice(0, -1).join(", ")} and {cityTowns[cityTowns.length - 1]} is the
+                    same {cityName} rate of ₹{today.rate_22k_1g.toLocaleString("en-IN")}/g for 22K shown
+                    above — there is no separate town-wise gold rate in Kerala.
+                  </p>
+                )}
               </section>
             )}
 
