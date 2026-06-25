@@ -2,11 +2,11 @@ import type { NextConfig } from "next";
 
 const CSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://va.vercel-scripts.com",
+  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://va.vercel-scripts.com https://www.clarity.ms",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  "img-src 'self' data: blob: https://*.clarity.ms https://c.bing.com",
   "font-src 'self'",
-  "connect-src 'self' https://*.google-analytics.com https://www.googletagmanager.com https://vitals.vercel-insights.com https://cdn.jsdelivr.net",
+  "connect-src 'self' https://*.google-analytics.com https://www.googletagmanager.com https://vitals.vercel-insights.com https://cdn.jsdelivr.net https://*.clarity.ms https://c.bing.com",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",

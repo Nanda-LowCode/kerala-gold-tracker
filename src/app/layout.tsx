@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
+import Script from "next/script";
 import InstallPrompt from "@/components/InstallPrompt";
 import SiteNav from "@/components/SiteNav";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -70,6 +71,13 @@ export default function RootLayout({
           <Analytics />
           {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
             <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+          )}
+          {/* Microsoft Clarity — behavioral analytics (heatmaps + session recordings).
+              Production only. Requires clarity.ms in the CSP (see next.config.ts). */}
+          {process.env.NODE_ENV === "production" && (
+            <Script id="ms-clarity" strategy="afterInteractive">
+              {`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","xcc8gp87mw");`}
+            </Script>
           )}
         </ThemeProvider>
       </body>
