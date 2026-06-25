@@ -46,11 +46,13 @@ export default function PriceChart({ history }: { history: GoldRate[] }) {
     );
   }
 
+  // Long ranges (6M/1Y/All) cross year boundaries, so show the year too.
+  const longRange = !Number.isFinite(days) || days > 90;
+  const labelOpts: Intl.DateTimeFormatOptions = longRange
+    ? { day: "numeric", month: "short", year: "2-digit" }
+    : { month: "short", day: "numeric" };
   const labels = view.map((d) =>
-    new Date(d.date + "T00:00:00").toLocaleDateString("en-IN", {
-      month: "short",
-      day: "numeric",
-    })
+    new Date(d.date + "T00:00:00").toLocaleDateString("en-IN", labelOpts)
   );
 
   const rateKey = `rate_${karat}_1g` as keyof GoldRate;
@@ -104,6 +106,14 @@ export default function PriceChart({ history }: { history: GoldRate[] }) {
       },
     },
     scales: {
+      x: {
+        ticks: {
+          autoSkip: true,
+          maxTicksLimit: longRange ? 8 : 12,
+          maxRotation: 60,
+          minRotation: 0,
+        },
+      },
       y: {
         ticks: {
           callback: (val: string | number) => `₹${Number(val).toLocaleString("en-IN")}`,
