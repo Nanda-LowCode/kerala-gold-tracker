@@ -6,12 +6,12 @@ import GoldCalculator from "@/components/GoldCalculator";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Kerala Gold Making Charge & GST Calculator",
+  title: "Gold Making Charges in Kerala 2026 — Calculator (22K, 24K + GST)",
   description:
-    "Calculate the total cost of gold jewelry in Kerala including making charges (8%–25%) and 3% GST. Estimate showroom prices for 22K, 24K, and 18K gold with our free calculator.",
+    "Calculate making charges for gold in Kerala with live board rates. Our free Kerala gold calculator adds making charges (8%–25%) and 3% GST to show the real showroom price per gram and per pavan for 22K, 24K and 18K.",
   alternates: { canonical: "/tools/gold-making-charge-calculator" },
   openGraph: {
-    title: "Kerala Gold Making Charge & GST Calculator",
+    title: "Gold Making Charges in Kerala 2026 — Calculator (22K, 24K + GST)",
     description:
       "Free tool to estimate Kerala jewelry prices with making charges and GST included.",
     url: "https://www.livegoldkerala.com/tools/gold-making-charge-calculator",

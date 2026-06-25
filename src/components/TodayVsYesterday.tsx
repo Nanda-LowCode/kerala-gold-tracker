@@ -31,10 +31,10 @@ export default function TodayVsYesterday({
         <div className="flex items-center justify-between gap-3">
           <div>
             <h2 className="text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
-              Today vs. Yesterday
+              Gold Rate Today by Weight
             </h2>
             <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-              Price comparison across common weights
+              Today vs. yesterday — 1 gram, 8 gram (1 pavan), 10 gram &amp; 100 gram for 22K&nbsp;(916), 24K &amp; 18K
             </p>
           </div>
           <KaratToggle karat={karat} setKarat={setKarat} />
