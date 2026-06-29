@@ -6,7 +6,7 @@ export const revalidate = 86400;
 export const metadata: Metadata = {
   title: "Kerala Wedding Gold Traditions by Community — Nair, Syrian Christian, Mappila Muslim",
   description:
-    "Community-specific bridal gold traditions in Kerala — Nair Kumbla Thali, Namboothiri Malarthi Thali, Syrian Christian Minnu, Mappila Muslim Valayidal and Mahr. Wedding budget calculator included.",
+    "Community-specific bridal gold traditions in Kerala — Nair Kumbla Thali, Namboothiri Malarthi Thali, Syrian Christian Minnu, Mappila Muslim Valayidal and Mahr — plus how much gold a Kerala wedding needs and a bridal gold budget calculator at today's board rate.",
   alternates: { canonical: "/culture/weddings" },
   openGraph: {
     title: "Kerala Wedding Gold Traditions by Community",
@@ -129,6 +129,19 @@ export default function WeddingsPage() {
             Syrian Christian, Latin Catholic, Marthoma, Mappila Muslim, and Sunni Muslim
             practices are not interchangeable.
           </p>
+          <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+            Wondering <strong>how much gold a Kerala wedding needs</strong>? It varies by
+            community and budget — typically 25–100+ sovereigns (pavan) of bridal gold. With
+            Kerala&apos;s wedding season running from after Onam through the year-end, many
+            families buy ahead of the rush. Estimate your set at today&apos;s rate with the{" "}
+            <Link href="/culture/weddings/budget-calculator" className="font-semibold text-amber-700 hover:underline dark:text-amber-400">
+              budget calculator
+            </Link>, and see our{" "}
+            <Link href="/blog/wedding-gold-shopping-kerala" className="font-semibold text-amber-700 hover:underline dark:text-amber-400">
+              Kerala wedding gold shopping guide
+            </Link>{" "}
+            for what to buy and when.
+          </p>
         </div>
 
         {/* Editorial note */}
@@ -182,7 +195,7 @@ export default function WeddingsPage() {
         {/* Budget calculator CTA */}
         <section className="rounded-2xl border border-amber-200/60 bg-amber-50/40 p-5 dark:border-amber-800/30 dark:bg-amber-950/10">
           <h2 className="font-bold text-zinc-800 dark:text-zinc-100">
-            Wedding Budget Calculator
+            How Much Gold for Your Wedding? — Budget Calculator
           </h2>
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
             Select your community, toggle ornaments on/off, adjust pavan weights, and get
