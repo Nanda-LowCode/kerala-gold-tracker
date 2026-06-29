@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 import InstallPrompt from "@/components/InstallPrompt";
 import SiteNav from "@/components/SiteNav";
@@ -69,6 +70,7 @@ export default function RootLayout({
           {children}
           <InstallPrompt />
           <Analytics />
+          <SpeedInsights />
           {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
             <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
           )}
