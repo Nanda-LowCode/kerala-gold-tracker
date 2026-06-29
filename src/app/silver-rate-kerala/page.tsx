@@ -11,13 +11,13 @@ export async function generateMetadata(): Promise<Metadata> {
   const rate = today?.rate_silver_1g;
 
   const title = rate
-    ? `Silver Rate in Kerala Today: ₹${rate}/g | LiveGold Kerala`
-    : "Today's Silver Rate in Kerala | LiveGold Kerala";
+    ? `Silver Rate in Kerala Today: ₹${rate}/g — Per Gram & Per Kg | LiveGold Kerala`
+    : "Today's Silver Rate in Kerala — Per Gram & Per Kg | LiveGold Kerala";
 
   return {
     title,
     description:
-      "Check today's silver rate per gram, 100g, and 1kg in Kerala. Updated daily from the Kerala board rate. Free, accurate, no login required.",
+      "Today's silver rate in Kerala per gram, 100g and 1kg (999 fine). The same KGSMA board rate applies in Kochi, Ernakulam, Thrissur, Kozhikode and Trivandrum. Updated daily.",
     keywords: [
       "silver rate today kerala",
       "silver rate per gram kerala",
@@ -73,6 +73,32 @@ export default async function SilverRatePage() {
   const silverToday = today?.rate_silver_1g ?? null;
   const silverYesterday = yesterday?.rate_silver_1g ?? null;
   const change = silverToday && silverYesterday ? silverToday - silverYesterday : null;
+
+  // 7-day range (freshness/depth signal)
+  const weekVals = history.slice(0, 7).map((h) => h.rate_silver_1g).filter((v): v is number => typeof v === "number");
+  const weekLow = weekVals.length ? Math.min(...weekVals) : null;
+  const weekHigh = weekVals.length ? Math.max(...weekVals) : null;
+
+  const faqs = silverToday
+    ? [
+        {
+          q: "What is the silver rate in Kerala today?",
+          a: `Today's silver rate in Kerala is ${formatCurrency(silverToday)} per gram for 999 fine silver — that's ${formatCurrency(silverToday * 1000)} per kilogram. It is set by the Kerala Gold & Silver Merchants Association and is uniform across all districts.`,
+        },
+        {
+          q: "Is the silver rate the same in Kochi, Thrissur and other Kerala cities?",
+          a: "Yes. The KGSMA board rate is uniform across Kerala, so the silver rate today in Kochi, Ernakulam, Thrissur, Kozhikode, Kollam, Kannur and Trivandrum is the same per-gram rate shown above.",
+        },
+        {
+          q: "What is the silver rate per kg in Kerala?",
+          a: `At ${formatCurrency(silverToday)} per gram, 1 kg of 999 silver works out to ${formatCurrency(silverToday * 1000)} today (before making charges and GST).`,
+        },
+        {
+          q: "Why is silver more volatile than gold?",
+          a: "Silver responds to both precious-metal sentiment and industrial demand (electronics, solar, EVs), so its price swings more than gold's. The gold-to-silver ratio is a common gauge of relative value.",
+        },
+      ]
+    : [];
 
   const denominations = silverToday
     ? [
@@ -155,6 +181,16 @@ export default async function SilverRatePage() {
                 ))}
               </div>
             </div>
+
+            {/* City coverage + 7-day range — captures "silver rate today {city}" and adds a freshness signal */}
+            <p className="mb-8 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+              The same KGSMA board rate applies right across Kerala, so the silver rate today in{" "}
+              <strong className="text-zinc-700 dark:text-zinc-300">Kochi, Ernakulam, Thrissur, Kozhikode, Kollam, Kannur and Trivandrum</strong>{" "}
+              is the same {formatCurrency(silverToday)}/g shown above.
+              {weekLow !== null && weekHigh !== null && weekLow !== weekHigh && (
+                <> Over the last 7 days it has ranged {formatCurrency(weekLow)}–{formatCurrency(weekHigh)} per gram.</>
+              )}
+            </p>
           </>
         ) : (
           <div className="mb-8 rounded-2xl border border-zinc-200/70 bg-white p-8 text-center shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
@@ -193,6 +229,35 @@ export default async function SilverRatePage() {
             )}.
           </p>
         </div>
+
+        {/* FAQ */}
+        {faqs.length > 0 && (
+          <section className="mt-10">
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "FAQPage",
+                  mainEntity: faqs.map((f) => ({
+                    "@type": "Question",
+                    name: f.q,
+                    acceptedAnswer: { "@type": "Answer", text: f.a },
+                  })),
+                }),
+              }}
+            />
+            <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-200">Silver Rate FAQs</h2>
+            <div className="mt-4 divide-y divide-zinc-100 dark:divide-zinc-800">
+              {faqs.map((f) => (
+                <div key={f.q} className="py-4">
+                  <h3 className="text-sm font-bold text-zinc-800 dark:text-zinc-200">{f.q}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">{f.a}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* CTA to gold rates */}
         <div className="mt-8 rounded-2xl border border-amber-200/50 bg-amber-50/50 p-5 text-center dark:border-zinc-700 dark:bg-zinc-900">
