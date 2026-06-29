@@ -70,6 +70,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/about`,                      lastModified: LAUNCH_DATE,  changeFrequency: 'monthly' as const, priority: 0.5 },
     { url: `${BASE}/silver-rate-kerala`,          lastModified: new Date(),   changeFrequency: 'daily'   as const, priority: 0.85 },
     { url: `${BASE}/gold-rate-history`,           lastModified: new Date(),   changeFrequency: 'daily'   as const, priority: 0.75 },
+    { url: `${BASE}/kerala-gold-price-trends`,    lastModified: new Date(),   changeFrequency: 'monthly' as const, priority: 0.75 },
     { url: `${BASE}/gold-rate-yesterday-kerala`,  lastModified: new Date(),   changeFrequency: 'daily'   as const, priority: 0.7 },
     { url: `${BASE}/contact`,                     lastModified: LAUNCH_DATE,  changeFrequency: 'monthly' as const, priority: 0.4 },
     { url: `${BASE}/privacy`,                     lastModified: LAUNCH_DATE,  changeFrequency: 'monthly' as const, priority: 0.3 },

@@ -82,7 +82,11 @@ export default async function GoldRateHistoryPage() {
         <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
           Daily 22K &amp; 24K board rates from the Kerala Gold &amp; Silver Merchants Association —
           {history.length > 0 ? ` ${history.length} days tracked.` : " uniform across all districts."} Trend
-          chart, all-time high/low, and a year-by-year archive below.
+          chart, all-time high/low, and a year-by-year archive below. See also our{" "}
+          <Link href="/kerala-gold-price-trends" className="font-semibold text-amber-700 hover:underline dark:text-amber-400">
+            Kerala gold price trends study
+          </Link>{" "}
+          (how 22K gold tripled since 2020).
         </p>
 
         {today && (
