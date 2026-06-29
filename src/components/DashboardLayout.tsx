@@ -289,6 +289,9 @@ export default async function DashboardLayout({
               22K &amp; 18K are the official AKGSMA Kerala board rates. 24K is derived from the 916 rate by purity (22K&nbsp;&times;&nbsp;24&frasl;22), reflecting pure-gold value.
             </p>
 
+            {/* Price Trend chart — surfaced high, right under today's rate. */}
+            <PriceChart history={chartData} />
+
             {/* Live international spot price — adds "live market" freshness, clearly
                 distinct from the once-daily board rate. */}
             <SpotGoldTicker />
@@ -379,9 +382,6 @@ export default async function DashboardLayout({
             {/* Month High/Low — secondary context, moved down from the top so the
                 page leads with today's rate, not month extremes. */}
             {today && <TopTicker history={history} cityName={cityName} />}
-
-            {/* Price Chart */}
-            <PriceChart history={chartData} />
 
             {/* Old Gold Calculator Component */}
             <OldGoldCalculator 
