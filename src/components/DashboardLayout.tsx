@@ -6,6 +6,7 @@ import FAQ from "@/components/FAQ";
 import TodayVsYesterday from "@/components/TodayVsYesterday";
 import TopTicker from "@/components/TopTicker";
 import SpotGoldTicker from "@/components/SpotGoldTicker";
+import EmailAlertForm from "@/components/EmailAlertForm";
 import GoldCalculator from "@/components/GoldCalculator";
 import OldGoldCalculator from "@/components/OldGoldCalculator";
 import CtaBanner from "@/components/CtaBanner";
@@ -399,6 +400,9 @@ export default async function DashboardLayout({
 
             {/* Price Drop Alert — only visible to push-subscribed users */}
             <PriceAlertInput currentRate={today.rate_22k_1g} />
+
+            {/* Email price alert — universal channel (works without push permission) */}
+            <EmailAlertForm currentRate={today.rate_22k_1g} />
 
             {/* History Table */}
             <HistoryTable history={history} />

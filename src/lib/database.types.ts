@@ -294,6 +294,30 @@ export interface Database {
         };
         Relationships: [];
       };
+      email_alerts: {
+        Row: {
+          id: number;
+          email: string;
+          target_rate: number;
+          token: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: number;
+          email: string;
+          target_rate: number;
+          token?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: number;
+          email?: string;
+          target_rate?: number;
+          token?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       festival_rate_history: {

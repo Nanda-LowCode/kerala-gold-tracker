@@ -566,6 +566,46 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    // Email price alerts — notify users whose target is at or above today's 22K rate.
+    if (process.env.RESEND_API_KEY) {
+      try {
+        const { data: emailAlerts } = await supabase
+          .from("email_alerts")
+          .select("email, target_rate, token")
+          .gte("target_rate", data.rate_22k_1g);
+
+        if (emailAlerts && emailAlerts.length > 0) {
+          const resend = new Resend(process.env.RESEND_API_KEY);
+          const rateStr = data.rate_22k_1g.toLocaleString("en-IN");
+          const pavanStr = (data.rate_22k_1g * 8).toLocaleString("en-IN");
+
+          await Promise.allSettled(
+            emailAlerts.map((a: { email: string; target_rate: number; token: string }) => {
+              const unsub = `https://www.livegoldkerala.com/api/notifications/email-unsubscribe?token=${a.token}`;
+              return resend.emails.send({
+                from: "LiveGold Kerala <onboarding@resend.dev>",
+                to: a.email,
+                subject: `🎯 Gold alert: 22K is ₹${rateStr}/g in Kerala`,
+                html: `<div style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:480px;color:#18181b">
+  <p>Good news — <strong>22K gold has reached your target of ₹${Number(a.target_rate).toLocaleString("en-IN")}/g</strong>.</p>
+  <p>Today's Kerala board rate is <strong>₹${rateStr}/g</strong> (₹${pavanStr} per pavan).</p>
+  <p><a href="https://www.livegoldkerala.com" style="color:#b45309;font-weight:600;text-decoration:none">See the live rate →</a></p>
+  <hr style="border:none;border-top:1px solid #eee;margin:16px 0">
+  <p style="font-size:12px;color:#999">You set this one-time alert at livegoldkerala.com. <a href="${unsub}" style="color:#999">Unsubscribe</a>.</p>
+</div>`,
+              });
+            })
+          );
+
+          // One-shot: remove fired alerts so they don't repeat the next day.
+          await supabase.from("email_alerts").delete().gte("target_rate", data.rate_22k_1g);
+          console.log(`[gold-cron] Sent ${emailAlerts.length} email price alerts.`);
+        }
+      } catch (err) {
+        console.error("[gold-cron] Email alert send failed:", err);
+      }
+    }
+
     return NextResponse.json({
       success: true,
       date: today,
