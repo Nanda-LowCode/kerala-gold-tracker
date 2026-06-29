@@ -1,0 +1,45 @@
+name: Daily Reddit Gold Rate Post
+
+# Posts the day's Kerala gold rate to your own subreddit, once each morning,
+# after the rate cron has updated. Skips cleanly if today's rate isn't in yet.
+#
+# Required repo secrets (Settings → Secrets and variables → Actions):
+#   NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY
+#   REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET   (reddit.com/prefs/apps → "script" app)
+#   REDDIT_USERNAME, REDDIT_PASSWORD         (the account that mods your subreddit)
+#   REDDIT_SUBREDDIT                         (e.g. LiveGoldKerala — no "r/")
+
+on:
+  schedule:
+    - cron: "15 5 * * *" # ~10:45 AM IST — after the 10:00 rate update
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Post even if today's rate row isn't in yet"
+        type: boolean
+        default: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Post today's rate to Reddit
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+          REDDIT_USERNAME: ${{ secrets.REDDIT_USERNAME }}
+          REDDIT_PASSWORD: ${{ secrets.REDDIT_PASSWORD }}
+          REDDIT_SUBREDDIT: ${{ secrets.REDDIT_SUBREDDIT }}
+          REDDIT_FORCE: ${{ github.event.inputs.force == 'true' && '1' || '' }}
+        run: node scripts/post-to-reddit.mjs
