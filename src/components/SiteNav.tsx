@@ -48,7 +48,7 @@ export default function SiteNav() {
           <span className="text-base leading-none">✨</span>
           <span>
             LiveGold{" "}
-            <span className="bg-gradient-to-r from-amber-600 to-yellow-500 bg-clip-text text-transparent dark:from-amber-400 dark:to-yellow-400">
+            <span className="gold-text-shine bg-gradient-to-r from-amber-600 via-yellow-300 to-amber-600 bg-clip-text text-transparent dark:from-amber-400 dark:via-yellow-200 dark:to-amber-400">
               Kerala
             </span>
           </span>

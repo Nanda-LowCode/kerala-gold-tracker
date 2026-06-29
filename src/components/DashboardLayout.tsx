@@ -219,8 +219,8 @@ export default async function DashboardLayout({
         {today ? (
           <>
             {/* Hero: trust badge + date -> Squished aggressively for mobile */}
-            <section className="flex flex-col items-center text-center">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 sm:px-3 sm:py-1 shadow-sm dark:border-emerald-900/50 dark:bg-emerald-950/30">
+            <section className="animate-rise flex flex-col items-center text-center">
+              <div className="pulse-glow inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 sm:px-3 sm:py-1 shadow-sm dark:border-emerald-900/50 dark:bg-emerald-950/30">
                 <svg
                   className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-emerald-600 dark:text-emerald-500"
                   viewBox="0 0 20 20"
@@ -263,7 +263,7 @@ export default async function DashboardLayout({
 
             {/* Rate Cards: 22K hero + rate board — lead with the number users came for,
                 so today's rate is the first thing visible above the fold on mobile. */}
-            <div className="flex flex-col gap-3 sm:gap-4">
+            <div className="animate-rise animate-rise-1 flex flex-col gap-3 sm:gap-4">
               <RateCard
                 label="22 Karat Gold"
                 purity="916 Hallmark"
@@ -271,6 +271,7 @@ export default async function DashboardLayout({
                 change={change22k}
                 pavanRate={today.rate_22k_1g * 8}
                 featured
+                animate
               />
               <RateBoard
                 rows={[

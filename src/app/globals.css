@@ -11,3 +11,57 @@
 body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
+
+/* ---------------------------------------------------------------------------
+   Theme motion — subtle, gold-themed, GPU-only (transform/opacity/shadow), so
+   none of it causes layout shift. All disabled under prefers-reduced-motion.
+   --------------------------------------------------------------------------- */
+
+/* Gold "shine" sweep — a band of light crosses the element. Host must be
+   position:relative; overflow:hidden (the featured rate card already is). */
+@keyframes gold-sweep {
+  0%   { transform: translateX(-160%) skewX(-20deg); }
+  100% { transform: translateX(260%)  skewX(-20deg); }
+}
+.gold-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent 38%, rgba(255,255,255,0.45) 50%, transparent 62%);
+  transform: translateX(-160%) skewX(-20deg);
+  animation: gold-sweep 5.5s ease-in-out 1.4s infinite;
+}
+.dark .gold-shimmer::after {
+  background: linear-gradient(100deg, transparent 38%, rgba(255,255,255,0.10) 50%, transparent 62%);
+}
+
+/* Gentle entrance — fade + rise. Visible by default (no-CSS safe); the keyframe
+   start state only applies while the animation runs. */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.animate-rise   { animation: rise-in 0.5s ease-out both; }
+.animate-rise-1 { animation-delay: 0.09s; }
+.animate-rise-2 { animation-delay: 0.18s; }
+
+/* Live pulse — radar ring on the "verified/today" badge. */
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(16,185,129,0.45); }
+  70%  { box-shadow: 0 0 0 6px rgba(16,185,129,0); }
+  100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+}
+.pulse-glow { animation: pulse-ring 2.6s ease-out infinite; }
+
+/* Gold text shimmer for gradient-clipped text (e.g. the logo). */
+@keyframes text-shine { to { background-position: 200% center; } }
+.gold-text-shine { background-size: 200% auto; animation: text-shine 5s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gold-shimmer::after,
+  .animate-rise,
+  .pulse-glow,
+  .gold-text-shine { animation: none !important; }
+  .animate-rise { opacity: 1 !important; transform: none !important; }
+}

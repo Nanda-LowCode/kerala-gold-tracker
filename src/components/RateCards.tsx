@@ -1,4 +1,5 @@
 import { formatCurrency } from "@/lib/format";
+import CountUp from "@/components/CountUp";
 
 export function RateCard({
   label,
@@ -8,6 +9,7 @@ export function RateCard({
   pavanRate,
   featured = false,
   compact = false,
+  animate = false,
 }: {
   label: string;
   purity: string;
@@ -16,10 +18,14 @@ export function RateCard({
   pavanRate?: number;
   featured?: boolean;
   compact?: boolean;
+  /** Featured hero card: shimmer sweep + count-up on the rate value. */
+  animate?: boolean;
 }) {
   return (
     <article
       className={`group relative overflow-hidden rounded-2xl border bg-white dark:bg-zinc-900 transition-all hover:-translate-y-0.5 ${
+        animate ? "gold-shimmer" : ""
+      } ${
         compact ? "p-4 md:p-5 lg:p-6" : "p-5 md:p-6"
       } ${
         featured
@@ -63,7 +69,7 @@ export function RateCard({
               : "mt-2 text-3xl md:text-4xl"
           }`}
         >
-          {formatCurrency(ratePerGram)}
+          {animate ? <CountUp value={ratePerGram} /> : formatCurrency(ratePerGram)}
         </p>
 
         {pavanRate && (
