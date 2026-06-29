@@ -37,7 +37,18 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: "/(.*)",
+        // The embeddable rate widget — must be framable on third-party sites,
+        // so it gets a permissive frame-ancestors and NO X-Frame-Options.
+        source: "/embed",
+        headers: [
+          { key: "Content-Security-Policy", value: CSP.replace("frame-ancestors 'none'", "frame-ancestors *") },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+        ],
+      },
+      {
+        // Everything else keeps the strict policy (no framing at all).
+        source: "/((?!embed$).*)",
         headers: [
           { key: "Content-Security-Policy", value: CSP },
           { key: "X-Content-Type-Options", value: "nosniff" },
