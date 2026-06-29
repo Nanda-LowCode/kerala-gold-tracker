@@ -12,6 +12,7 @@ import "./globals.css";
 const geist = Geist({
   variable: "--font-geist",
   subsets: ["latin"],
+  display: "swap", // avoid invisible text while the (self-hosted) font loads
 });
 
 // Next 16: themeColor belongs in the viewport export, not metadata.
@@ -64,6 +65,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geist.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col bg-gradient-to-b from-amber-50 to-white font-sans text-gray-900 dark:from-zinc-950 dark:to-zinc-950 dark:text-zinc-200 transition-colors duration-300">
+        {/* Resource hints — React 19 hoists these to <head>. They let the browser
+            open connections to the deferred analytics origins earlier; none block
+            first paint (the scripts themselves load afterInteractive/lazily). */}
+        <link rel="preconnect" href="https://va.vercel-scripts.com" />
+        <link rel="preconnect" href="https://vitals.vercel-insights.com" />
+        <link rel="dns-prefetch" href="https://www.clarity.ms" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: `{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.livegoldkerala.com/#organization","name":"Live Gold Kerala","url":"https://www.livegoldkerala.com"},{"@type":"WebSite","@id":"https://www.livegoldkerala.com/#website","url":"https://www.livegoldkerala.com","name":"Live Gold Kerala","publisher":{"@id":"https://www.livegoldkerala.com/#organization"}}]}` }} />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <SiteNav />
