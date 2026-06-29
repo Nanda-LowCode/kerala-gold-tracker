@@ -5,13 +5,13 @@ import { createSupabaseReadClient } from "@/lib/supabase";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Kerala Festival Gold Calendar 2026 — Vishu, Akshaya Tritiya, Onam Muhurat",
+  title: "Kerala Festival Gold Calendar 2026 — Onam, Chingam 1 & Auspicious Gold-Buying Days",
   description:
-    "2026 festival dates and gold-buying muhurats for Kerala — Vishu (Apr 15), Akshaya Tritiya (Apr 19), Onam (Aug 25), Dhanteras, and Pushya Nakshatra dates with auspicious windows.",
+    "2026 Kerala festival dates and auspicious days to buy gold — Onam (Thiruvonam 26 Aug), Chingam 1 / Malayalam New Year (17 Aug), Akshaya Tritiya, Vishu and Dhanteras — with muhurat windows.",
   alternates: { canonical: "/culture/festivals" },
   openGraph: {
-    title: "Kerala Festival Calendar 2026 — Gold Muhurat Dates",
-    description: "Verified muhurat windows for Akshaya Tritiya, Vishu, Onam, and Dhanteras 2026.",
+    title: "Kerala Festival Calendar 2026 — Auspicious Gold-Buying Days",
+    description: "Onam, Chingam 1 (Malayalam New Year), Akshaya Tritiya, Vishu and Dhanteras 2026 — the auspicious days to buy gold in Kerala, with muhurat windows.",
     url: "https://www.livegoldkerala.com/culture/festivals",
   },
 };
@@ -147,6 +147,19 @@ export default async function FestivalsPage() {
           <p className="mt-2 text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
             Verified dates and muhurat windows for major Kerala festivals. Gold-buying days
             are marked — days considered auspicious by tradition for purchasing gold jewellery.
+          </p>
+          <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+            The next big one is <strong>Onam</strong>: the Malayalam New Year (Chingam 1) on
+            17 August and Thiruvonam on 26 August 2026 — Kerala&apos;s biggest gold-buying season.
+            See our{" "}
+            <Link href="/blog/onam-gold-buying-guide-kerala-2026" className="font-semibold text-amber-700 hover:underline dark:text-amber-400">
+              Onam 2026 gold-buying guide
+            </Link>{" "}
+            and whether it&apos;s worth buying in the quiet{" "}
+            <Link href="/blog/should-you-buy-gold-in-karkidakam-kerala" className="font-semibold text-amber-700 hover:underline dark:text-amber-400">
+              Karkidakam month
+            </Link>{" "}
+            that precedes it.
           </p>
         </div>
 
