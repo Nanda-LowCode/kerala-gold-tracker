@@ -5,6 +5,7 @@ import HistoryTable from "@/components/HistoryTable";
 import FAQ from "@/components/FAQ";
 import TodayVsYesterday from "@/components/TodayVsYesterday";
 import TopTicker from "@/components/TopTicker";
+import SpotGoldTicker from "@/components/SpotGoldTicker";
 import GoldCalculator from "@/components/GoldCalculator";
 import OldGoldCalculator from "@/components/OldGoldCalculator";
 import CtaBanner from "@/components/CtaBanner";
@@ -286,6 +287,10 @@ export default async function DashboardLayout({
             <p className="-mt-1 text-[11px] leading-relaxed text-zinc-400 dark:text-zinc-500">
               22K &amp; 18K are the official AKGSMA Kerala board rates. 24K is derived from the 916 rate by purity (22K&nbsp;&times;&nbsp;24&frasl;22), reflecting pure-gold value.
             </p>
+
+            {/* Live international spot price — adds "live market" freshness, clearly
+                distinct from the once-daily board rate. */}
+            <SpotGoldTicker />
 
             {/* City-specific market overview — surfaces unique, keyword-relevant content
                 HIGH on city pages (the homepage uses the Kerala framing instead). This is

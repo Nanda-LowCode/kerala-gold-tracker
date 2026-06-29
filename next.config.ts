@@ -6,7 +6,7 @@ const CSP = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://*.clarity.ms https://c.bing.com",
   "font-src 'self'",
-  "connect-src 'self' https://*.google-analytics.com https://www.googletagmanager.com https://vitals.vercel-insights.com https://cdn.jsdelivr.net https://*.clarity.ms https://c.bing.com",
+  "connect-src 'self' https://*.google-analytics.com https://www.googletagmanager.com https://vitals.vercel-insights.com https://cdn.jsdelivr.net https://*.clarity.ms https://c.bing.com https://api.gold-api.com",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
