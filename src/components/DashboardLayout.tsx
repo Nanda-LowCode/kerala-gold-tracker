@@ -7,6 +7,7 @@ import TodayVsYesterday from "@/components/TodayVsYesterday";
 import TopTicker from "@/components/TopTicker";
 import SpotGoldTicker from "@/components/SpotGoldTicker";
 import EmailAlertForm from "@/components/EmailAlertForm";
+import AffiliateOffers from "@/components/AffiliateOffers";
 import GoldCalculator from "@/components/GoldCalculator";
 import OldGoldCalculator from "@/components/OldGoldCalculator";
 import CtaBanner from "@/components/CtaBanner";
@@ -403,6 +404,9 @@ export default async function DashboardLayout({
 
             {/* Email price alert — universal channel (works without push permission) */}
             <EmailAlertForm currentRate={today.rate_22k_1g} />
+
+            {/* Affiliate / lead-gen offers — env-gated, renders only when configured */}
+            <AffiliateOffers />
 
             {/* History Table */}
             <HistoryTable history={history} />
