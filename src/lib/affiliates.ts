@@ -12,8 +12,26 @@ export type AffiliateOffer = {
   cta: string;
 };
 
+// Amazon.in gold & silver coins store. We only need the Associate tag from you;
+// the URL is built here. Set NEXT_PUBLIC_AMAZON_TAG to your tracking id (e.g.
+// "livegoldkerala-21") from affiliate-program.amazon.in.
+const AMAZON_GOLD_COINS_BASE =
+  "https://www.amazon.in/gold-silver-coins/b?ie=UTF8&node=8609763031";
+
 export function getAffiliateOffers(): AffiliateOffer[] {
   const offers: AffiliateOffer[] = [];
+
+  const amazonTag = process.env.NEXT_PUBLIC_AMAZON_TAG;
+  if (amazonTag) {
+    offers.push({
+      id: "gold-coins",
+      url: `${AMAZON_GOLD_COINS_BASE}&tag=${encodeURIComponent(amazonTag)}`,
+      emoji: "🪙",
+      title: "Buy gold & silver coins",
+      blurb: "Shop hallmarked 24K (999.9) gold and silver coins online — trusted brands, delivered to your door.",
+      cta: "Shop on Amazon",
+    });
+  }
 
   const goldLoan = process.env.NEXT_PUBLIC_AFF_GOLD_LOAN;
   if (goldLoan) {
