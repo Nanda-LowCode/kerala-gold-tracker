@@ -9,21 +9,31 @@ const BASE = 'https://www.livegoldkerala.com'
 const RICH_TEMPLE_SLUGS = ['guruvayur', 'sabarimala', 'padmanabhaswamy']
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Fetch dynamic slugs from DB in parallel
+  // Fetch dynamic slugs from DB in parallel. NOTE: Supabase caps any single
+  // response at 1,000 rows, and daily_gold_rates has ~2,000 — so we must never
+  // fetch "all rate rows" here. News dates are filtered server-side (~100 real
+  // rows), and year/month archives are enumerated from min/max date instead
+  // (the series is contiguous).
   const supabase = createSupabaseReadClient()
-  const [ornamentsRes, newsDatesRes] = await Promise.all([
+  const [ornamentsRes, newsDatesRes, firstRes, lastRes] = await Promise.all([
     supabase.from('ornaments').select('slug, description_en, symbolism_en'),
-    supabase.from('daily_gold_rates').select('date, consensus_sources').eq('city', 'Kochi'),
+    supabase
+      .from('daily_gold_rates')
+      .select('date')
+      .eq('city', 'Kochi')
+      .neq('consensus_sources', 'backfill-yahoo-calibrated')
+      .order('date', { ascending: true }),
+    supabase.from('daily_gold_rates').select('date').eq('city', 'Kochi').order('date', { ascending: true }).limit(1),
+    supabase.from('daily_gold_rates').select('date').eq('city', 'Kochi').order('date', { ascending: false }).limit(1),
   ])
   // Only include ornaments that have real content (not stubs)
   const ornamentSlugs = (ornamentsRes.data ?? [])
     .filter((r) => r.description_en || r.symbolism_en)
     .map((r) => r.slug)
-  const allRateRows = (newsDatesRes.data ?? []) as { date: string; consensus_sources: string | null }[]
-  // News pages: real board-rate dates only (exclude estimated backfill).
-  const newsDates = allRateRows
-    .filter((r) => r.consensus_sources !== 'backfill-yahoo-calibrated')
-    .map((r) => r.date)
+  // News pages: real board-rate dates only (excluded estimated backfill server-side).
+  const newsDates = (newsDatesRes.data ?? []).map((r) => r.date as string)
+  const firstDate = firstRes.data?.[0]?.date as string | undefined
+  const lastDate = lastRes.data?.[0]?.date as string | undefined
 
   const rootRoute: MetadataRoute.Sitemap = [
     { url: BASE, lastModified: new Date(), changeFrequency: 'daily', priority: 1.0 },
@@ -134,29 +144,35 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ]
 
-  // Historical year pages (/gold-rate-history/[year]) — one per year of data
-  // (includes backfilled years, unlike the news routes above).
-  const years = [...new Set(allRateRows.map((r) => r.date.slice(0, 4)))].sort()
-  const yearRoutes: MetadataRoute.Sitemap = years.map((y) => ({
-    url: `${BASE}/gold-rate-history/${y}`,
-    lastModified: new Date(),
-    changeFrequency: 'monthly' as const,
-    priority: 0.6,
-  }))
-
-  // Month archive pages (/gold-rate-history/[year]/[month]) — one per month
-  // of data, targeting "gold rate {month} {year} kerala" queries.
-  const MONTH_SLUGS = ['january','february','march','april','may','june','july','august','september','october','november','december']
-  const yearMonths = [...new Set(allRateRows.map((r) => r.date.slice(0, 7)))].sort()
-  const monthRoutes: MetadataRoute.Sitemap = yearMonths.map((ym) => {
-    const [y, m] = ym.split('-')
-    return {
-      url: `${BASE}/gold-rate-history/${y}/${MONTH_SLUGS[Number(m) - 1]}`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.55,
+  // Historical year + month archive pages, enumerated from the (contiguous)
+  // data range so they cover the full backfill — a "fetch all rows" approach
+  // silently truncates at Supabase's 1,000-row cap.
+  const yearRoutes: MetadataRoute.Sitemap = []
+  const monthRoutes: MetadataRoute.Sitemap = []
+  if (firstDate && lastDate) {
+    const MONTH_SLUGS = ['january','february','march','april','may','june','july','august','september','october','november','december']
+    const start = new Date(firstDate + 'T00:00:00')
+    const end = new Date(lastDate + 'T00:00:00')
+    for (let y = start.getFullYear(); y <= end.getFullYear(); y++) {
+      yearRoutes.push({
+        url: `${BASE}/gold-rate-history/${y}`,
+        lastModified: new Date(),
+        changeFrequency: 'monthly' as const,
+        priority: 0.6,
+      })
     }
-  })
+    const cursor = new Date(start.getFullYear(), start.getMonth(), 1)
+    const endMonth = new Date(end.getFullYear(), end.getMonth(), 1)
+    while (cursor <= endMonth) {
+      monthRoutes.push({
+        url: `${BASE}/gold-rate-history/${cursor.getFullYear()}/${MONTH_SLUGS[cursor.getMonth()]}`,
+        lastModified: new Date(),
+        changeFrequency: 'monthly' as const,
+        priority: 0.55,
+      })
+      cursor.setMonth(cursor.getMonth() + 1)
+    }
+  }
 
   return [...rootRoute, ...toolRoutes, ...staticRoutes, ...cityRoutes, ...blogRoutes, ...cultureRoutes, ...newsRoutes, ...yearRoutes, ...monthRoutes]
 }
