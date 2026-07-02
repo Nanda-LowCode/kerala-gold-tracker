@@ -91,22 +91,6 @@ export default async function GoldImportDutyCalculatorPage() {
     <>
       {/* Static JSON-LD schema — content is hardcoded, not from user input */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: IMPORT_DUTY_LD }} />
-      <header className="border-b border-zinc-200/60 bg-white/70 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-950/70">
-        <div className="mx-auto flex max-w-3xl items-center gap-2.5 px-4 py-4">
-          <span className="text-2xl leading-none">✨</span>
-          <div>
-            <Link href="/" className="text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-lg hover:underline">
-              LiveGold{" "}
-              <span className="bg-gradient-to-r from-amber-600 to-yellow-500 bg-clip-text text-transparent">
-                Kerala
-              </span>
-            </Link>
-            <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-400">
-              Tools · Gold Import Duty
-            </p>
-          </div>
-        </div>
-      </header>
 
       <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-6 md:gap-10 md:py-12">
         <h1 className="text-2xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100 md:text-3xl text-center">

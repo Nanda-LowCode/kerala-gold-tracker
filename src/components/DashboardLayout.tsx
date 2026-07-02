@@ -526,18 +526,6 @@ export default async function DashboardLayout({
             </div>
           </div>
 
-          <div className="text-center text-xs text-zinc-400 dark:text-zinc-500">
-            <p className="font-medium">
-              AKGSMA · For reference only
-            </p>
-            <p className="mt-1.5">
-              © 2026 LiveGold Kerala ·{" "}
-              <Link href="/about" className="hover:text-zinc-600 dark:hover:text-zinc-300">About</Link>{" "}·{" "}
-              <Link href="/contact" className="hover:text-zinc-600 dark:hover:text-zinc-300">Contact</Link>{" "}·{" "}
-              <Link href="/privacy" className="hover:text-zinc-600 dark:hover:text-zinc-300">Privacy</Link>{" "}·{" "}
-              <Link href="/terms" className="hover:text-zinc-600 dark:hover:text-zinc-300">Terms</Link>
-            </p>
-          </div>
         </div>
       </footer>
     </>

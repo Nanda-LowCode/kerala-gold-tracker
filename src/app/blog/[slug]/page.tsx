@@ -76,27 +76,6 @@ export default async function BlogPost({ params }: Props) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: articleJsonLd }} />
-      <header className="sticky top-0 z-50 border-b border-zinc-200/60 bg-white/70 backdrop-blur-xl dark:border-zinc-800/60 dark:bg-zinc-950/80">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-4">
-          <Link href="/" className="flex items-center gap-2.5">
-            <span className="text-2xl leading-none">✨</span>
-            <div>
-              <span className="text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-lg">
-                LiveGold{" "}
-                <span className="bg-gradient-to-r from-amber-600 to-yellow-500 bg-clip-text text-transparent">
-                  Kerala
-                </span>
-              </span>
-            </div>
-          </Link>
-          <Link
-            href="/blog"
-            className="rounded-full border border-zinc-200 bg-white px-3 py-1.5 text-xs font-semibold text-zinc-600 shadow-sm hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
-          >
-            &larr; All Articles
-          </Link>
-        </div>
-      </header>
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 md:py-14">
         <article>
@@ -169,24 +148,6 @@ export default async function BlogPost({ params }: Props) {
         </div>
       </main>
 
-      <footer className="border-t border-zinc-200/60 bg-white/50 pt-6 pb-8 dark:border-zinc-800/60 dark:bg-zinc-950/50">
-        <div className="mx-auto max-w-3xl px-4">
-          <div className="mb-6 flex flex-wrap justify-center gap-3 text-xs font-medium">
-            <Link href="/" className="text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200">Today&apos;s Rate</Link>
-            <span className="text-zinc-300 dark:text-zinc-700">·</span>
-            <Link href="/tools/gold-making-charge-calculator" className="text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200">Making Charge Calculator</Link>
-            <span className="text-zinc-300 dark:text-zinc-700">·</span>
-            <Link href="/tools/old-gold-exchange-calculator" className="text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200">Old Gold Exchange</Link>
-            <span className="text-zinc-300 dark:text-zinc-700">·</span>
-            <Link href="/tools/gold-import-duty-calculator" className="text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200">NRI Import Duty</Link>
-            <span className="text-zinc-300 dark:text-zinc-700">·</span>
-            <Link href="/blog" className="text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200">All Articles</Link>
-          </div>
-          <div className="text-center text-xs text-zinc-400">
-            <p>&copy; 2026 LiveGold Kerala</p>
-          </div>
-        </div>
-      </footer>
     </>
   );
 }

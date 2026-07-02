@@ -72,23 +72,6 @@ export default async function TemplesPage() {
 
   return (
     <>
-      <header className="border-b border-zinc-200/60 bg-white/70 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-950/70">
-        <div className="mx-auto flex max-w-3xl items-center gap-2.5 px-4 py-4">
-          <span className="text-2xl leading-none">🛕</span>
-          <div>
-            <Link href="/" className="text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-lg hover:underline">
-              LiveGold{" "}
-              <span className="bg-gradient-to-r from-amber-600 to-yellow-500 bg-clip-text text-transparent dark:from-amber-400 dark:to-yellow-400">
-                Kerala
-              </span>
-            </Link>
-            <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-              <Link href="/culture" className="hover:text-zinc-600">Culture</Link>
-              {" · "}Temples &amp; Sacred Gold
-            </p>
-          </div>
-        </div>
-      </header>
 
       <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-4 py-8 md:py-12">
         <div>
@@ -220,12 +203,6 @@ export default async function TemplesPage() {
         </div>
       </main>
 
-      <footer className="border-t border-zinc-200/60 bg-white/50 pt-6 pb-8 dark:border-zinc-800/80 dark:bg-zinc-950/50">
-        <div className="mx-auto max-w-3xl px-4 text-center text-xs text-zinc-400 dark:text-zinc-500">
-          <p className="font-medium">AKGSMA · For reference only</p>
-          <p className="mt-1.5">© 2026 LiveGold Kerala</p>
-        </div>
-      </footer>
     </>
   );
 }

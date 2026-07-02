@@ -11,27 +11,6 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-zinc-200/60 bg-white/70 backdrop-blur-xl dark:border-zinc-800/60 dark:bg-zinc-950/80">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-4">
-          <Link href="/" className="flex items-center gap-2.5">
-            <span className="text-2xl leading-none">✨</span>
-            <div>
-              <span className="text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-lg">
-                LiveGold{" "}
-                <span className="bg-gradient-to-r from-amber-600 to-yellow-500 bg-clip-text text-transparent">
-                  Kerala
-                </span>
-              </span>
-            </div>
-          </Link>
-          <Link
-            href="/"
-            className="rounded-full border border-zinc-200 bg-white px-4 py-1.5 text-xs font-semibold text-zinc-600 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
-          >
-            ← Today&apos;s Rate
-          </Link>
-        </div>
-      </header>
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10">
         <div className="mb-8">
@@ -140,9 +119,6 @@ export default function AboutPage() {
         </div>
       </main>
 
-      <footer className="border-t border-zinc-200/60 py-8 text-center text-xs text-zinc-400 dark:border-zinc-800 dark:text-zinc-500">
-        <p>© 2026 LiveGold Kerala · <Link href="/" className="hover:text-zinc-600 dark:hover:text-zinc-300">Home</Link></p>
-      </footer>
     </>
   );
 }
