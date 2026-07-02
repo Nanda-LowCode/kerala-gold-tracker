@@ -27,6 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const rootRoute: MetadataRoute.Sitemap = [
     { url: BASE, lastModified: new Date(), changeFrequency: 'daily', priority: 1.0 },
+    { url: `${BASE}/ml`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
   ]
 
   const cityRoutes: MetadataRoute.Sitemap = KERALA_CITIES.map((city) => ({

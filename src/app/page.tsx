@@ -37,7 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Gold Rate Today in Kerala — 22K & 24K Live Price | LiveGold Kerala",
       description:
         "Today's gold rate in Kerala: live 22K (916) and 24K prices per gram and per pavan (8g), sourced from the Kerala board rate. Updated daily.",
-      alternates: { canonical: "/" },
+      alternates: { canonical: "/", languages: { "en-IN": "/", "ml-IN": "/ml", "x-default": "/" } },
     };
   }
 
@@ -49,7 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `Gold Rate Today in Kerala (${dateFormatted}): 22K @ ₹${today.rate_22k_1g}/g`,
     description: `Today's gold rate in Kerala: 22 Karat (916) is ₹${today.rate_22k_1g}/gram (₹${(today.rate_22k_1g * 8).toLocaleString("en-IN")}/pavan) and 24 Karat is ₹${today.rate_24k_1g}/gram. Live Kerala board rate, updated daily by 10 AM IST.`,
-    alternates: { canonical: "/" },
+    alternates: { canonical: "/", languages: { "en-IN": "/", "ml-IN": "/ml", "x-default": "/" } },
   };
 }
 

@@ -259,6 +259,14 @@ export default async function DashboardLayout({
               </h1>
               <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400 md:mt-1 md:text-sm">
                 <time dateTime={`${today.date}T10:00:00+05:30`}>{formatDate(today.date)}</time> · Updated by 10 AM IST · {region}
+                {displayName && (
+                  <>
+                    {" · "}
+                    <Link href="/ml" lang="ml" className="font-semibold text-amber-700 hover:underline dark:text-amber-400">
+                      മലയാളം
+                    </Link>
+                  </>
+                )}
               </p>
               {/* At-a-glance daily trend signal — the "reason to come back" cue */}
               {change22k !== null && yesterday && (
