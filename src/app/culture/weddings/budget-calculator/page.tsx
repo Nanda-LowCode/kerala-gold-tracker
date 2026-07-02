@@ -7,13 +7,13 @@ import WeddingBudgetCalculator from "@/components/WeddingBudgetCalculator";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Kerala Wedding Gold Budget Calculator — All Communities | LiveGold Kerala",
+  title: "Kerala Wedding Gold Budget Calculator — How Much Gold Do You Need? | LiveGold Kerala",
   description:
-    "Estimate gold jewellery cost for a Kerala wedding. Supports Nair, Namboothiri, Ezhava, Syrian Christian, Mappila Muslim, and more. Includes making charge, GST, Mahr input.",
+    "Estimate the gold jewellery cost for a Kerala wedding at today's live 22K rate. Pick a starting preset (classic, Christian or Muslim ceremony with Mahr), adjust every ornament and weight, and see the total with making charges and GST.",
   alternates: { canonical: "/culture/weddings/budget-calculator" },
   openGraph: {
     title: "Kerala Wedding Gold Budget Calculator",
-    description: "Estimate wedding gold cost by community — live 22K rate, making charge, GST.",
+    description: "Estimate wedding gold cost — live 22K rate, adjustable ornaments, making charge, GST.",
     url: "https://www.livegoldkerala.com/culture/weddings/budget-calculator",
   },
 };
@@ -82,8 +82,8 @@ export default async function BudgetCalculatorPage() {
             Wedding Gold Budget Calculator
           </h1>
           <p className="mt-2 text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
-            Estimate gold jewellery cost for a Kerala wedding. Select your community, adjust quantities,
-            set making charge, and get a live estimate based on today&apos;s 22K rate.
+            Estimate gold jewellery cost for a Kerala wedding. Pick a starting preset, add or remove
+            ornaments, adjust weights and making charge, and get a live estimate at today&apos;s 22K rate.
           </p>
           {rate22k && (
             <p className="mt-1.5 text-xs font-semibold text-amber-700 dark:text-amber-400">
@@ -97,7 +97,7 @@ export default async function BudgetCalculatorPage() {
         <div className="rounded-lg border border-zinc-100 bg-zinc-50/50 px-4 py-3 text-xs text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900/30 dark:text-zinc-400">
           <strong>Disclaimer:</strong> This calculator provides estimates for planning purposes only.
           Actual jewellery prices depend on the specific jeweller, design, making charges, stone
-          settings, and other factors. For Mappila Muslim families, Mahr is the bride&apos;s absolute
+          settings, and other factors. In Muslim weddings, Mahr is the bride&apos;s absolute
           property by Islamic law — it is not dowry. Verify current gold rates with certified jewellers
           before making purchase decisions.
         </div>

@@ -181,7 +181,7 @@ export default function WeddingsPage() {
             How Much Gold for Your Wedding? — Budget Calculator
           </h2>
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            Select your community, toggle ornaments on/off, adjust pavan weights, and get
+            Pick a starting preset, toggle ornaments on/off, adjust pavan weights, and get
             an instant estimate with making charges and GST — all at today&apos;s Kerala board rate.
           </p>
           <Link

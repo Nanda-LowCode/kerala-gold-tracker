@@ -7,18 +7,24 @@ import type { OrnamentRow } from "@/app/culture/weddings/budget-calculator/page"
 const PAVAN_GRAMS = 8;
 const GST_RATE = 0.03;
 
-const COMMUNITIES: { value: WeddingCommunity; label: string; tradition: string }[] = [
-  { value: "nair",            label: "Nair",              tradition: "Hindu" },
-  { value: "namboothiri",     label: "Namboothiri",       tradition: "Hindu" },
-  { value: "ezhava",          label: "Ezhava",            tradition: "Hindu" },
-  { value: "syrian-christian",label: "Syrian Christian",  tradition: "Christian" },
-  { value: "latin-catholic",  label: "Latin Catholic",    tradition: "Christian" },
-  { value: "marthoma",        label: "Marthoma",          tradition: "Christian" },
-  { value: "mappila-muslim",  label: "Mappila Muslim",    tradition: "Muslim" },
-  { value: "sunni-muslim",    label: "Sunni Muslim",      tradition: "Muslim" },
+// Neutral starting presets (ceremony style, not community/caste). Each maps to
+// an ornament-defaults set in the DB; users customise everything from there.
+const PRESETS: {
+  value: string;
+  label: string;
+  community: WeddingCommunity;
+  hasMahr: boolean;
+}[] = [
+  { value: "classic",   label: "Classic Kerala",           community: "nair",             hasMahr: false },
+  { value: "christian", label: "Christian ceremony",       community: "syrian-christian", hasMahr: false },
+  { value: "muslim",    label: "Muslim ceremony (Nikah)",  community: "mappila-muslim",   hasMahr: true },
 ];
 
-const MUSLIM_COMMUNITIES: WeddingCommunity[] = ["mappila-muslim", "sunni-muslim"];
+// Generic display names for preset-specific ornament labels, so the default
+// "Classic Kerala" set reads neutrally (the item is simply a thali).
+const CLASSIC_DISPLAY_NAMES: Record<string, string> = {
+  "kumbla-thali": "Thali (wedding pendant)",
+};
 
 type Props = {
   ornaments: OrnamentRow[];
@@ -26,13 +32,15 @@ type Props = {
 };
 
 export default function WeddingBudgetCalculator({ ornaments, rate22k }: Props) {
-  const [community, setCommunity] = useState<WeddingCommunity>("nair");
+  const [presetValue, setPresetValue] = useState("classic");
   const [makingPct, setMakingPct] = useState(12);
   const [mahrGrams, setMahrGrams] = useState(0);
 
+  const preset = PRESETS.find((p) => p.value === presetValue) ?? PRESETS[0];
+
   const communityOrnaments = useMemo(
-    () => ornaments.filter((o) => o.community === community),
-    [ornaments, community]
+    () => ornaments.filter((o) => o.community === preset.community),
+    [ornaments, preset.community]
   );
 
   const [checked, setChecked] = useState<Record<string, boolean>>({});
@@ -44,53 +52,53 @@ export default function WeddingBudgetCalculator({ ornaments, rate22k }: Props) {
   const isChecked = (slug: string, required: boolean) =>
     checked[slug] !== undefined ? checked[slug] : required;
 
-  const { goldGrams, goldValue, makingCharge, mahrValue, subtotal, gst, grandTotal } =
-    useMemo(() => {
-      const goldGrams = communityOrnaments.reduce((sum, o) => {
-        if (!isChecked(o.slug, o.is_required)) return sum;
-        return sum + getPavan(o.slug, o.default_pavan) * PAVAN_GRAMS;
-      }, 0);
-      const goldValue = goldGrams * rate22k;
-      const makingCharge = goldValue * (makingPct / 100);
-      const isMuslim = MUSLIM_COMMUNITIES.includes(community);
-      const mahrValue = isMuslim ? mahrGrams * rate22k : 0;
-      const subtotal = goldValue + makingCharge + mahrValue;
-      const gst = subtotal * GST_RATE;
-      const grandTotal = subtotal + gst;
-      return { goldGrams, goldValue, makingCharge, mahrValue, subtotal, gst, grandTotal };
-    }, [communityOrnaments, checked, pavans, rate22k, makingPct, mahrGrams, community]);
+  // Plain computation — cheap enough to run every render (≤ ~15 ornaments).
+  const goldGrams = communityOrnaments.reduce((sum, o) => {
+    if (!isChecked(o.slug, o.is_required)) return sum;
+    return sum + getPavan(o.slug, o.default_pavan) * PAVAN_GRAMS;
+  }, 0);
+  const goldValue = goldGrams * rate22k;
+  const makingCharge = goldValue * (makingPct / 100);
+  const mahrValue = preset.hasMahr ? mahrGrams * rate22k : 0;
+  const subtotal = goldValue + makingCharge + mahrValue;
+  const gst = subtotal * GST_RATE;
+  const grandTotal = subtotal + gst;
 
-  const isMuslim = MUSLIM_COMMUNITIES.includes(community);
+  const isMuslim = preset.hasMahr;
 
   const fmt = (n: number) =>
     "₹" + Math.round(n).toLocaleString("en-IN");
 
   return (
     <div className="space-y-6">
-      {/* Community selector */}
+      {/* Starting-preset selector — a convenience, not a gate. */}
       <section className="space-y-2">
         <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
-          Select Community
+          Starting preset
         </label>
         <div className="flex flex-wrap gap-2">
-          {COMMUNITIES.map((c) => (
+          {PRESETS.map((p) => (
             <button
-              key={c.value}
+              key={p.value}
               onClick={() => {
-                setCommunity(c.value);
+                setPresetValue(p.value);
                 setChecked({});
                 setPavans({});
               }}
               className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
-                community === c.value
+                presetValue === p.value
                   ? "bg-amber-600 text-white"
                   : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
               }`}
             >
-              {c.label}
+              {p.label}
             </button>
           ))}
         </div>
+        <p className="text-[11px] text-zinc-400 dark:text-zinc-500">
+          Presets just pre-fill a typical ornament set — everything below is optional and fully
+          adjustable, whatever your traditions.
+        </p>
       </section>
 
       {/* Mahr notice for Muslim communities */}
@@ -103,7 +111,7 @@ export default function WeddingBudgetCalculator({ ornaments, rate22k }: Props) {
       {/* Ornament list */}
       {communityOrnaments.length === 0 ? (
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          Ornament defaults for this community are being prepared. Check back soon.
+          Ornament defaults for this preset are being prepared. Check back soon.
         </p>
       ) : (
         <section className="space-y-2">
@@ -129,7 +137,7 @@ export default function WeddingBudgetCalculator({ ornaments, rate22k }: Props) {
                   />
                   <div className="flex-1 min-w-0">
                     <p className="truncate text-sm font-medium text-zinc-800 dark:text-zinc-200">
-                      {o.name_en}
+                      {presetValue === "classic" ? (CLASSIC_DISPLAY_NAMES[o.slug] ?? o.name_en) : o.name_en}
                     </p>
                     {o.name_ml && (
                       <p className="text-xs text-zinc-400">{o.name_ml}</p>
