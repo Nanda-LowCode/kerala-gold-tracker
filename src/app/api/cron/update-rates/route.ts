@@ -470,6 +470,8 @@ export async function GET(request: NextRequest) {
     revalidatePath("/silver-rate-kerala");
     // Malayalam rate page
     revalidatePath("/ml");
+    // Old-gold resale page
+    revalidatePath("/old-gold-rate-kerala");
 
     // Ping IndexNow so Bing/Yandex reindex immediately
     if (process.env.INDEXNOW_KEY) {

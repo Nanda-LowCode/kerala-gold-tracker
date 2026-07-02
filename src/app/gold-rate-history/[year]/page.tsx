@@ -195,7 +195,14 @@ export default async function YearHistoryPage({ params }: RouteParams) {
             <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
               {s.months.map((m) => (
                 <tr key={m.month} className="transition-colors hover:bg-amber-50/30 dark:hover:bg-zinc-800/50">
-                  <td className="px-4 py-3 font-medium text-zinc-700 dark:text-zinc-300">{MONTHS[m.month]} {year}</td>
+                  <td className="px-4 py-3 font-medium text-zinc-700 dark:text-zinc-300">
+                    <Link
+                      href={`/gold-rate-history/${year}/${MONTHS[m.month].toLowerCase()}`}
+                      className="hover:text-amber-700 hover:underline dark:hover:text-amber-400"
+                    >
+                      {MONTHS[m.month]} {year}
+                    </Link>
+                  </td>
                   <td className="px-4 py-3 text-right font-semibold text-zinc-800 dark:text-zinc-200">{inr(m.avg22)}</td>
                   <td className="px-4 py-3 text-right text-zinc-600 dark:text-zinc-400">{inr(m.high22)}</td>
                   <td className="px-4 py-3 text-right text-zinc-600 dark:text-zinc-400">{inr(m.low22)}</td>

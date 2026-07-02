@@ -6,6 +6,7 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
     links: [
       { label: "Today's Gold Rate", href: "/" },
       { label: "Yesterday's Rate", href: "/gold-rate-yesterday-kerala" },
+      { label: "Old Gold Rate", href: "/old-gold-rate-kerala" },
       { label: "Rate History", href: "/gold-rate-history" },
       { label: "Price Trends Study", href: "/kerala-gold-price-trends" },
       { label: "Silver Rate", href: "/silver-rate-kerala" },

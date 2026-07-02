@@ -74,6 +74,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/kerala-gold-price-trends`,    lastModified: new Date(),   changeFrequency: 'monthly' as const, priority: 0.75 },
     { url: `${BASE}/widget`,                       lastModified: new Date(),   changeFrequency: 'monthly' as const, priority: 0.5 },
     { url: `${BASE}/gold-rate-yesterday-kerala`,  lastModified: new Date(),   changeFrequency: 'daily'   as const, priority: 0.7 },
+    { url: `${BASE}/old-gold-rate-kerala`,        lastModified: new Date(),   changeFrequency: 'daily'   as const, priority: 0.75 },
     { url: `${BASE}/contact`,                     lastModified: LAUNCH_DATE,  changeFrequency: 'monthly' as const, priority: 0.4 },
     { url: `${BASE}/privacy`,                     lastModified: LAUNCH_DATE,  changeFrequency: 'monthly' as const, priority: 0.3 },
     { url: `${BASE}/terms`,                       lastModified: LAUNCH_DATE,  changeFrequency: 'monthly' as const, priority: 0.3 },
@@ -143,5 +144,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }))
 
-  return [...rootRoute, ...toolRoutes, ...staticRoutes, ...cityRoutes, ...blogRoutes, ...cultureRoutes, ...newsRoutes, ...yearRoutes]
+  // Month archive pages (/gold-rate-history/[year]/[month]) — one per month
+  // of data, targeting "gold rate {month} {year} kerala" queries.
+  const MONTH_SLUGS = ['january','february','march','april','may','june','july','august','september','october','november','december']
+  const yearMonths = [...new Set(allRateRows.map((r) => r.date.slice(0, 7)))].sort()
+  const monthRoutes: MetadataRoute.Sitemap = yearMonths.map((ym) => {
+    const [y, m] = ym.split('-')
+    return {
+      url: `${BASE}/gold-rate-history/${y}/${MONTH_SLUGS[Number(m) - 1]}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.55,
+    }
+  })
+
+  return [...rootRoute, ...toolRoutes, ...staticRoutes, ...cityRoutes, ...blogRoutes, ...cultureRoutes, ...newsRoutes, ...yearRoutes, ...monthRoutes]
 }
