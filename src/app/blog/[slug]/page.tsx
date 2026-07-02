@@ -46,9 +46,12 @@ export default async function BlogPost({ params }: Props) {
   const post = allPosts.find((p) => p.slug === slug) ? getPostBySlug(slug) : null;
   if (!post) notFound();
 
-  const relatedPosts = allPosts
-    .filter((p: PostMeta) => p.slug !== slug)
-    .slice(0, 3);
+  // Topically related first (same category), padded with the most recent.
+  const others = allPosts.filter((p: PostMeta) => p.slug !== slug);
+  const relatedPosts = [
+    ...others.filter((p) => p.category === post.category),
+    ...others.filter((p) => p.category !== post.category),
+  ].slice(0, 3);
 
   const dateFormatted = new Date(post.date + "T00:00:00").toLocaleDateString(
     "en-IN",
@@ -73,16 +76,38 @@ export default async function BlogPost({ params }: Props) {
     },
   }).replace(/</g, "\\u003c").replace(/>/g, "\\u003e");
 
+  const breadcrumbJsonLd = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.livegoldkerala.com" },
+      { "@type": "ListItem", position: 2, name: "Knowledge Hub", item: "https://www.livegoldkerala.com/blog" },
+      { "@type": "ListItem", position: 3, name: post.title, item: `https://www.livegoldkerala.com/blog/${slug}` },
+    ],
+  }).replace(/</g, "\\u003c").replace(/>/g, "\\u003e");
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: articleJsonLd }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd }} />
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 md:py-14">
         <article>
           <header className="mb-8 border-b border-zinc-100 pb-6 dark:border-zinc-800">
-            <time className="text-[11px] font-medium uppercase tracking-wider text-zinc-400">
-              {dateFormatted}
-            </time>
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+              <Link
+                href="/blog"
+                className="rounded-full bg-amber-50 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-700 ring-1 ring-inset ring-amber-200/60 transition-colors hover:bg-amber-100 dark:bg-amber-950/30 dark:text-amber-400 dark:ring-amber-800/50"
+              >
+                {post.category}
+              </Link>
+              <time className="text-[11px] font-medium uppercase tracking-wider text-zinc-400">
+                {dateFormatted}
+              </time>
+              <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-400">
+                · {post.readingMinutes} min read
+              </span>
+            </div>
             <h1 className="mt-2 text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 md:text-3xl">
               {post.title}
             </h1>
@@ -110,7 +135,7 @@ export default async function BlogPost({ params }: Props) {
 
         {relatedPosts.length > 0 && (
           <section className="mt-12">
-            <h2 className="mb-4 text-lg font-bold tracking-tight text-zinc-900">
+            <h2 className="mb-4 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
               Read Next
             </h2>
             <div className="grid gap-3 sm:grid-cols-3">
@@ -120,12 +145,9 @@ export default async function BlogPost({ params }: Props) {
                   href={`/blog/${p.slug}`}
                   className="group rounded-xl border border-zinc-200/70 bg-white p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-zinc-800/70 dark:bg-zinc-900 dark:shadow-none dark:hover:border-zinc-700"
                 >
-                  <time className="text-[10px] font-medium uppercase tracking-wider text-zinc-400">
-                    {new Date(p.date + "T00:00:00").toLocaleDateString("en-IN", {
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </time>
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-400">
+                    {p.category} · {p.readingMinutes} min
+                  </p>
                   <h3 className="mt-1 text-sm font-semibold leading-snug text-zinc-800 group-hover:text-amber-700 dark:text-zinc-200 dark:group-hover:text-amber-400">
                     {p.title}
                   </h3>
@@ -137,14 +159,22 @@ export default async function BlogPost({ params }: Props) {
 
         <div className="mt-8 rounded-2xl border border-amber-200/60 bg-amber-50/50 p-6 text-center dark:border-amber-900/40 dark:bg-amber-950/20">
           <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            Want to check today&apos;s gold rate?
+            Track the market before you buy
           </p>
-          <Link
-            href="/"
-            className="mt-3 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-amber-500/25 transition-all hover:brightness-110"
-          >
-            View Live Gold Rate &rarr;
-          </Link>
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-amber-500/25 transition-all hover:brightness-110"
+            >
+              View Live Gold Rate &rarr;
+            </Link>
+            <Link
+              href="/#price-alert"
+              className="inline-flex items-center gap-2 rounded-xl border border-amber-300 bg-white px-5 py-2.5 text-sm font-semibold text-amber-700 shadow-sm transition-colors hover:bg-amber-50 dark:border-amber-700 dark:bg-zinc-900 dark:text-amber-400 dark:hover:bg-amber-950/30"
+            >
+              📧 Get a price-drop alert
+            </Link>
+          </div>
         </div>
       </main>
 

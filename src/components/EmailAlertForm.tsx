@@ -33,7 +33,7 @@ export default function EmailAlertForm({ currentRate }: { currentRate: number })
   };
 
   return (
-    <section className="rounded-2xl border border-zinc-200/70 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+    <section id="price-alert" className="scroll-mt-24 rounded-2xl border border-zinc-200/70 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
       <div className="flex items-center gap-2">
         <span className="text-lg">📧</span>
         <h2 className="text-sm font-bold text-zinc-800 dark:text-zinc-100">Get a gold price alert by email</h2>
