@@ -8,6 +8,7 @@ import TopTicker from "@/components/TopTicker";
 import SpotGoldTicker from "@/components/SpotGoldTicker";
 import EmailAlertForm from "@/components/EmailAlertForm";
 import AffiliateOffers from "@/components/AffiliateOffers";
+import BuyTodayCard from "@/components/BuyTodayCard";
 import GoldCalculator from "@/components/GoldCalculator";
 import OldGoldCalculator from "@/components/OldGoldCalculator";
 import CtaBanner from "@/components/CtaBanner";
@@ -108,6 +109,20 @@ export default async function DashboardLayout({
       ? today.rate_silver_1g - yesterday.rate_silver_1g
       : null;
   const chartData = [...history].reverse();
+
+  // "Should you buy today?" — same verdict the news pages compute, plus a
+  // 30-day percentile buy-timing signal. History is newest-first.
+  const BUY_WINDOW = 30;
+  let todayVerdict: import("@/lib/verdict").Verdict | null = null;
+  let cheaperThanPct: number | null = null;
+  if (today && history.length >= 5) {
+    const { computeStats } = await import("@/lib/commentary");
+    const { computeVerdict } = await import("@/lib/verdict");
+    todayVerdict = computeVerdict(computeStats(history.slice(0, BUY_WINDOW)));
+    const window = history.slice(0, BUY_WINDOW);
+    const higherDays = window.filter((h) => h.rate_22k_1g > today.rate_22k_1g).length;
+    cheaperThanPct = Math.round((higherDays / window.length) * 100);
+  }
 
   const citySlug = cityName.toLowerCase() === "kochi" ? "" : `/${cityName.toLowerCase()}`;
   const pageUrl = `https://www.livegoldkerala.com${citySlug}`;
@@ -289,6 +304,9 @@ export default async function DashboardLayout({
             <p className="-mt-1 text-[11px] leading-relaxed text-zinc-400 dark:text-zinc-500">
               22K &amp; 18K are the official AKGSMA Kerala board rates. 24K is derived from the 916 rate by purity (22K&nbsp;&times;&nbsp;24&frasl;22), reflecting pure-gold value.
             </p>
+
+            {/* Should you buy today? — verdict + 30-day percentile signal */}
+            <BuyTodayCard verdict={todayVerdict} cheaperThanPct={cheaperThanPct} windowDays={Math.min(BUY_WINDOW, history.length)} />
 
             {/* Price Trend chart — surfaced high, right under today's rate. */}
             <PriceChart history={chartData} />
