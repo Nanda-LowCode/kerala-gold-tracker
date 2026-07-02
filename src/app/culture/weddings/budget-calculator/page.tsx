@@ -34,7 +34,10 @@ async function getData(): Promise<{ ornaments: OrnamentRow[]; rate22k: number | 
   const [defaultsResult, ornamentsResult, rateResult] = await Promise.all([
     supabase
       .from("wedding_ornament_defaults")
-      .select("community, ornament_id, default_pavan, is_required, notes"),
+      .select("community, ornament_id, default_pavan, is_required, notes")
+      // Only the sets used by the calculator's neutral presets (see
+      // WeddingBudgetCalculator PRESETS) — keeps unused rows out of the payload.
+      .in("community", ["nair", "syrian-christian", "mappila-muslim"]),
     supabase
       .from("ornaments")
       .select("id, slug, name_en, name_ml"),
