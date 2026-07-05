@@ -49,7 +49,7 @@ export async function GET(request: Request) {
 
     body = `
     <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px">
-      <div style="font-weight:700;font-size:13px;color:${fg}">✨ Gold Rate Today · Kerala</div>
+      <div style="font-weight:700;font-size:13px;color:${fg}"><svg width="14" height="14" viewBox="0 0 64 64" style="vertical-align:-2px;margin-right:2px" aria-hidden="true"><path d="M50 20 A 24 24 0 1 0 56 32" fill="none" stroke="${gold}" stroke-width="7" stroke-linecap="round"/><rect x="34" y="29" width="22" height="7" rx="3.5" fill="${gold}"/></svg> Gold Rate Today · Kerala</div>
       <div style="font-size:11px;color:${sub}">${dateStr}</div>
     </div>
     <div style="display:flex;align-items:flex-end;gap:10px;margin-bottom:4px">

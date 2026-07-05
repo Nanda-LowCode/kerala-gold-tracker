@@ -53,7 +53,10 @@ export default async function OgImage() {
       >
         {/* Brand */}
         <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "32px" }}>
-          <span style={{ fontSize: "56px" }}>✨</span>
+          <svg width="56" height="56" viewBox="0 0 64 64">
+            <path d="M50 20 A 24 24 0 1 0 56 32" fill="none" stroke="#B45309" strokeWidth="6.5" strokeLinecap="round" />
+            <rect x="34" y="29" width="22" height="7" rx="3.5" fill="#F59E0B" />
+          </svg>
           <span style={{ fontSize: "52px", fontWeight: 800, color: "#18181B", letterSpacing: "-1px" }}>
             LiveGold <span style={{ color: "#D97706" }}>Kerala</span>
           </span>

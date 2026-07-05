@@ -77,7 +77,10 @@ export async function GET() {
 
         {/* Header branding */}
         <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "12px" }}>
-          <span style={{ fontSize: "56px", lineHeight: "1" }}>✨</span>
+          <svg width="56" height="56" viewBox="0 0 64 64">
+            <path d="M50 20 A 24 24 0 1 0 56 32" fill="none" stroke="#f5c842" strokeWidth="6.5" strokeLinecap="round" />
+            <rect x="34" y="29" width="22" height="7" rx="3.5" fill="#F7C948" />
+          </svg>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <span style={{ fontSize: "48px", fontWeight: 800, color: "#f5c842", lineHeight: "1" }}>
               LiveGold Kerala
@@ -181,7 +184,10 @@ export async function GET() {
           </div>
           {/* URL */}
           <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "4px" }}>
-            <span style={{ fontSize: "26px" }}>✨</span>
+            <svg width="26" height="26" viewBox="0 0 64 64">
+              <path d="M50 20 A 24 24 0 1 0 56 32" fill="none" stroke="#f5c842" strokeWidth="7" strokeLinecap="round" />
+              <rect x="34" y="29" width="22" height="7" rx="3.5" fill="#F7C948" />
+            </svg>
             <span style={{ fontSize: "30px", fontWeight: 700, color: "#f5c842", letterSpacing: "1.5px" }}>
               livegoldkerala.com
             </span>

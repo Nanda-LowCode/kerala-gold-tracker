@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import Logo from "@/components/Logo";
 
 interface NavItem {
   label: string;
@@ -45,7 +46,7 @@ export default function SiteNav() {
           className="flex items-center gap-2 text-sm font-bold tracking-tight text-zinc-900 dark:text-zinc-100"
           aria-label="LiveGold Kerala — Home"
         >
-          <span className="text-base leading-none">✨</span>
+          <Logo size={22} className="shrink-0" />
           <span>
             LiveGold{" "}
             <span className="gold-text-shine bg-gradient-to-r from-amber-600 via-yellow-300 to-amber-600 bg-clip-text text-transparent dark:from-amber-400 dark:via-yellow-200 dark:to-amber-400">
