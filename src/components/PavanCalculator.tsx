@@ -73,7 +73,7 @@ export default function PavanCalculator({ rate22k, rate24k }: { rate22k: number;
                   : "border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900"
               }`}
             >
-              <div className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400">{u.label}</div>
+              <div className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">{u.label}</div>
               <div className="mt-1 text-xl font-bold text-zinc-900 dark:text-zinc-100">{fmtQty(qty)}</div>
               {isPavan && <div className="text-[10px] text-amber-600 dark:text-amber-400">Kerala standard</div>}
             </div>
@@ -84,20 +84,20 @@ export default function PavanCalculator({ rate22k, rate24k }: { rate22k: number;
       {/* Gold value */}
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900">
-          <div className="text-xs font-semibold uppercase tracking-wider text-zinc-400">22K Value</div>
+          <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500">22K Value</div>
           <div className="mt-1 text-xl font-bold text-zinc-900 dark:text-zinc-100">{fmtRupees(totalGrams * rate22k)}</div>
-          <div className="text-xs text-zinc-400">{fmtQty(totalGrams)}g × {fmtRupees(rate22k)}/g</div>
+          <div className="text-xs text-zinc-500">{fmtQty(totalGrams)}g × {fmtRupees(rate22k)}/g</div>
         </div>
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950/30">
           <div className="text-xs font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">24K Value</div>
           <div className="mt-1 text-xl font-bold text-amber-700 dark:text-amber-400">{fmtRupees(totalGrams * rate24k)}</div>
-          <div className="text-xs text-zinc-400">{fmtQty(totalGrams)}g × {fmtRupees(rate24k)}/g</div>
+          <div className="text-xs text-zinc-500">{fmtQty(totalGrams)}g × {fmtRupees(rate24k)}/g</div>
         </div>
       </div>
 
       {/* Quick pavan presets */}
       <div>
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-400">Quick presets</p>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-500">Quick presets</p>
         <div className="flex flex-wrap gap-2">
           {[0.5, 1, 2, 4, 8, 10, 16].map((pavans) => (
             <button
@@ -111,7 +111,7 @@ export default function PavanCalculator({ rate22k, rate24k }: { rate22k: number;
         </div>
       </div>
 
-      <p className="text-xs text-zinc-400 dark:text-zinc-500">
+      <p className="text-xs text-zinc-500 dark:text-zinc-400">
         * Raw gold value only — making charges and 3% GST not included. 1 pavan = 1 sovereign = 8 grams. 1 tola = 11.664 grams.
       </p>
     </div>

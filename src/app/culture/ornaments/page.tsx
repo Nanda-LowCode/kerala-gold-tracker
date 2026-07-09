@@ -94,7 +94,7 @@ export default async function OrnamentsPage() {
                         {o.name_en}
                       </p>
                       {o.name_ml && (
-                        <p className="text-xs text-zinc-400">{o.name_ml}</p>
+                        <p className="text-xs text-zinc-500">{o.name_ml}</p>
                       )}
                     </div>
                     {o.typical_weight_pavan_min && (
@@ -106,13 +106,13 @@ export default async function OrnamentsPage() {
                   {o.community_tags && o.community_tags.length > 0 && (
                     <div className="flex flex-wrap gap-1">
                       {o.community_tags.slice(0, 3).map((tag) => (
-                        <span key={tag} className="text-[10px] text-zinc-400">
+                        <span key={tag} className="text-[10px] text-zinc-500">
                           {COMMUNITY_LABEL[tag] ?? tag}
                           {o.community_tags!.indexOf(tag) < Math.min(o.community_tags!.length, 3) - 1 ? " ·" : ""}
                         </span>
                       ))}
                       {o.community_tags.length > 3 && (
-                        <span className="text-[10px] text-zinc-400">+{o.community_tags.length - 3} more</span>
+                        <span className="text-[10px] text-zinc-500">+{o.community_tags.length - 3} more</span>
                       )}
                     </div>
                   )}

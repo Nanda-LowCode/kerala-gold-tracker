@@ -60,7 +60,7 @@ export default function SiteFooter() {
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
           {COLUMNS.map((col) => (
             <nav key={col.heading} aria-label={col.heading}>
-              <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+              <h3 className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
                 {col.heading}
               </h3>
               <ul className="mt-3 space-y-2">
@@ -79,7 +79,7 @@ export default function SiteFooter() {
           ))}
         </div>
 
-        <div className="mt-8 border-t border-zinc-200/60 pt-5 text-center text-xs text-zinc-400 dark:border-zinc-800 dark:text-zinc-500">
+        <div className="mt-8 border-t border-zinc-200/60 pt-5 text-center text-xs text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
           <p className="font-medium">
             Rates: All Kerala Gold &amp; Silver Merchants Association (AKGSMA) board rate · For reference only — confirm at your jeweller
           </p>

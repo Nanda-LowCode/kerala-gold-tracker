@@ -240,7 +240,7 @@ export default async function NewsDay({ params }: RouteParams) {
         {stats.weekHigh !== null && (
           <section className="overflow-hidden rounded-2xl border border-zinc-200/70 bg-white shadow-md shadow-amber-100/40 dark:border-zinc-800 dark:bg-zinc-900 dark:shadow-none">
             <div className="border-b border-zinc-100 bg-zinc-50/60 px-5 py-2.5 dark:border-zinc-800 dark:bg-zinc-800/30">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
                 30-day trend — 22K
               </p>
             </div>
@@ -265,7 +265,7 @@ export default async function NewsDay({ params }: RouteParams) {
 
         {/* Commentary with drop cap */}
         <section className="rounded-2xl border border-zinc-200/70 bg-white p-5 shadow-md shadow-amber-100/40 dark:border-zinc-800 dark:bg-zinc-900 dark:shadow-none md:p-6">
-          <h2 className="mb-3 text-[10px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+          <h2 className="mb-3 text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
             Market commentary
           </h2>
           {paragraphs.map((p, i) => (
@@ -336,7 +336,7 @@ export default async function NewsDay({ params }: RouteParams) {
 function SummaryStat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+      <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
         {label}
       </p>
       <p className="mt-0.5 text-sm font-bold text-zinc-800 dark:text-zinc-200">
@@ -368,7 +368,7 @@ async function NavCard({ direction, date }: { direction: "prev" | "next"; date: 
       }`}
     >
       <div>
-        <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-400">
+        <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-500">
           {direction === "prev" ? "Previous" : "Next"}
         </p>
         <p className="mt-0.5 text-sm font-semibold text-zinc-800 group-hover:text-amber-700 dark:text-zinc-200 dark:group-hover:text-amber-400">

@@ -71,7 +71,7 @@ export default function BlogPostList({ posts }: { posts: PostMeta[] }) {
               </div>
             )}
             <div className="flex flex-1 flex-col p-4">
-              <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-400">
+              <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-500">
                 {new Date(post.date + "T00:00:00").toLocaleDateString("en-IN", {
                   day: "numeric",
                   month: "short",

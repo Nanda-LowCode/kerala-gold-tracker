@@ -28,7 +28,9 @@ export default function TodayVsYesterday({
   return (
     <section className="overflow-hidden rounded-2xl border border-zinc-200/70 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-lg shadow-amber-100/40 dark:shadow-none">
       <div className="border-b border-zinc-100 dark:border-zinc-800 bg-gradient-to-br from-white to-amber-50/30 dark:from-zinc-900 dark:to-zinc-900/50 px-6 py-5">
-        <div className="flex items-center justify-between gap-3">
+        {/* Stack on mobile so the title never squeezes into 3 cramped lines
+            beside the toggle; side-by-side from sm up. */}
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
               Gold Rate Today by Weight
@@ -76,7 +78,7 @@ export default function TodayVsYesterday({
                   <td className="px-6 py-3.5">
                     <p className="font-semibold text-zinc-900 dark:text-zinc-200">{w.label}</p>
                     {w.sub && (
-                      <p className="text-[11px] text-zinc-400 dark:text-zinc-500">{w.sub}</p>
+                      <p className="text-[11px] text-zinc-500 dark:text-zinc-400">{w.sub}</p>
                     )}
                   </td>
                   <td className="px-4 py-3.5 text-right">
@@ -136,7 +138,7 @@ function KaratToggle({
 
 function ChangeCell({ change }: { change: number }) {
   if (change === 0) {
-    return <span className="text-xs font-semibold text-zinc-400 dark:text-zinc-500">{"\u2014"}</span>;
+    return <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">{"\u2014"}</span>;
   }
   const up = change > 0;
   return (
@@ -145,8 +147,7 @@ function ChangeCell({ change }: { change: number }) {
         up ? "text-red-600 dark:text-red-500" : "text-green-600 dark:text-green-500"
       }`}
     >
-      {up ? "\u25B2" : "\u25BC"} {up ? "+" : ""}
-      {formatCurrency(change)}
+      {up ? "\u25B2" : "\u25BC"} {formatCurrency(Math.abs(change))}
     </span>
   );
 }

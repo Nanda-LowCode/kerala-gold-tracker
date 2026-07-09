@@ -52,11 +52,11 @@ export default function ExchangeTicker() {
           <h2 className="text-sm font-bold text-zinc-800 dark:text-zinc-200">
             Live Exchange Rates
           </h2>
-          <p className="text-[10px] text-zinc-400 dark:text-zinc-500">
+          <p className="text-[10px] text-zinc-500 dark:text-zinc-400">
             Driving today&apos;s Kerala gold price
           </p>
         </div>
-        <span className="text-[10px] text-zinc-400 dark:text-zinc-500">
+        <span className="text-[10px] text-zinc-500 dark:text-zinc-400">
           {rates.date}
         </span>
       </div>
@@ -79,7 +79,7 @@ export default function ExchangeTicker() {
               <p className="text-lg font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100">
                 ₹{rate.toFixed(2)}
               </p>
-              <p className="text-[10px] text-zinc-400 dark:text-zinc-500">
+              <p className="text-[10px] text-zinc-500 dark:text-zinc-400">
                 {p.label}
               </p>
             </div>

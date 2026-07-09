@@ -73,13 +73,13 @@ export function RateCard({
         </p>
 
         {pavanRate && (
-          <p className="mt-0.5 text-[11px] font-medium text-zinc-400">
+          <p className="mt-0.5 text-[11px] font-medium text-zinc-500">
             ({formatCurrency(pavanRate)} per Pavan)
           </p>
         )}
 
         <div className={`flex items-center justify-between ${compact ? "mt-2" : "mt-2 sm:mt-3"}`}>
-          <span className="text-[10px] sm:text-xs font-medium uppercase tracking-wider text-zinc-400">
+          <span className="text-[10px] sm:text-xs font-medium uppercase tracking-wider text-zinc-500">
             per gram
           </span>
           {change !== null && <ChangeBadge change={change} />}
@@ -107,8 +107,7 @@ export function ChangeBadge({ change }: { change: number }) {
           : "bg-green-50 text-green-600 ring-green-200/60 dark:bg-green-950/30 dark:text-green-400 dark:ring-green-900/50"
       }`}
     >
-      {up ? "▲" : "▼"} {up ? "+" : ""}
-      {change.toLocaleString("en-IN")}
+      {up ? "▲" : "▼"} ₹{Math.abs(change).toLocaleString("en-IN")}
     </span>
   );
 }
@@ -128,10 +127,10 @@ export function RateBoard({
     <article className="overflow-hidden rounded-2xl border border-zinc-200/70 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-md shadow-amber-100/30 dark:shadow-none">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50/60 dark:bg-zinc-800/30 px-5 py-2.5">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
           Other Karat Rates Today
         </p>
-        <p className="text-[10px] text-zinc-400 dark:text-zinc-500">Per gram · Per pavan</p>
+        <p className="text-[10px] text-zinc-500 dark:text-zinc-400">Per gram · Per pavan</p>
       </div>
 
       <div className="divide-y divide-zinc-100 dark:divide-zinc-800/70">
@@ -140,7 +139,7 @@ export function RateBoard({
             {/* Purity label */}
             <div className="min-w-[90px]">
               <p className="text-sm font-bold text-zinc-800 dark:text-zinc-200">{row.label}</p>
-              <p className="text-[10px] font-medium text-zinc-400 dark:text-zinc-500">{row.purity}</p>
+              <p className="text-[10px] font-medium text-zinc-500 dark:text-zinc-400">{row.purity}</p>
             </div>
 
             {/* Rates */}
@@ -148,10 +147,10 @@ export function RateBoard({
               <p className="bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 dark:from-amber-400 dark:via-yellow-400 dark:to-amber-500 bg-clip-text text-xl font-extrabold tracking-tight text-transparent">
                 {formatCurrency(row.ratePerGram)}
               </p>
-              <p className="text-xs text-zinc-400 dark:text-zinc-500">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">
                 / g
               </p>
-              <p className="hidden sm:block text-xs text-zinc-400 dark:text-zinc-500">
+              <p className="hidden sm:block text-xs text-zinc-500 dark:text-zinc-400">
                 · {formatCurrency(row.pavanRate)} / pavan
               </p>
             </div>

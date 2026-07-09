@@ -66,7 +66,7 @@ export default function CultureHubPage() {
             harvests. This section documents the traditions, sacred practices, and community
             customs that shape one of India&apos;s most distinctive gold cultures.
           </p>
-          <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">
+          <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
             Content sourced and verified. Factual claims cite named sources; community practices
             are described, never prescribed.
           </p>
@@ -74,7 +74,7 @@ export default function CultureHubPage() {
 
         {/* Three pillars */}
         <section className="space-y-4">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
             Three pillars
           </h2>
           <div className="grid gap-4 sm:grid-cols-3">
@@ -89,7 +89,7 @@ export default function CultureHubPage() {
                   <p className="font-bold text-zinc-900 group-hover:text-amber-700 dark:text-zinc-100 dark:group-hover:text-amber-400">
                     {p.title}
                   </p>
-                  <p className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-zinc-400">
+                  <p className="mt-1 text-[10px] font-semibold uppercase tracking-wider text-zinc-500">
                     {p.count}
                   </p>
                 </div>
@@ -131,7 +131,7 @@ export default function CultureHubPage() {
                 className="rounded-full border border-amber-200/60 bg-white px-3 py-1 text-xs font-medium text-zinc-700 hover:border-amber-400 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
               >
                 {o.name}
-                <span className="ml-1.5 font-normal text-zinc-400">{o.ml}</span>
+                <span className="ml-1.5 font-normal text-zinc-500">{o.ml}</span>
               </Link>
             ))}
           </div>

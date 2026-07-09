@@ -33,7 +33,7 @@ export function NewsSparkline({
     return (
       <div
         style={{ height }}
-        className="flex items-center justify-center rounded-xl border border-dashed border-zinc-200 text-xs text-zinc-400 dark:border-zinc-800"
+        className="flex items-center justify-center rounded-xl border border-dashed border-zinc-200 text-xs text-zinc-500 dark:border-zinc-800"
       >
         Not enough data for a trend chart yet.
       </div>

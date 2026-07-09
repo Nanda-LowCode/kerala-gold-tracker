@@ -71,12 +71,12 @@ export default async function YesterdayPage() {
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               <div className="rounded-2xl border border-amber-300 bg-amber-50/60 p-5 shadow-sm dark:border-amber-800/50 dark:bg-amber-950/20">
                 <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">22K Gold — Yesterday</p>
-                <p className="mt-2 text-3xl font-bold text-amber-700 dark:text-amber-400">{formatCur(yesterday.rate_22k_1g)}<span className="ml-1 text-sm font-normal text-zinc-400">/g</span></p>
+                <p className="mt-2 text-3xl font-bold text-amber-700 dark:text-amber-400">{formatCur(yesterday.rate_22k_1g)}<span className="ml-1 text-sm font-normal text-zinc-500">/g</span></p>
                 <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{formatCur(yesterday.rate_22k_1g * 8)} per Pavan (8g)</p>
               </div>
               <div className="rounded-2xl border border-zinc-200/70 bg-zinc-50/60 p-5 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
                 <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">24K Gold — Yesterday</p>
-                <p className="mt-2 text-3xl font-bold text-zinc-700 dark:text-zinc-200">{formatCur(yesterday.rate_24k_1g)}<span className="ml-1 text-sm font-normal text-zinc-400">/g</span></p>
+                <p className="mt-2 text-3xl font-bold text-zinc-700 dark:text-zinc-200">{formatCur(yesterday.rate_24k_1g)}<span className="ml-1 text-sm font-normal text-zinc-500">/g</span></p>
                 <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{formatCur(yesterday.rate_24k_1g * 8)} per Pavan (8g)</p>
               </div>
             </div>
@@ -85,7 +85,7 @@ export default async function YesterdayPage() {
             {today && (
               <div className="mt-6 rounded-2xl border border-zinc-200/60 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
                 <h2 className="text-sm font-bold text-zinc-800 dark:text-zinc-100">Today vs Yesterday</h2>
-                <p className="mt-0.5 text-xs text-zinc-400">Today: {formatDate(today.date, { weekday: "long", month: "short", day: "numeric" })}</p>
+                <p className="mt-0.5 text-xs text-zinc-500">Today: {formatDate(today.date, { weekday: "long", month: "short", day: "numeric" })}</p>
                 <div className="mt-4 space-y-3">
                   {[
                     { label: "22K Gold", todayRate: today.rate_22k_1g, change: change22k },
@@ -107,7 +107,7 @@ export default async function YesterdayPage() {
               </div>
             )}
 
-            <p className="mt-4 text-xs text-zinc-400 dark:text-zinc-500">
+            <p className="mt-4 text-xs text-zinc-500 dark:text-zinc-400">
               * Kerala gold rate is uniform across all districts — the same rate applies in Kochi, Thrissur, Kozhikode, and all other cities.
             </p>
           </>

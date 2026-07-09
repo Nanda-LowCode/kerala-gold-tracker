@@ -120,7 +120,7 @@ export default function GoldCalculator({
                 ))}
               </div>
               {karat === "21k" && (
-                <p className="mt-1.5 text-[10px] text-zinc-400 dark:text-zinc-500">
+                <p className="mt-1.5 text-[10px] text-zinc-500 dark:text-zinc-400">
                   21K (875): common in Gulf-imported machine-made jewelry
                 </p>
               )}
@@ -172,7 +172,7 @@ export default function GoldCalculator({
                   className="w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-950/50 px-4 py-2.5 pr-16 text-zinc-900 dark:text-zinc-100 shadow-sm transition-colors focus:border-amber-400 focus:outline-none focus:ring-4 focus:ring-amber-500/10 dark:focus:ring-amber-500/20"
                   placeholder={unitPlaceholder}
                 />
-                <span className="absolute inset-y-0 right-4 flex items-center text-sm font-medium text-zinc-400 pointer-events-none">
+                <span className="absolute inset-y-0 right-4 flex items-center text-sm font-medium text-zinc-500 pointer-events-none">
                   {unitSuffix}
                 </span>
               </div>
@@ -219,7 +219,7 @@ export default function GoldCalculator({
                     }}
                     className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-950/50 px-3 py-1.5 text-center text-sm font-semibold text-zinc-900 dark:text-zinc-100 shadow-sm transition-colors focus:border-amber-400 focus:outline-none focus:ring-4 focus:ring-amber-500/10 dark:focus:ring-amber-500/20"
                   />
-                  <span className="absolute inset-y-0 right-2 flex items-center text-xs font-bold text-zinc-400 pointer-events-none">
+                  <span className="absolute inset-y-0 right-2 flex items-center text-xs font-bold text-zinc-500 pointer-events-none">
                     %
                   </span>
                 </div>
@@ -229,7 +229,7 @@ export default function GoldCalculator({
 
           {/* Output Section */}
           <div className="flex flex-col rounded-xl bg-zinc-50 dark:bg-zinc-950/50 p-5 ring-1 ring-inset ring-zinc-200/80 dark:ring-zinc-800/80">
-            <h3 className="mb-4 text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+            <h3 className="mb-4 text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
               Estimated Breakdown
             </h3>
 
@@ -264,7 +264,7 @@ export default function GoldCalculator({
                   <p className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-500">
                     Total Estimate
                   </p>
-                  <p className="text-[10px] text-zinc-400 dark:text-zinc-500">
+                  <p className="text-[10px] text-zinc-500 dark:text-zinc-400">
                     Incl. taxes & making
                   </p>
                 </div>

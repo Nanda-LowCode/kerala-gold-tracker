@@ -122,7 +122,7 @@ export default async function GoldPriceTrendsPage() {
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {stats.map((s) => (
             <div key={s.label} className="rounded-xl border border-amber-200/50 bg-amber-50/40 p-3 dark:border-zinc-700 dark:bg-zinc-900">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">{s.label}</p>
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">{s.label}</p>
               <p className="mt-0.5 text-base font-bold text-amber-700 dark:text-amber-400">{s.value}</p>
             </div>
           ))}
@@ -153,7 +153,7 @@ export default async function GoldPriceTrendsPage() {
                   </div>
                   <span
                     className={`w-16 shrink-0 text-right text-xs font-semibold ${
-                      yoy === null ? "text-zinc-400" : yoy >= 0 ? "text-green-600 dark:text-green-500" : "text-red-600 dark:text-red-500"
+                      yoy === null ? "text-zinc-500" : yoy >= 0 ? "text-green-600 dark:text-green-500" : "text-red-600 dark:text-red-500"
                     }`}
                   >
                     {yoy === null ? "—" : `${yoy >= 0 ? "+" : ""}${yoy.toFixed(0)}%`}
@@ -162,7 +162,7 @@ export default async function GoldPriceTrendsPage() {
               );
             })}
           </div>
-          <p className="mt-3 text-xs text-zinc-400 dark:text-zinc-500">
+          <p className="mt-3 text-xs text-zinc-500 dark:text-zinc-400">
             {lastYear} is a partial year (to date). Range over the full period: {inr(allLow)}–{inr(allHigh)} per gram.
           </p>
         </section>

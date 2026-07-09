@@ -110,7 +110,7 @@ export default async function TemplesPage() {
                       <Link href={`/culture/temples/${t.slug}`} className="font-bold text-zinc-900 hover:text-amber-700 dark:text-zinc-100 dark:hover:text-amber-400">
                         {t.name_en}
                       </Link>
-                      <p className="text-xs text-zinc-400">{t.name_ml} · {t.district}</p>
+                      <p className="text-xs text-zinc-500">{t.name_ml} · {t.district}</p>
                     </div>
                     <span className="shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
                       {info.highlight}
@@ -127,7 +127,7 @@ export default async function TemplesPage() {
                       href={mapsUrl(t)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-[10px] font-medium text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+                      className="inline-flex items-center gap-1 text-[10px] font-medium text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300"
                     >
                       <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
                       Google Maps
@@ -154,15 +154,15 @@ export default async function TemplesPage() {
                   <Link href={`/culture/temples/${t.slug}`} className="font-medium text-zinc-800 hover:text-amber-700 dark:text-zinc-200 dark:hover:text-amber-400">
                     {t.name_en}
                   </Link>
-                  <p className="mt-0.5 text-xs text-zinc-400">{t.name_ml} · {t.district}</p>
+                  <p className="mt-0.5 text-xs text-zinc-500">{t.name_ml} · {t.district}</p>
                   {t.deity && (
-                    <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-500">{t.deity}</p>
+                    <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{t.deity}</p>
                   )}
                   <a
                     href={mapsUrl(t)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-2 inline-flex items-center gap-1 text-[10px] font-medium text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+                    className="mt-2 inline-flex items-center gap-1 text-[10px] font-medium text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300"
                   >
                     <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
                     Google Maps

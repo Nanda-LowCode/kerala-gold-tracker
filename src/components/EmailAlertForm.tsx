@@ -32,11 +32,13 @@ export default function EmailAlertForm({ currentRate }: { currentRate: number })
     }
   };
 
+  // Rendered inside the shared "Price-drop alerts" card in DashboardLayout —
+  // no card chrome of its own.
   return (
-    <section id="price-alert" className="scroll-mt-24 rounded-2xl border border-zinc-200/70 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+    <div>
       <div className="flex items-center gap-2">
-        <span className="text-lg">📧</span>
-        <h2 className="text-sm font-bold text-zinc-800 dark:text-zinc-100">Get a gold price alert by email</h2>
+        <span className="text-base" aria-hidden>📧</span>
+        <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">By email</h3>
       </div>
 
       {status === "saved" ? (
@@ -55,7 +57,7 @@ export default function EmailAlertForm({ currentRate }: { currentRate: number })
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@email.com"
-              className="min-w-0 flex-1 rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-amber-400 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+              className="min-w-0 flex-1 rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 focus:border-amber-400 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
             />
             <input
               type="number"
@@ -64,7 +66,7 @@ export default function EmailAlertForm({ currentRate }: { currentRate: number })
               value={target}
               onChange={(e) => setTarget(e.target.value)}
               placeholder={`₹ ${Math.floor(currentRate * 0.97).toLocaleString("en-IN")}`}
-              className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-amber-400 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100 sm:w-32"
+              className="w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none placeholder:text-zinc-500 focus:border-amber-400 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100 sm:w-32"
             />
             <button
               type="submit"
@@ -77,6 +79,6 @@ export default function EmailAlertForm({ currentRate }: { currentRate: number })
           {status === "error" && <p className="mt-2 text-xs font-medium text-red-600 dark:text-red-400">{msg}</p>}
         </>
       )}
-    </section>
+    </div>
   );
 }

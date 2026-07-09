@@ -59,8 +59,7 @@ function ChangeBadge({ change }: { change: number }) {
           : "bg-green-50 text-green-600 ring-green-200/60 dark:bg-green-950/30 dark:text-green-400 dark:ring-green-900/50"
       }`}
     >
-      {up ? "▲" : "▼"} {up ? "+" : ""}
-      {change.toLocaleString("en-IN")} today
+      {up ? "▲" : "▼"} ₹{Math.abs(change).toLocaleString("en-IN")} today
     </span>
   );
 }

@@ -111,7 +111,7 @@ export default async function OrnamentPage({
               <span className="text-base text-zinc-500 dark:text-zinc-400">{ornament.name_ml}</span>
             )}
             {ornament.transliteration && (
-              <span className="text-sm italic text-zinc-400 dark:text-zinc-500">{ornament.transliteration}</span>
+              <span className="text-sm italic text-zinc-500 dark:text-zinc-400">{ornament.transliteration}</span>
             )}
           </div>
           {ornament.community_tags && ornament.community_tags.length > 0 && (
@@ -136,7 +136,7 @@ export default async function OrnamentPage({
 
         {ornament.symbolism_en && (
           <section className="space-y-2">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-400">Symbolism</h2>
+            <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-500">Symbolism</h2>
             <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 md:text-base">
               {ornament.symbolism_en}
             </p>

@@ -156,7 +156,7 @@ export default function JewellersPage() {
               </tbody>
             </table>
           </div>
-          <p className="border-t border-zinc-100 px-4 py-3 text-[11px] text-zinc-400 dark:border-zinc-800 dark:text-zinc-500">
+          <p className="border-t border-zinc-100 px-4 py-3 text-[11px] text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
             All major Kerala jewellers sell BIS-hallmarked 916 gold. We don&apos;t list a fixed
             making-charge % per brand — it varies by design, store and season, so a single number
             would mislead. Compare the actual quote on <em>your</em> piece.

@@ -50,7 +50,7 @@ export default function GoldImportDutyCalculator({
           {/* Gender */}
           <div className="space-y-2">
             <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-              <User className="h-4 w-4 text-zinc-400" /> Passenger Gender
+              <User className="h-4 w-4 text-zinc-500" /> Passenger Gender
             </label>
             <select
               value={gender}
@@ -65,7 +65,7 @@ export default function GoldImportDutyCalculator({
           {/* Stay Duration */}
           <div className="space-y-2">
             <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-              <CalendarClock className="h-4 w-4 text-zinc-400" /> Gulf/Abroad Stay Duration
+              <CalendarClock className="h-4 w-4 text-zinc-500" /> Gulf/Abroad Stay Duration
             </label>
             <select
               value={stayDuration}
@@ -81,7 +81,7 @@ export default function GoldImportDutyCalculator({
           {/* Gold Weight */}
           <div className="space-y-2">
             <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-              <Scale className="h-4 w-4 text-zinc-400" /> Total Gold Weight (Grams)
+              <Scale className="h-4 w-4 text-zinc-500" /> Total Gold Weight (Grams)
             </label>
             <input
               type="number"
@@ -96,7 +96,7 @@ export default function GoldImportDutyCalculator({
           {/* Current Rate */}
           <div className="space-y-2">
             <label className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-              <DollarSign className="h-4 w-4 text-zinc-400" /> 1g Gold Rate (in INR)
+              <DollarSign className="h-4 w-4 text-zinc-500" /> 1g Gold Rate (in INR)
             </label>
             <input
               type="number"

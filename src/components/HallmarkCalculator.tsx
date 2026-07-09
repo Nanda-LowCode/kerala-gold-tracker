@@ -36,7 +36,7 @@ export default function HallmarkCalculator({ rate24k }: { rate24k: number }) {
             className="w-32 rounded-xl border border-amber-300 bg-white px-3 py-2 text-lg font-bold text-zinc-900 shadow-sm outline-none focus:ring-2 focus:ring-amber-400 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
           />
           <span className="text-sm text-zinc-500">grams</span>
-          <span className="text-xs text-zinc-400">({(weight / 8).toFixed(2)} pavan)</span>
+          <span className="text-xs text-zinc-500">({(weight / 8).toFixed(2)} pavan)</span>
         </div>
         <div className="mt-3 flex flex-wrap gap-2">
           {[1, 2, 4, 8, 10, 16].map((g) => (
@@ -60,9 +60,9 @@ export default function HallmarkCalculator({ rate24k }: { rate24k: number }) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-zinc-100 dark:border-zinc-800">
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Purity</th>
-              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Rate/g</th>
-              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Purity</th>
+              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Rate/g</th>
+              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                 Value for {weight}g
               </th>
             </tr>
@@ -100,7 +100,7 @@ export default function HallmarkCalculator({ rate24k }: { rate24k: number }) {
         </table>
       </div>
 
-      <p className="text-xs text-zinc-400 dark:text-zinc-500">
+      <p className="text-xs text-zinc-500 dark:text-zinc-400">
         * Gold value only — does not include making charges or GST. Based on today&apos;s Kerala board rate.
       </p>
     </div>

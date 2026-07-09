@@ -116,7 +116,7 @@ export default async function NewsHub() {
       {/* Sparkline card */}
       <section className="overflow-hidden rounded-2xl border border-zinc-200/70 bg-white shadow-md shadow-amber-100/40 dark:border-zinc-800 dark:bg-zinc-900 dark:shadow-none">
         <div className="border-b border-zinc-100 bg-zinc-50/60 px-5 py-2.5 dark:border-zinc-800 dark:bg-zinc-800/30">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
             30-day trend — 22K
           </p>
         </div>
@@ -129,7 +129,7 @@ export default async function NewsHub() {
       <section className="flex flex-col gap-5">
         {grouped.map((group) => (
           <div key={group.weekKey}>
-            <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+            <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
               {formatWeekRange(group.weekKey)}
             </p>
             <ul className="flex flex-col gap-2">
@@ -176,7 +176,7 @@ function HeroStat({
       : "text-zinc-800 dark:text-zinc-200";
   return (
     <div className="rounded-2xl border border-zinc-200/70 bg-white p-4 text-center shadow-md shadow-amber-100/40 dark:border-zinc-800 dark:bg-zinc-900 dark:shadow-none">
-      <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+      <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
         {label}
       </p>
       <p className={`mt-1 text-lg font-bold ${valueColor}`}>{value}</p>

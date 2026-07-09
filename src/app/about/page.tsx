@@ -90,7 +90,7 @@ export default function AboutPage() {
                 { label: "Silver", value: "999 fine, per gram" },
               ].map(({ label, value }) => (
                 <div key={label} className="rounded-xl bg-zinc-50 p-3 dark:bg-zinc-800/50">
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">{label}</p>
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">{label}</p>
                   <p className="mt-0.5 text-sm font-semibold text-zinc-700 dark:text-zinc-300">{value}</p>
                 </div>
               ))}

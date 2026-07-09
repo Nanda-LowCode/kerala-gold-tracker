@@ -40,7 +40,7 @@ export default function PriceChart({ history }: { history: GoldRate[] }) {
 
   if (history.length < 2) {
     return (
-      <div className="rounded-xl border border-amber-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-sm text-center text-sm text-zinc-400 dark:text-zinc-500">
+      <div className="rounded-xl border border-amber-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-sm text-center text-sm text-zinc-500 dark:text-zinc-400">
         Chart will appear once there are at least 2 days of data.
       </div>
     );

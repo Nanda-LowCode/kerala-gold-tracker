@@ -47,11 +47,11 @@ export default function TopTicker({ history, cityName = "Kochi" }: { history: Go
       <div className="md:hidden w-full bg-gradient-to-r from-amber-50/90 via-amber-100/30 to-amber-50/90 dark:from-amber-950/40 dark:via-zinc-950 dark:to-amber-950/40 py-1.5 px-2 text-center text-[10px] sm:text-[11px] font-semibold tracking-wide text-zinc-600 dark:text-zinc-400 border-b border-amber-200/50 dark:border-amber-900/40 shadow-sm shadow-amber-100/20 dark:shadow-none">
         <span className="uppercase text-amber-800 dark:text-amber-500 font-extrabold mr-1.5 sm:mr-2 flex-shrink-0">{monthNameShort} 22K · {cityName}</span>
         <span className="inline-block whitespace-nowrap">
-          📈 Hi: <span className="text-zinc-900 dark:text-zinc-100">{formatINR(highest.rate_22k_1g)}</span> <span className="font-medium text-zinc-400 dark:text-zinc-500">({formatShortDate(highest.date)})</span>
+          📈 Hi: <span className="text-zinc-900 dark:text-zinc-100">{formatINR(highest.rate_22k_1g)}</span> <span className="font-medium text-zinc-500 dark:text-zinc-400">({formatShortDate(highest.date)})</span>
         </span>
         <span className="mx-1.5 sm:mx-2 text-zinc-300 dark:text-zinc-700">|</span>
         <span className="inline-block whitespace-nowrap">
-          📉 Lo: <span className="text-zinc-900 dark:text-zinc-100">{formatINR(lowest.rate_22k_1g)}</span> <span className="font-medium text-zinc-400 dark:text-zinc-500">({formatShortDate(lowest.date)})</span>
+          📉 Lo: <span className="text-zinc-900 dark:text-zinc-100">{formatINR(lowest.rate_22k_1g)}</span> <span className="font-medium text-zinc-500 dark:text-zinc-400">({formatShortDate(lowest.date)})</span>
         </span>
       </div>
 

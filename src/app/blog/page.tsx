@@ -29,7 +29,7 @@ export default function BlogIndex() {
       </p>
 
       {posts.length === 0 ? (
-        <p className="mt-12 text-center text-sm text-zinc-400">No articles yet. Check back soon!</p>
+        <p className="mt-12 text-center text-sm text-zinc-500">No articles yet. Check back soon!</p>
       ) : (
         <BlogPostList posts={posts} />
       )}

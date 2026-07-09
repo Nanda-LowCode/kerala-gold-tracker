@@ -175,10 +175,10 @@ export default async function GlossaryTermPage({
               <span className="text-base text-zinc-500 dark:text-zinc-400">{entry.termMl}</span>
             )}
             {entry.transliteration && (
-              <span className="text-sm italic text-zinc-400 dark:text-zinc-500">{entry.transliteration}</span>
+              <span className="text-sm italic text-zinc-500 dark:text-zinc-400">{entry.transliteration}</span>
             )}
           </div>
-          <p className="mt-1.5 text-xs font-semibold uppercase tracking-wider text-zinc-400">
+          <p className="mt-1.5 text-xs font-semibold uppercase tracking-wider text-zinc-500">
             {entry.community}
           </p>
         </div>
@@ -189,7 +189,7 @@ export default async function GlossaryTermPage({
 
         {entry.relatedTerms && entry.relatedTerms.length > 0 && (
           <section className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Related terms</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Related terms</p>
             <div className="flex flex-wrap gap-2">
               {entry.relatedTerms.map((t) => (
                 <Link

@@ -93,7 +93,7 @@ export default function OldGoldCalculator({
                   className="w-full rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-950/50 px-4 py-2.5 pr-12 text-zinc-900 dark:text-zinc-100 shadow-sm transition-colors focus:border-zinc-400 focus:outline-none focus:ring-4 focus:ring-zinc-500/10 dark:focus:ring-zinc-500/20"
                   placeholder="e.g. 8"
                 />
-                <span className="absolute inset-y-0 right-4 flex items-center text-sm font-medium text-zinc-400 pointer-events-none">
+                <span className="absolute inset-y-0 right-4 flex items-center text-sm font-medium text-zinc-500 pointer-events-none">
                   g
                 </span>
               </div>
@@ -127,7 +127,7 @@ export default function OldGoldCalculator({
                     onChange={(e) => setDeductionPercent(e.target.value === "" ? "" : parseFloat(e.target.value))}
                     className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-950/50 px-3 py-1.5 text-center text-sm font-semibold text-zinc-900 dark:text-zinc-100 shadow-sm transition-colors focus:border-zinc-400 focus:outline-none focus:ring-4 focus:ring-zinc-500/10 dark:focus:ring-zinc-500/20"
                   />
-                  <span className="absolute inset-y-0 right-2 flex items-center text-xs font-bold text-zinc-400 pointer-events-none">
+                  <span className="absolute inset-y-0 right-2 flex items-center text-xs font-bold text-zinc-500 pointer-events-none">
                     %
                   </span>
                 </div>

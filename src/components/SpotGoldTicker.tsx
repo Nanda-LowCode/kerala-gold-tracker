@@ -58,7 +58,7 @@ export default function SpotGoldTicker() {
           Live · International Spot (24K)
         </span>
         {perGram !== null && ago && (
-          <span className="text-[10px] text-zinc-400 dark:text-zinc-500">updated {ago}</span>
+          <span className="text-[10px] text-zinc-500 dark:text-zinc-400">updated {ago}</span>
         )}
       </div>
 
@@ -66,16 +66,16 @@ export default function SpotGoldTicker() {
         {perGram !== null ? (
           <p className="text-xl font-extrabold tracking-tight tabular-nums text-zinc-900 dark:text-zinc-100">
             {inr(perGram)}
-            <span className="ml-0.5 text-xs font-semibold text-zinc-400">/g</span>
+            <span className="ml-0.5 text-xs font-semibold text-zinc-500">/g</span>
           </p>
         ) : failed ? (
-          <p className="text-sm text-zinc-400 dark:text-zinc-500">Live market price unavailable right now.</p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">Live market price unavailable right now.</p>
         ) : (
           <p className="h-6 w-28 animate-pulse rounded bg-zinc-100 dark:bg-zinc-800" aria-hidden />
         )}
       </div>
 
-      <p className="mt-1 text-[11px] leading-relaxed text-zinc-400 dark:text-zinc-500">
+      <p className="mt-1 text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">
         Global market price (LBMA). The Kerala board rate above is higher — it includes import
         duty and local premium.
       </p>

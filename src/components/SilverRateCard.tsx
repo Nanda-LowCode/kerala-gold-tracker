@@ -17,7 +17,7 @@ export default function SilverRateCard({
           <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">
             Silver Rate Today
           </p>
-          <p className="text-[10px] font-medium text-zinc-400 dark:text-zinc-500">
+          <p className="text-[10px] font-medium text-zinc-500 dark:text-zinc-400">
             Ag 999 · Kerala Board Rate
           </p>
         </div>
@@ -27,9 +27,9 @@ export default function SilverRateCard({
         <div className="text-right">
           <p className="text-2xl font-bold tracking-tight text-slate-700 dark:text-slate-300">
             {formatCurrency(ratePerGram)}
-            <span className="ml-1 text-xs font-medium text-zinc-400">/g</span>
+            <span className="ml-1 text-xs font-medium text-zinc-500">/g</span>
           </p>
-          <p className="text-[11px] text-zinc-400 dark:text-zinc-500">
+          <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
             {formatCurrency(ratePerGram * 100)} per 100g
           </p>
         </div>

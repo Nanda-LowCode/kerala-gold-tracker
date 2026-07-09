@@ -109,7 +109,7 @@ export default function ToolsIndex() {
                   className={`h-4 w-4 shrink-0 transition-transform group-hover:translate-x-0.5 ${
                     i === 0
                       ? "text-amber-700 dark:text-amber-400"
-                      : "text-zinc-400 group-hover:text-amber-700 dark:group-hover:text-amber-400"
+                      : "text-zinc-500 group-hover:text-amber-700 dark:group-hover:text-amber-400"
                   }`}
                   viewBox="0 0 20 20"
                   fill="currentColor"

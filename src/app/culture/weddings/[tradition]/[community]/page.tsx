@@ -320,7 +320,7 @@ export default async function CommunityWeddingPage({
           <div className="mt-3 flex items-center gap-2">
             <span className="text-xs text-zinc-500">Central ornament:</span>
             <span className="font-semibold text-amber-700 dark:text-amber-400">{info.thali}</span>
-            <span className="text-xs text-zinc-400">{info.thaliMl}</span>
+            <span className="text-xs text-zinc-500">{info.thaliMl}</span>
           </div>
         </div>
 
@@ -359,16 +359,16 @@ export default async function CommunityWeddingPage({
           </h2>
           {defaults.length > 0 ? (
             <>
-              <p className="text-xs text-zinc-400 dark:text-zinc-500">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">
                 Default weights used in the wedding budget calculator. Indicative community averages — actual choices vary by family.
               </p>
               <div className="overflow-x-auto rounded-2xl border border-zinc-200/70 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-zinc-100 dark:border-zinc-800">
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-400">Ornament</th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-400">Default (pavan)</th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-400">Required</th>
+                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">Ornament</th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500">Default (pavan)</th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500">Required</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
@@ -377,10 +377,10 @@ export default async function CommunityWeddingPage({
                         <td className="px-4 py-2.5">
                           <p className="font-medium text-zinc-800 dark:text-zinc-200">{d.ornaments?.name_en}</p>
                           {d.ornaments?.name_ml && (
-                            <p className="text-xs text-zinc-400">{d.ornaments.name_ml}</p>
+                            <p className="text-xs text-zinc-500">{d.ornaments.name_ml}</p>
                           )}
                           {d.notes && (
-                            <p className="text-xs text-zinc-400 mt-0.5">{d.notes}</p>
+                            <p className="text-xs text-zinc-500 mt-0.5">{d.notes}</p>
                           )}
                         </td>
                         <td className="px-4 py-2.5 text-right font-semibold text-amber-700 dark:text-amber-400">
@@ -390,7 +390,7 @@ export default async function CommunityWeddingPage({
                           {d.is_required ? (
                             <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">Yes</span>
                           ) : (
-                            <span className="text-xs text-zinc-400">Optional</span>
+                            <span className="text-xs text-zinc-500">Optional</span>
                           )}
                         </td>
                       </tr>
@@ -410,7 +410,7 @@ export default async function CommunityWeddingPage({
               <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
                 Ornament defaults for this community are being compiled.
               </p>
-              <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
+              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
                 Use the budget calculator with custom weights in the meantime.
               </p>
               <Link
@@ -426,7 +426,7 @@ export default async function CommunityWeddingPage({
         {/* Key terms */}
         {info.keyTerms && (
           <section className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Glossary</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Glossary</p>
             <div className="flex flex-wrap gap-2">
               {info.keyTerms.map((term) => (
                 <Link

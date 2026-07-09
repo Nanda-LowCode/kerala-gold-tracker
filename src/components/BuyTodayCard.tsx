@@ -43,7 +43,7 @@ export default function BuyTodayCard({
     <section
       className={`rounded-2xl border border-zinc-200/70 p-5 shadow-sm ring-1 ring-inset dark:border-zinc-800 ${tone.ring} ${tone.bg}`}
     >
-      <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+      <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
         Should you buy today?
       </p>
 
@@ -71,7 +71,7 @@ export default function BuyTodayCard({
         </p>
       )}
 
-      <p className="mt-2 text-[10px] text-zinc-400 dark:text-zinc-500">
+      <p className="mt-2 text-[10px] text-zinc-500 dark:text-zinc-400">
         Based on the recent board-rate range · Not financial advice
       </p>
     </section>

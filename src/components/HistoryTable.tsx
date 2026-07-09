@@ -107,7 +107,7 @@ export default function HistoryTable({ history }: { history: GoldRate[] }) {
                 {change !== null && (
                   <div className="w-16 text-right">
                     {change === 0 ? (
-                      <span className="text-xs font-medium text-zinc-400 dark:text-zinc-500">
+                      <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
                         —
                       </span>
                     ) : (
@@ -116,7 +116,7 @@ export default function HistoryTable({ history }: { history: GoldRate[] }) {
                           change > 0 ? "text-red-600 dark:text-red-500" : "text-green-600 dark:text-green-500"
                         }`}
                       >
-                        {change > 0 ? "\u25B2" : "\u25BC"}
+                        {change > 0 ? "\u25B2" : "\u25BC"} {"\u20B9"}
                         {Math.abs(change).toLocaleString("en-IN")}
                       </span>
                     )}

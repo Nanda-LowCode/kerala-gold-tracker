@@ -72,10 +72,10 @@ export default function PriceAlertInput({ currentRate }: { currentRate: number }
   }
 
   return (
-    <section className="rounded-xl border border-amber-200/60 bg-amber-50/40 p-4 dark:border-amber-900/40 dark:bg-amber-950/20">
+    <div>
       <div className="mb-3 flex items-center gap-2">
         <BellRing className="h-4 w-4 text-amber-600 dark:text-amber-500" />
-        <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Price Drop Alert</h3>
+        <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Push notification (this device)</h3>
         <span className="ml-auto rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:bg-amber-900/40 dark:text-amber-400">
           22K
         </span>
@@ -105,7 +105,7 @@ export default function PriceAlertInput({ currentRate }: { currentRate: number }
       ) : (
         <div className="flex gap-2">
           <div className="relative flex-1">
-            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm font-medium text-zinc-400">₹</span>
+            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm font-medium text-zinc-500">₹</span>
             <input
               type="number"
               min={1000}
@@ -133,10 +133,10 @@ export default function PriceAlertInput({ currentRate }: { currentRate: number }
         <p className="mt-2 text-xs text-red-500">Failed to save alert. Try again.</p>
       )}
       {!savedTarget && (
-        <p className="mt-2 text-[11px] text-zinc-400 dark:text-zinc-500">
+        <p className="mt-2 text-[11px] text-zinc-500 dark:text-zinc-400">
           You&apos;ll get a push notification when 22K gold drops to your target price.
         </p>
       )}
-    </section>
+    </div>
   );
 }

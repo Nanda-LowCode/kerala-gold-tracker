@@ -73,7 +73,7 @@ export default function WeddingBudgetCalculator({ ornaments, rate22k }: Props) {
     <div className="space-y-6">
       {/* Starting-preset selector — a convenience, not a gate. */}
       <section className="space-y-2">
-        <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+        <label className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
           Starting preset
         </label>
         <div className="flex flex-wrap gap-2">
@@ -95,7 +95,7 @@ export default function WeddingBudgetCalculator({ ornaments, rate22k }: Props) {
             </button>
           ))}
         </div>
-        <p className="text-[11px] text-zinc-400 dark:text-zinc-500">
+        <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
           Presets just pre-fill a typical ornament set — everything below is optional and fully
           adjustable, whatever your traditions.
         </p>
@@ -115,7 +115,7 @@ export default function WeddingBudgetCalculator({ ornaments, rate22k }: Props) {
         </p>
       ) : (
         <section className="space-y-2">
-          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
             Ornaments
           </label>
           <div className="divide-y divide-zinc-100 rounded-xl border border-zinc-200/60 dark:divide-zinc-800 dark:border-zinc-800">
@@ -140,7 +140,7 @@ export default function WeddingBudgetCalculator({ ornaments, rate22k }: Props) {
                       {presetValue === "classic" ? (CLASSIC_DISPLAY_NAMES[o.slug] ?? o.name_en) : o.name_en}
                     </p>
                     {o.name_ml && (
-                      <p className="text-xs text-zinc-400">{o.name_ml}</p>
+                      <p className="text-xs text-zinc-500">{o.name_ml}</p>
                     )}
                     {o.is_required && (
                       <span className="text-[10px] font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">
@@ -194,7 +194,7 @@ export default function WeddingBudgetCalculator({ ornaments, rate22k }: Props) {
       {/* Making charge slider */}
       <section className="space-y-2">
         <div className="flex items-center justify-between">
-          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
             Making Charge
           </label>
           <span className="text-sm font-bold text-zinc-800 dark:text-zinc-200">{makingPct}%</span>
@@ -208,7 +208,7 @@ export default function WeddingBudgetCalculator({ ornaments, rate22k }: Props) {
           onChange={(e) => setMakingPct(Number(e.target.value))}
           className="w-full accent-amber-600"
         />
-        <div className="flex justify-between text-[10px] text-zinc-400">
+        <div className="flex justify-between text-[10px] text-zinc-500">
           <span>8% (minimum)</span>
           <span>25% (premium)</span>
         </div>
@@ -217,7 +217,7 @@ export default function WeddingBudgetCalculator({ ornaments, rate22k }: Props) {
       {/* Mahr input for Muslim communities */}
       {isMuslim && (
         <section className="space-y-2">
-          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+          <label className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
             Mahr — Bride&apos;s Gold (grams)
           </label>
           <div className="flex items-center gap-3">
@@ -237,7 +237,7 @@ export default function WeddingBudgetCalculator({ ornaments, rate22k }: Props) {
               </span>
             )}
           </div>
-          <p className="text-[10px] text-zinc-400">
+          <p className="text-[10px] text-zinc-500">
             Enter the Mahr in grams of gold. This is entirely the bride&apos;s property.
           </p>
         </section>
@@ -281,14 +281,14 @@ export default function WeddingBudgetCalculator({ ornaments, rate22k }: Props) {
               </div>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-zinc-400 dark:text-zinc-500">
+          <p className="mt-3 text-[10px] text-zinc-500 dark:text-zinc-400">
             Estimate based on 22K rate. Actual cost depends on specific designs, jeweller, and current market.
           </p>
         </section>
       )}
 
       {rate22k === 0 && (
-        <p className="text-center text-sm text-zinc-400">
+        <p className="text-center text-sm text-zinc-500">
           Gold rate unavailable — estimates paused. Check back shortly.
         </p>
       )}

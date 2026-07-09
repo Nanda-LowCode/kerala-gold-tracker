@@ -258,7 +258,7 @@ export default async function TemplePage({
             <p className="mt-1 text-base text-zinc-500 dark:text-zinc-400">{temple.name_ml}</p>
           )}
           {temple.district && (
-            <p className="mt-0.5 text-sm text-zinc-400 dark:text-zinc-500">
+            <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">
               {temple.district} · {temple.deity}
             </p>
           )}
@@ -267,7 +267,7 @@ export default async function TemplePage({
               href={`https://maps.google.com/?q=${temple.lat},${temple.lng}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+              className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300"
             >
               <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
               View on Google Maps
@@ -277,7 +277,7 @@ export default async function TemplePage({
               href={`https://maps.google.com/?q=${encodeURIComponent((temple.name_en ?? "") + " temple Kerala")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+              className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300"
             >
               <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
               Search on Google Maps
@@ -321,9 +321,9 @@ export default async function TemplePage({
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b border-zinc-100 dark:border-zinc-800">
-                          <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-400">Body weight</th>
-                          <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-400">Gold (grams)</th>
-                          <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-400">Gold (pavan)</th>
+                          <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">Body weight</th>
+                          <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500">Gold (grams)</th>
+                          <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500">Gold (pavan)</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
@@ -338,7 +338,7 @@ export default async function TemplePage({
                         ))}
                       </tbody>
                     </table>
-                    <p className="px-4 py-3 text-xs text-zinc-400 dark:text-zinc-500 border-t border-zinc-100 dark:border-zinc-800">
+                    <p className="px-4 py-3 text-xs text-zinc-500 dark:text-zinc-400 border-t border-zinc-100 dark:border-zinc-800">
                       Informational only. Actual Devaswom rates, material availability, and procedures vary — confirm with Guruvayur Devaswom directly before planning.
                     </p>
                   </div>
@@ -359,7 +359,7 @@ export default async function TemplePage({
                 <p className="mt-1 text-zinc-500 dark:text-zinc-400">
                   {temple.district} · {temple.deity}
                 </p>
-                <p className="mt-3 text-xs text-zinc-400">
+                <p className="mt-3 text-xs text-zinc-500">
                   Detailed content for this temple is being prepared. Facts are verified against
                   named sources before publication per our editorial standards.
                 </p>

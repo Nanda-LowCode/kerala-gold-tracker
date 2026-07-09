@@ -212,7 +212,29 @@ export default async function DashboardLayout({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       {/* Page action bar — page-specific actions only; site brand lives in SiteNav */}
       <header className="sticky top-0 z-40 border-b border-zinc-200/60 bg-white/70 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-950/70">
-        <div className="mx-auto flex max-w-3xl items-center justify-end gap-3 px-4 py-2.5">
+        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-2.5 xl:max-w-6xl">
+          {/* Sticky mini-ticker — on a ~10-screen page, today's rate should never
+              scroll out of sight. */}
+          {today ? (
+            <p className="flex min-w-0 items-baseline gap-1.5 whitespace-nowrap">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">22K</span>
+              <span className="text-sm font-extrabold tabular-nums text-zinc-900 dark:text-zinc-100">
+                ₹{today.rate_22k_1g.toLocaleString("en-IN")}
+              </span>
+              <span className="text-[10px] font-medium text-zinc-400 dark:text-zinc-500">/g</span>
+              {change22k !== null && change22k !== 0 && (
+                <span
+                  className={`text-[11px] font-bold ${
+                    change22k > 0 ? "text-red-600 dark:text-red-500" : "text-green-600 dark:text-green-500"
+                  }`}
+                >
+                  {change22k > 0 ? "▲" : "▼"} ₹{Math.abs(change22k).toLocaleString("en-IN")}
+                </span>
+              )}
+            </p>
+          ) : (
+            <span />
+          )}
           <div className="flex items-center gap-3">
             <a
               href="/api/og/gold-rate-card"
@@ -263,8 +285,12 @@ export default async function DashboardLayout({
                 <time dateTime={`${today.date}T10:00:00+05:30`}>{formatDate(today.date)}</time> · Updated by 10 AM IST · {region}
                 {displayName && (
                   <>
-                    {" · "}
-                    <Link href="/ml" lang="ml" className="font-semibold text-amber-700 hover:underline dark:text-amber-400">
+                    {" "}
+                    <Link
+                      href="/ml"
+                      lang="ml"
+                      className="ml-1 inline-flex translate-y-[-1px] items-center rounded-full border border-amber-200/70 bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700 transition-colors hover:bg-amber-100 dark:border-amber-800/50 dark:bg-amber-950/30 dark:text-amber-400 dark:hover:bg-amber-900/40"
+                    >
                       മലയാളം
                     </Link>
                   </>
@@ -311,7 +337,7 @@ export default async function DashboardLayout({
             </div>
 
             {/* Data-trust note — explains the 24K derivation so it doesn't look "wrong" vs aggregators */}
-            <p className="-mt-1 text-[11px] leading-relaxed text-zinc-400 dark:text-zinc-500">
+            <p className="-mt-1 text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">
               22K &amp; 18K are the official AKGSMA Kerala board rates. 24K is derived from the 916 rate by purity (22K&nbsp;&times;&nbsp;24&frasl;22), reflecting pure-gold value.
             </p>
 
@@ -375,10 +401,10 @@ export default async function DashboardLayout({
             {change22k !== null && (
               <section className="rounded-2xl border border-zinc-200/70 bg-white p-4 shadow-md shadow-amber-100/40 dark:border-zinc-800 dark:bg-zinc-900 dark:shadow-none md:p-5">
                 <div className="mb-3 flex items-center justify-between">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
                     Share today&apos;s rate
                   </p>
-                  <p className="hidden text-[10px] text-zinc-400 sm:block">
+                  <p className="hidden text-[10px] text-zinc-500 sm:block">
                     WhatsApp · Instagram · anywhere
                   </p>
                 </div>
@@ -428,11 +454,18 @@ export default async function DashboardLayout({
               />
             </div>
 
-            {/* Price Drop Alert — only visible to push-subscribed users */}
-            <PriceAlertInput currentRate={today.rate_22k_1g} />
-
-            {/* Email price alert — universal channel (works without push permission) */}
-            <EmailAlertForm currentRate={today.rate_22k_1g} />
+            {/* Price-drop alerts — one card, two channels. The push row renders
+                only for users who have notifications enabled; email is universal. */}
+            <section
+              id="price-alert"
+              className="scroll-mt-24 space-y-5 rounded-2xl border border-zinc-200/70 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+            >
+              <h2 className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+                Price-drop alerts · 22K
+              </h2>
+              <PriceAlertInput currentRate={today.rate_22k_1g} />
+              <EmailAlertForm currentRate={today.rate_22k_1g} />
+            </section>
 
             {/* Affiliate / lead-gen offers — env-gated, renders only when configured */}
             <AffiliateOffers />
@@ -469,7 +502,7 @@ export default async function DashboardLayout({
             <p className="mt-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400 sm:text-sm">
               {cityData.insightContent}
             </p>
-            <p className="mt-3 border-t border-amber-100/60 pt-2 text-[10px] text-zinc-400 dark:border-zinc-800 dark:text-zinc-500 sm:text-xs">
+            <p className="mt-3 border-t border-amber-100/60 pt-2 text-[10px] text-zinc-500 dark:border-zinc-800 dark:text-zinc-400 sm:text-xs">
               * Gold rates in Kerala are standardised across all districts by the Kerala Gold &amp; Silver Merchants Association. The daily board rate applies equally to {region}.
             </p>
           </div>
@@ -490,7 +523,7 @@ export default async function DashboardLayout({
       <footer className="border-t border-zinc-200/60 bg-white/50 pt-8 pb-12 dark:border-zinc-800/80 dark:bg-zinc-950/50">
         <div className="mx-auto max-w-3xl px-4">
           <div className="mb-8 rounded-2xl bg-zinc-50/50 p-6 text-center shadow-inner dark:bg-zinc-900/50 dark:shadow-none">
-            <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+            <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
               Check Daily Rates Around Kerala
             </h3>
             <ul className="flex flex-wrap justify-center gap-2 md:gap-3">
@@ -528,7 +561,7 @@ export default async function DashboardLayout({
           </div>
 
           <div className="mb-8">
-            <h3 className="mb-3 text-center text-[11px] font-bold uppercase tracking-[0.18em] text-zinc-400 dark:text-zinc-500">
+            <h3 className="mb-3 text-center text-[11px] font-bold uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">
               Popular
             </h3>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -590,7 +623,7 @@ function RecentDailyUpdates({
             className="group rounded-xl border border-zinc-200/60 bg-white px-4 py-3 shadow-sm transition-colors hover:border-amber-200 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-amber-800/40"
           >
             <div className="flex items-center justify-between gap-2">
-              <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-400">
+              <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-500">
                 {new Date(e.date + "T00:00:00").toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" })}
               </p>
               {e.verdict && <VerdictDot verdict={e.verdict} />}
@@ -631,7 +664,7 @@ function RecentArticles() {
             href={`/blog/${post.slug}`}
             className="group rounded-xl border border-zinc-200/60 bg-white px-4 py-3 shadow-sm transition-colors hover:border-amber-200 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-amber-800/40"
           >
-            <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-400">
+            <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-500">
               {new Date(post.date + "T00:00:00").toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" })}
             </p>
             <p className="mt-0.5 text-sm font-semibold leading-snug text-zinc-800 group-hover:text-amber-700 dark:text-zinc-200 dark:group-hover:text-amber-400">

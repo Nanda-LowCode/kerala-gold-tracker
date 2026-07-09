@@ -130,7 +130,7 @@ export default async function MonthHistoryPage({ params }: RouteParams) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd }} />
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 md:py-12">
-        <p className="text-xs font-semibold text-zinc-400 dark:text-zinc-500">
+        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
           <Link href="/gold-rate-history" className="hover:text-amber-700 dark:hover:text-amber-400">History</Link>
           {" / "}
           <Link href={`/gold-rate-history/${year}`} className="hover:text-amber-700 dark:hover:text-amber-400">{year}</Link>
@@ -159,7 +159,7 @@ export default async function MonthHistoryPage({ params }: RouteParams) {
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {stats.map((s) => (
             <div key={s.label} className="rounded-xl border border-amber-200/50 bg-amber-50/40 p-3 dark:border-zinc-700 dark:bg-zinc-900">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">{s.label}</p>
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">{s.label}</p>
               <p className="mt-0.5 text-sm font-bold text-amber-700 dark:text-amber-400">{s.value}</p>
             </div>
           ))}
@@ -170,11 +170,11 @@ export default async function MonthHistoryPage({ params }: RouteParams) {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-zinc-100 dark:border-zinc-800">
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Date</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">22K/g</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">22K/Pavan</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">24K/g</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Change</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Date</th>
+                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">22K/g</th>
+                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">22K/Pavan</th>
+                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">24K/g</th>
+                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Change</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
@@ -193,7 +193,7 @@ export default async function MonthHistoryPage({ params }: RouteParams) {
                       {dayChange === null ? (
                         <span className="text-zinc-300 dark:text-zinc-600">—</span>
                       ) : dayChange === 0 ? (
-                        <span className="text-xs text-zinc-400">0</span>
+                        <span className="text-xs text-zinc-500">0</span>
                       ) : (
                         <span className={`text-xs font-semibold ${dayChange > 0 ? "text-red-500" : "text-green-600"}`}>
                           {dayChange > 0 ? "▲" : "▼"} {inr(Math.abs(dayChange))}
@@ -207,7 +207,7 @@ export default async function MonthHistoryPage({ params }: RouteParams) {
           </table>
         </div>
 
-        <p className="mt-4 text-xs text-zinc-400 dark:text-zinc-500">
+        <p className="mt-4 text-xs text-zinc-500 dark:text-zinc-400">
           * Daily Kerala board rate (22K per gram); pavan = 8 grams. Some dates may be missing where
           no rate was published.
         </p>

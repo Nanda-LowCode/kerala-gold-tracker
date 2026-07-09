@@ -14,7 +14,7 @@ export default function AffiliateOffers() {
     <section className="rounded-2xl border border-zinc-200/70 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
       <div className="mb-3 flex items-center justify-between gap-2">
         <h2 className="text-sm font-bold text-zinc-800 dark:text-zinc-100">Gold services</h2>
-        <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500">
+        <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
           Sponsored
         </span>
       </div>
@@ -38,7 +38,7 @@ export default function AffiliateOffers() {
         ))}
       </div>
 
-      <p className="mt-3 text-[10px] leading-relaxed text-zinc-400 dark:text-zinc-500">
+      <p className="mt-3 text-[10px] leading-relaxed text-zinc-500 dark:text-zinc-400">
         Sponsored links. We may earn a commission if you sign up — at no extra cost to you. Not financial advice.
       </p>
     </section>

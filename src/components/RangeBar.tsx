@@ -30,7 +30,7 @@ export function RangeBar({
           aria-label={`Today's price is ${formatCurrency(current)}`}
         />
       </div>
-      <div className="mt-1 flex items-center justify-between text-[10px] text-zinc-400 dark:text-zinc-500">
+      <div className="mt-1 flex items-center justify-between text-[10px] text-zinc-500 dark:text-zinc-400">
         <span>Low</span>
         <span className="font-semibold text-zinc-700 dark:text-zinc-200">
           Today {formatCurrency(current)}

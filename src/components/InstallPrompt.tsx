@@ -53,7 +53,7 @@ export default function InstallPrompt() {
             <p className="text-sm font-bold text-white md:text-base">
               Install LiveGold Kerala
             </p>
-            <p className="mt-0.5 text-xs text-zinc-400 md:text-sm">
+            <p className="mt-0.5 text-xs text-zinc-500 md:text-sm">
               Use this site like an app — no download required!
             </p>
           </div>
@@ -70,7 +70,7 @@ export default function InstallPrompt() {
         <div className="flex gap-2 border-t border-zinc-800 px-4 py-3 md:px-5">
           <button
             onClick={handleDismiss}
-            className="flex-1 rounded-xl px-4 py-2.5 text-sm font-semibold text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-zinc-200"
+            className="flex-1 rounded-xl px-4 py-2.5 text-sm font-semibold text-zinc-500 transition-colors hover:bg-zinc-800 hover:text-zinc-200"
           >
             Not now
           </button>

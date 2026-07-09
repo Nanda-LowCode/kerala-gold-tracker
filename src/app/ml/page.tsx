@@ -149,9 +149,9 @@ export default async function MalayalamRatePage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-zinc-100 bg-zinc-50/60 dark:border-zinc-800 dark:bg-zinc-800/30">
-                <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-zinc-400">കാരറ്റ്</th>
-                <th className="px-5 py-3 text-right text-[11px] font-bold uppercase tracking-wider text-zinc-400">ഗ്രാമിന്</th>
-                <th className="px-5 py-3 text-right text-[11px] font-bold uppercase tracking-wider text-zinc-400">പവന് (8 ഗ്രാം)</th>
+                <th className="px-5 py-3 text-left text-[11px] font-bold uppercase tracking-wider text-zinc-500">കാരറ്റ്</th>
+                <th className="px-5 py-3 text-right text-[11px] font-bold uppercase tracking-wider text-zinc-500">ഗ്രാമിന്</th>
+                <th className="px-5 py-3 text-right text-[11px] font-bold uppercase tracking-wider text-zinc-500">പവന് (8 ഗ്രാം)</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
@@ -159,7 +159,7 @@ export default async function MalayalamRatePage() {
                 <tr key={k.label}>
                   <td className="px-5 py-3.5">
                     <p className="font-bold text-zinc-800 dark:text-zinc-200">{k.label}</p>
-                    <p className="text-[11px] text-zinc-400">{k.purity}</p>
+                    <p className="text-[11px] text-zinc-500">{k.purity}</p>
                   </td>
                   <td className="px-5 py-3.5 text-right font-semibold text-zinc-900 dark:text-zinc-100">{inr(k.perGram)}</td>
                   <td className="px-5 py-3.5 text-right text-zinc-600 dark:text-zinc-400">{inr(k.perGram * 8)}</td>
@@ -185,7 +185,7 @@ export default async function MalayalamRatePage() {
         </section>
 
         {/* Source note */}
-        <p className="mt-4 text-xs leading-relaxed text-zinc-400 dark:text-zinc-500">
+        <p className="mt-4 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
           * 22K, 18K നിരക്കുകൾ ഔദ്യോഗിക AKGSMA കേരള ബോർഡ് നിരക്കാണ്. 24K നിരക്ക് 916 നിരക്കിൽ നിന്ന്
           ശുദ്ധത അനുപാതത്തിൽ കണക്കാക്കിയത്. പണിക്കൂലിയും 3% GST-യും അധികമായി വരും.
         </p>

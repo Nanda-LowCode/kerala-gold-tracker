@@ -102,10 +102,10 @@ export default async function BlogPost({ params }: Props) {
               >
                 {post.category}
               </Link>
-              <time className="text-[11px] font-medium uppercase tracking-wider text-zinc-400">
+              <time className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
                 {dateFormatted}
               </time>
-              <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-400">
+              <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
                 · {post.readingMinutes} min read
               </span>
             </div>
@@ -151,7 +151,7 @@ export default async function BlogPost({ params }: Props) {
                   href={`/blog/${p.slug}`}
                   className="group rounded-xl border border-zinc-200/70 bg-white p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-zinc-800/70 dark:bg-zinc-900 dark:shadow-none dark:hover:border-zinc-700"
                 >
-                  <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-400">
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-500">
                     {p.category} · {p.readingMinutes} min
                   </p>
                   <h3 className="mt-1 text-sm font-semibold leading-snug text-zinc-800 group-hover:text-amber-700 dark:text-zinc-200 dark:group-hover:text-amber-400">

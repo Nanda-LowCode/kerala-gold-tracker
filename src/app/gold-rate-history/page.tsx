@@ -82,7 +82,7 @@ export default async function GoldRateHistoryPage() {
               { label: "All-time Low (22K/g)", value: allLow !== null ? formatCur(allLow) : "—" },
             ].map((stat) => (
               <div key={stat.label} className="rounded-xl border border-amber-200/50 bg-amber-50/40 p-3 dark:border-zinc-700 dark:bg-zinc-900">
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">{stat.label}</p>
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">{stat.label}</p>
                 <p className="mt-0.5 text-base font-bold text-amber-700 dark:text-amber-400">{stat.value}</p>
               </div>
             ))}
@@ -120,11 +120,11 @@ export default async function GoldRateHistoryPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-zinc-100 dark:border-zinc-800">
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Date</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">22K/g</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">22K/Pavan</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">24K/g</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Change</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Date</th>
+                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">22K/g</th>
+                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">22K/Pavan</th>
+                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">24K/g</th>
+                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Change</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
@@ -151,10 +151,10 @@ export default async function GoldRateHistoryPage() {
                       {change === null ? (
                         <span className="text-zinc-300 dark:text-zinc-600">—</span>
                       ) : change === 0 ? (
-                        <span className="text-xs text-zinc-400">No change</span>
+                        <span className="text-xs text-zinc-500">No change</span>
                       ) : (
                         <span className={`text-xs font-semibold ${change > 0 ? "text-red-500" : "text-green-600"}`}>
-                          {change > 0 ? "▲" : "▼"} {change > 0 ? "+" : ""}{change.toLocaleString("en-IN")}
+                          {change > 0 ? "▲" : "▼"} ₹{Math.abs(change).toLocaleString("en-IN")}
                         </span>
                       )}
                     </td>
@@ -163,7 +163,7 @@ export default async function GoldRateHistoryPage() {
               })}
               {history.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-sm text-zinc-400">
+                  <td colSpan={5} className="px-4 py-8 text-center text-sm text-zinc-500">
                     No data available yet. Check back after the first rate update.
                   </td>
                 </tr>
@@ -172,7 +172,7 @@ export default async function GoldRateHistoryPage() {
           </table>
         </div>
 
-        <p className="mt-4 text-xs text-zinc-400 dark:text-zinc-500">
+        <p className="mt-4 text-xs text-zinc-500 dark:text-zinc-400">
           * Rates are the official Kerala board rate per gram. Pavan = 8 grams.
           {history.length > visible.length
             ? ` Table shows the most recent ${visible.length} days — use the year links above to browse the full ${history.length}-day archive.`

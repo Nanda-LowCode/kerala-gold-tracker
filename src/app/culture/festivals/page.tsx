@@ -164,7 +164,7 @@ export default async function FestivalsPage() {
                       <p className="text-lg font-bold leading-none text-amber-700 dark:text-amber-400">
                         {new Date(d.date + "T00:00:00").getDate()}
                       </p>
-                      <p className="text-[10px] font-semibold uppercase text-zinc-400">
+                      <p className="text-[10px] font-semibold uppercase text-zinc-500">
                         {new Date(d.date + "T00:00:00").toLocaleDateString("en-IN", { month: "short" })}
                       </p>
                     </div>
@@ -173,7 +173,7 @@ export default async function FestivalsPage() {
                         <p className="font-semibold text-zinc-900 dark:text-zinc-100">
                           {d.festival?.name_en}
                         </p>
-                        <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                        <span className="text-xs text-zinc-500 dark:text-zinc-400">
                           {d.festival?.name_ml}
                         </span>
                         {d.festival?.is_gold_buying_day && (
@@ -186,7 +186,7 @@ export default async function FestivalsPage() {
                             Today
                           </span>
                         ) : (
-                          <span className="text-xs text-zinc-400">in {until} days</span>
+                          <span className="text-xs text-zinc-500">in {until} days</span>
                         )}
                       </div>
                       <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
@@ -198,7 +198,7 @@ export default async function FestivalsPage() {
                         </p>
                       )}
                       {d.notes && (
-                        <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500 line-clamp-2">
+                        <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400 line-clamp-2">
                           {d.notes}
                         </p>
                       )}
@@ -221,10 +221,10 @@ export default async function FestivalsPage() {
                 <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
                   {pastWithFestival.map((d) => (
                     <tr key={d.date + d.festival_id} className="hover:bg-zinc-50/60 dark:hover:bg-zinc-800/50">
-                      <td className="px-4 py-3 text-xs text-zinc-400">{formatShortDate(d.date)}</td>
+                      <td className="px-4 py-3 text-xs text-zinc-500">{formatShortDate(d.date)}</td>
                       <td className="px-4 py-3 font-medium text-zinc-700 dark:text-zinc-300">
                         {d.festival?.name_en}
-                        <span className="ml-2 text-xs font-normal text-zinc-400">{d.festival?.name_ml}</span>
+                        <span className="ml-2 text-xs font-normal text-zinc-500">{d.festival?.name_ml}</span>
                       </td>
                       <td className="px-4 py-3 text-right">
                         {d.festival?.is_gold_buying_day && (
@@ -254,7 +254,7 @@ export default async function FestivalsPage() {
               >
                 <div>
                   <p className="font-medium text-zinc-800 dark:text-zinc-200">{f.name_en}</p>
-                  <p className="text-xs text-zinc-400">{f.name_ml}</p>
+                  <p className="text-xs text-zinc-500">{f.name_ml}</p>
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
                   {f.is_gold_buying_day && (
@@ -271,7 +271,7 @@ export default async function FestivalsPage() {
           </div>
         </section>
 
-        <p className="text-xs text-zinc-400 dark:text-zinc-500">
+        <p className="text-xs text-zinc-500 dark:text-zinc-400">
           * Dates sourced from DrikPanchang and ProKerala. Muhurat timings calculated for Kerala (IST).
           Verify with a local panchangam for precise auspicious windows.
         </p>
