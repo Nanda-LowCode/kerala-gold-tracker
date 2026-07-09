@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
 import { getAllPosts, getPostBySlug, type PostMeta } from "@/lib/mdx";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -129,7 +130,12 @@ export default async function BlogPost({ params }: Props) {
           </header>
 
           <div className="prose prose-amber lg:prose-xl mx-auto prose-headings:tracking-tight prose-a:text-amber-700 prose-a:no-underline hover:prose-a:underline dark:prose-invert dark:prose-a:text-amber-400">
-            <MDXRemote source={post.content} />
+            {/* remark-gfm enables GitHub-flavored markdown — 22 of the posts use
+                pipe tables, which render as raw text without it. */}
+            <MDXRemote
+              source={post.content}
+              options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
+            />
           </div>
         </article>
 
