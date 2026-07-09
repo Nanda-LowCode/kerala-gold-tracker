@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import PriceChart from "@/components/PriceChart";
+import PriceChartLazy from "@/components/PriceChartLazy";
 import HistoryTable from "@/components/HistoryTable";
 import FAQ from "@/components/FAQ";
 import TodayVsYesterday from "@/components/TodayVsYesterday";
@@ -317,7 +317,7 @@ export default async function DashboardLayout({
             <BuyTodayCard verdict={todayVerdict} cheaperThanPct={cheaperThanPct} windowDays={Math.min(BUY_WINDOW, history.length)} />
 
             {/* Price Trend chart — surfaced high, right under today's rate. */}
-            <PriceChart history={chartData} />
+            <PriceChartLazy history={chartData} />
 
             {/* Live international spot price — adds "live market" freshness, clearly
                 distinct from the once-daily board rate. */}
@@ -408,7 +408,8 @@ export default async function DashboardLayout({
 
             {/* Month High/Low — secondary context, moved down from the top so the
                 page leads with today's rate, not month extremes. */}
-            {today && <TopTicker history={history} cityName={cityName} />}
+            {/* Only the current month is used — don't serialize all ~1,100 rows into the payload */}
+            {today && <TopTicker history={history.slice(0, 31)} cityName={cityName} />}
 
             {/* Old Gold Calculator Component */}
             <OldGoldCalculator 
@@ -435,7 +436,8 @@ export default async function DashboardLayout({
             <AffiliateOffers />
 
             {/* History Table */}
-            <HistoryTable history={history} />
+            {/* Max range shown is 90 days — trim the serialized payload accordingly */}
+            <HistoryTable history={history.slice(0, 90)} />
           </>
         ) : (
           <EmptyState />

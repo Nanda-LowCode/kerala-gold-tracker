@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { getHistory } from "../page";
-import PriceChart from "@/components/PriceChart";
+import PriceChartLazy from "@/components/PriceChartLazy";
 import { createSupabaseReadClient } from "@/lib/supabase";
 
 export const revalidate = 3600;
@@ -92,7 +92,7 @@ export default async function GoldRateHistoryPage() {
         {/* Trend chart — multi-range, deepens as data accrues / after backfill */}
         {chartData.length >= 2 && (
           <div className="mt-8">
-            <PriceChart history={chartData} />
+            <PriceChartLazy history={chartData} />
           </div>
         )}
 
