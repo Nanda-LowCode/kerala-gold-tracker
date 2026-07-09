@@ -98,8 +98,10 @@ export default async function DashboardLayout({
 
   const change18k =
     today && yesterday ? today.rate_18k_1g - yesterday.rate_18k_1g : null;
+  // 21K is purity-derived (22K × 21/22), so its change is fractional — round it
+  // or the badge shows float artifacts like "▼ -4.773".
   const change21k =
-    today && yesterday21k !== null ? rate21k - yesterday21k : null;
+    today && yesterday21k !== null ? Math.round(rate21k - yesterday21k) : null;
   const change22k =
     today && yesterday ? today.rate_22k_1g - yesterday.rate_22k_1g : null;
   const change24k =
