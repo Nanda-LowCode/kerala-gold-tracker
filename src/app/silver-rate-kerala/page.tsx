@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { getHistory } from "@/app/page";
 import { formatCurrency } from "@/lib/format";
+import SilverChartLazy from "@/components/SilverChartLazy";
 
 export const revalidate = 3600;
 
@@ -78,6 +79,12 @@ export default async function SilverRatePage() {
   const weekLow = weekVals.length ? Math.min(...weekVals) : null;
   const weekHigh = weekVals.length ? Math.max(...weekVals) : null;
 
+  // Chronological silver series for the trend chart (oldest → newest).
+  const silverSeries = [...history]
+    .reverse()
+    .filter((h): h is typeof h & { rate_silver_1g: number } => typeof h.rate_silver_1g === "number")
+    .map((h) => ({ date: h.date, rate: h.rate_silver_1g }));
+
   const faqs = silverToday
     ? [
         {
@@ -95,6 +102,14 @@ export default async function SilverRatePage() {
         {
           q: "Why is silver more volatile than gold?",
           a: "Silver responds to both precious-metal sentiment and industrial demand (electronics, solar, EVs), so its price swings more than gold's. The gold-to-silver ratio is a common gauge of relative value.",
+        },
+        {
+          q: "What is the difference between 999 and 925 silver?",
+          a: "999 is fine silver (99.9% pure) — soft, used for coins and bars. 925 is sterling silver (92.5% pure, 7.5% copper) — harder and used for most jewellery, anklets and utensils. The board rate is quoted for 999; a 925 item costs about 92.5% of it, before making charges.",
+        },
+        {
+          q: "How much making charge do silver anklets and utensils have?",
+          a: `Silver making charges vary widely — coins and bars carry little or none, while anklets and intricate jewellery run roughly 10–25% (or a flat per-gram rate). Use our silver price calculator to estimate the total at today's ${formatCurrency(silverToday)}/g rate.`,
         },
       ]
     : [];
@@ -169,6 +184,27 @@ export default async function SilverRatePage() {
                 <> Over the last 7 days it has ranged {formatCurrency(weekLow)}–{formatCurrency(weekHigh)} per gram.</>
               )}
             </p>
+
+            {/* Silver trend chart */}
+            {silverSeries.length >= 2 && (
+              <div className="mb-8">
+                <SilverChartLazy series={silverSeries} />
+              </div>
+            )}
+
+            {/* Calculator CTA */}
+            <Link
+              href="/tools/silver-price-calculator"
+              className="mb-8 flex items-center justify-between gap-3 rounded-2xl border border-slate-200/70 bg-slate-50/50 p-5 transition-colors hover:border-slate-300 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
+            >
+              <div>
+                <p className="text-sm font-bold text-zinc-800 dark:text-zinc-100">Silver price calculator</p>
+                <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+                  Anklets, coins &amp; utensils — with making charges + GST at today&apos;s rate.
+                </p>
+              </div>
+              <span className="shrink-0 text-sm font-semibold text-slate-600 dark:text-slate-400">Open →</span>
+            </Link>
           </>
         ) : (
           <div className="mb-8 rounded-2xl border border-zinc-200/70 bg-white p-8 text-center shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
@@ -189,6 +225,19 @@ export default async function SilverRatePage() {
           <p>
             Kerala silver is sold as <strong className="text-zinc-700 dark:text-zinc-300">999 fine silver</strong> (99.9% purity), equivalent to international &quot;three nines&quot; grade. This is the highest purity available and is the standard for investment-grade silver coins and bars.
           </p>
+
+          <h3 className="text-base font-bold text-zinc-800 dark:text-zinc-200">999 fine vs 925 sterling — which is which?</h3>
+          <p>
+            <strong className="text-zinc-700 dark:text-zinc-300">999 (fine)</strong> is nearly pure silver — soft, used for coins, bars and investment. <strong className="text-zinc-700 dark:text-zinc-300">925 (sterling)</strong> is 92.5% silver with 7.5% copper for hardness, used for most jewellery, anklets and cutlery because pure silver bends too easily. The board rate above is for 999; a 925 piece is priced at about 92.5% of it, plus making charges.
+          </p>
+
+          <h3 className="text-base font-bold text-zinc-800 dark:text-zinc-200">What Keralites buy silver for</h3>
+          <ul className="ml-5 list-disc space-y-1.5">
+            <li><strong className="text-zinc-700 dark:text-zinc-300">Anklets (kolusu / painjan)</strong> and toe rings — silver is traditionally worn on the feet, where gold is avoided.</li>
+            <li><strong className="text-zinc-700 dark:text-zinc-300">Pooja items</strong> — lamps (nilavilakku), urulis, kindi and idols for temples and homes.</li>
+            <li><strong className="text-zinc-700 dark:text-zinc-300">Gifting utensils</strong> — glasses, plates and bowls for weddings and the 28th-day (choroonu) ceremony.</li>
+            <li><strong className="text-zinc-700 dark:text-zinc-300">Coins &amp; bars</strong> — 999 fine, bought as affordable precious-metal investment, especially on Akshaya Tritiya and Dhanteras.</li>
+          </ul>
 
           <h3 className="text-base font-bold text-zinc-800 dark:text-zinc-200">What drives the silver price?</h3>
 

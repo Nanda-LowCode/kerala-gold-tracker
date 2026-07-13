@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Gold Calculators & Tools — Live Gold Kerala",
   description:
-    "Free gold calculators for Kerala: making-charge estimator, old-gold exchange value, NRI import duty, hallmark purity, and pavan-to-gram conversion.",
+    "Free gold & silver calculators for Kerala: making-charge estimator, old-gold exchange value, NRI import duty, hallmark purity, pavan-to-gram conversion, and a silver price calculator.",
   alternates: { canonical: "/tools" },
 };
 
@@ -50,6 +50,13 @@ const TOOLS: ToolEntry[] = [
     blurb:
       "Quickly switch between pavan (sovereign), gram, tola, and ounce — handy for cross-checking quotes.",
     badge: "Units",
+  },
+  {
+    slug: "silver-price-calculator",
+    title: "Silver Price Calculator",
+    blurb:
+      "Price silver anklets, coins and utensils — enter weight and purity (999 or 925) for the total with making charges and GST.",
+    badge: "Silver",
   },
 ];
 

@@ -21,6 +21,7 @@ const COLUMNS: { heading: string; links: { label: string; href: string }[] }[] =
       { label: "NRI Import Duty", href: "/tools/gold-import-duty-calculator" },
       { label: "Pavan to Gram", href: "/tools/pavan-to-gram-calculator" },
       { label: "Hallmark Value", href: "/tools/hallmark-gold-calculator" },
+      { label: "Silver Calculator", href: "/tools/silver-price-calculator" },
       { label: "Wedding Budget", href: "/culture/weddings/budget-calculator" },
     ],
   },

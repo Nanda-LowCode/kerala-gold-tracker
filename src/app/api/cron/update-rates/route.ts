@@ -472,6 +472,8 @@ export async function GET(request: NextRequest) {
     revalidatePath("/ml");
     // Old-gold resale page
     revalidatePath("/old-gold-rate-kerala");
+    // Silver price calculator (shows the live silver rate)
+    revalidatePath("/tools/silver-price-calculator");
 
     // Ping IndexNow so Bing/Yandex reindex immediately
     if (process.env.INDEXNOW_KEY) {
