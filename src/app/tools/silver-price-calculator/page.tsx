@@ -8,7 +8,7 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: "Silver Price Calculator Kerala — Making Charges & GST | LiveGold Kerala",
   description:
-    "Calculate the total price of silver in Kerala — anklets, coins, utensils and jewellery. Enter weight and purity (999 or 925 sterling) to see silver value, making charges and 3% GST at today's board rate.",
+    "Calculate the total price of silver in Kerala — anklets, coins, utensils and jewellery. Enter weight and purity (999 or 925 sterling) to see silver value, making charges and 3% GST at today's silver rate.",
   alternates: { canonical: "/tools/silver-price-calculator" },
   openGraph: {
     title: "Silver Price Calculator Kerala — Making Charges & GST",
@@ -44,7 +44,7 @@ export default async function SilverCalculatorPage() {
           <p className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
             Work out the real price of silver — anklets (<em>kolusu</em>), coins, gift utensils or
             jewellery. Enter weight and purity to see the silver value, making charge and 3% GST at
-            today&apos;s Kerala board rate.
+            today&apos;s silver rate.
           </p>
           {rate999 && (
             <p className="mt-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400">
@@ -67,7 +67,7 @@ export default async function SilverCalculatorPage() {
         <section className="space-y-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
           <h2 className="text-lg font-bold text-zinc-800 dark:text-zinc-200">How silver pricing works in Kerala</h2>
           <p>
-            Silver is billed on the metal value (weight × board rate, adjusted for purity), plus a{" "}
+            Silver is billed on the metal value (weight × silver rate, adjusted for purity), plus a{" "}
             <strong className="text-zinc-700 dark:text-zinc-300">making charge</strong> and 3% GST.
             Coins and bars carry little or no making charge; anklets and intricate jewellery can run
             10–25% or a flat per-gram rate. <strong className="text-zinc-700 dark:text-zinc-300">925

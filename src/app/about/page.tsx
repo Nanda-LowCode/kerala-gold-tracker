@@ -27,7 +27,7 @@ export default function AboutPage() {
           <section className="rounded-2xl border border-zinc-200/70 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
             <h2 className="text-lg font-bold text-zinc-800 dark:text-zinc-100">What is LiveGold Kerala?</h2>
             <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-              LiveGold Kerala is a free tool that tracks the official daily gold and silver rates published by the Kerala Gold &amp; Silver Merchants Association (KGSMA). Our goal is simple: show you the correct rate before you walk into a jewellery shop, so you can buy or sell with confidence.
+              LiveGold Kerala is a free tool that tracks Kerala&apos;s daily precious-metal rates — the official AKGSMA board rate for gold, and the national market rate for silver. Our goal is simple: show you the correct rate before you walk into a jewellery shop, so you can buy or sell with confidence.
             </p>
             <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
               We also offer calculators for making charges, old gold exchange estimates, and NRI import duty — all the numbers you need in one place.
@@ -52,7 +52,7 @@ export default function AboutPage() {
                 <div>
                   <p className="font-semibold text-zinc-800 dark:text-zinc-200">BankBazaar Kerala (Fallback)</p>
                   <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                    If the primary source is unavailable, we fall back to BankBazaar's Kerala gold and silver rate pages. Both sources consistently report the same KGSMA board rate.
+                    If the primary source is unavailable, we fall back to BankBazaar's Kerala rate pages. For gold these track the same AKGSMA board rate; the silver figure reflects the national market price (silver has no separate Kerala board rate).
                   </p>
                 </div>
               </div>

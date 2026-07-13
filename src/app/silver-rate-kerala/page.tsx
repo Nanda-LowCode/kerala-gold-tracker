@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description:
-      "Today's silver rate in Kerala per gram, 100g and 1kg (999 fine). The same KGSMA board rate applies in Kochi, Ernakulam, Thrissur, Kozhikode and Trivandrum. Updated daily.",
+      "Today's silver rate in Kerala per gram, 100g and 1kg (999 fine). Silver trades at a national market rate, the same across Kochi, Ernakulam, Thrissur, Kozhikode and Trivandrum. Updated daily.",
     keywords: [
       "silver rate today kerala",
       "silver rate per gram kerala",
@@ -89,11 +89,11 @@ export default async function SilverRatePage() {
     ? [
         {
           q: "What is the silver rate in Kerala today?",
-          a: `Today's silver rate in Kerala is ${formatCurrency(silverToday)} per gram for 999 fine silver — that's ${formatCurrency(silverToday * 1000)} per kilogram. It is set by the Kerala Gold & Silver Merchants Association and is uniform across all districts.`,
+          a: `Today's silver rate in Kerala is ${formatCurrency(silverToday)} per gram for 999 fine silver — that's ${formatCurrency(silverToday * 1000)} per kilogram. Silver follows the national market price, so it's effectively the same across all Kerala districts.`,
         },
         {
           q: "Is the silver rate the same in Kochi, Thrissur and other Kerala cities?",
-          a: "Yes. The KGSMA board rate is uniform across Kerala, so the silver rate today in Kochi, Ernakulam, Thrissur, Kozhikode, Kollam, Kannur and Trivandrum is the same per-gram rate shown above.",
+          a: "Yes. Silver trades on a national market, so the silver rate today in Kochi, Ernakulam, Thrissur, Kozhikode, Kollam, Kannur and Trivandrum is the same per-gram rate shown above.",
         },
         {
           q: "What is the silver rate per kg in Kerala?",
@@ -105,7 +105,7 @@ export default async function SilverRatePage() {
         },
         {
           q: "What is the difference between 999 and 925 silver?",
-          a: "999 is fine silver (99.9% pure) — soft, used for coins and bars. 925 is sterling silver (92.5% pure, 7.5% copper) — harder and used for most jewellery, anklets and utensils. The board rate is quoted for 999; a 925 item costs about 92.5% of it, before making charges.",
+          a: "999 is fine silver (99.9% pure) — soft, used for coins and bars. 925 is sterling silver (92.5% pure, 7.5% copper) — harder and used for most jewellery, anklets and utensils. The rate is quoted for 999; a 925 item costs about 92.5% of it, before making charges.",
         },
         {
           q: "How much making charge do silver anklets and utensils have?",
@@ -131,7 +131,7 @@ export default async function SilverRatePage() {
         <section className="mb-8 text-center">
           <div className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
             <span className="text-base">🥈</span>
-            <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">Kerala Board Rate · Ag 999</span>
+            <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">Kerala · 999 Fine Silver</span>
           </div>
           <h1 className="mt-3 text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 md:text-4xl">
             Silver Rate in Kerala Today
@@ -177,7 +177,7 @@ export default async function SilverRatePage() {
 
             {/* City coverage + 7-day range — captures "silver rate today {city}" and adds a freshness signal */}
             <p className="mb-8 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-              The same KGSMA board rate applies right across Kerala, so the silver rate today in{" "}
+              Silver trades at a national market rate, so the silver rate today in{" "}
               <strong className="text-zinc-700 dark:text-zinc-300">Kochi, Ernakulam, Thrissur, Kozhikode, Kollam, Kannur and Trivandrum</strong>{" "}
               is the same {formatCurrency(silverToday)}/g shown above.
               {weekLow !== null && weekHigh !== null && weekLow !== weekHigh && (
@@ -219,7 +219,11 @@ export default async function SilverRatePage() {
           <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-200">About Silver Rates in Kerala</h2>
 
           <p>
-            The silver rate in Kerala is set daily by the Kerala Gold &amp; Silver Merchants Association (KGSMA), the same body that sets gold rates. Like gold, the rate is uniform across all districts — Kochi, Trivandrum, Thrissur, and Kozhikode all follow the same board rate.
+            Unlike gold — where Kerala has an official AKGSMA board rate — silver largely follows the{" "}
+            <strong className="text-zinc-700 dark:text-zinc-300">national market price</strong> (international
+            silver converted to INR, plus duty). The rate shown here is an indicative 999 fine silver
+            price for Kerala, updated daily. Because silver trades on a national market, it is
+            effectively the same across Kochi, Trivandrum, Thrissur, Kozhikode and every other district.
           </p>
 
           <p>
@@ -228,7 +232,7 @@ export default async function SilverRatePage() {
 
           <h3 className="text-base font-bold text-zinc-800 dark:text-zinc-200">999 fine vs 925 sterling — which is which?</h3>
           <p>
-            <strong className="text-zinc-700 dark:text-zinc-300">999 (fine)</strong> is nearly pure silver — soft, used for coins, bars and investment. <strong className="text-zinc-700 dark:text-zinc-300">925 (sterling)</strong> is 92.5% silver with 7.5% copper for hardness, used for most jewellery, anklets and cutlery because pure silver bends too easily. The board rate above is for 999; a 925 piece is priced at about 92.5% of it, plus making charges.
+            <strong className="text-zinc-700 dark:text-zinc-300">999 (fine)</strong> is nearly pure silver — soft, used for coins, bars and investment. <strong className="text-zinc-700 dark:text-zinc-300">925 (sterling)</strong> is 92.5% silver with 7.5% copper for hardness, used for most jewellery, anklets and cutlery because pure silver bends too easily. The rate above is for 999; a 925 piece is priced at about 92.5% of it, plus making charges.
           </p>
 
           <h3 className="text-base font-bold text-zinc-800 dark:text-zinc-200">What Keralites buy silver for</h3>

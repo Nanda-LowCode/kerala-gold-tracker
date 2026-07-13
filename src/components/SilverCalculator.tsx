@@ -4,7 +4,7 @@ import { useState } from "react";
 
 const GST_RATE = 0.03;
 
-// Purity factor applied to the 999 board rate.
+// Purity factor applied to the 999 silver rate.
 const PURITIES = [
   { value: "999", label: "999 fine", factor: 1 },
   { value: "925", label: "925 sterling", factor: 0.925 },
@@ -139,7 +139,7 @@ export default function SilverCalculator({ rate999 }: { rate999: number }) {
           </div>
         </div>
         <p className="mt-3 text-[10px] text-zinc-500 dark:text-zinc-500">
-          Estimate at today&apos;s 999 board rate. Actual cost varies by jeweller, design and current market.
+          Estimate at today&apos;s 999 silver rate. Actual cost varies by jeweller, design and current market.
         </p>
       </section>
     </div>

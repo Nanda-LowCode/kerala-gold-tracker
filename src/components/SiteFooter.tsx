@@ -82,7 +82,7 @@ export default function SiteFooter() {
 
         <div className="mt-8 border-t border-zinc-200/60 pt-5 text-center text-xs text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
           <p className="font-medium">
-            Rates: All Kerala Gold &amp; Silver Merchants Association (AKGSMA) board rate · For reference only — confirm at your jeweller
+            Gold: AKGSMA Kerala board rate · Silver: national market rate · For reference only — confirm at your jeweller
           </p>
           <p className="mt-1.5">© 2026 LiveGold Kerala</p>
         </div>
