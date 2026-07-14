@@ -41,18 +41,27 @@ export default function AboutPage() {
               <div className="flex gap-4">
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100 text-sm font-bold text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">1</div>
                 <div>
-                  <p className="font-semibold text-zinc-800 dark:text-zinc-200">Malabar Gold &amp; Diamonds (Primary)</p>
+                  <p className="font-semibold text-zinc-800 dark:text-zinc-200">AKGSMA — All Kerala Gold &amp; Silver Merchants Association (Primary)</p>
                   <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                    We fetch the official Kerala rate directly from Malabar Gold &amp; Diamonds' rate API. As Kerala's largest jewellery chain, their published rate matches the KGSMA board rate exactly.
+                    Our gold rate comes straight from the official AKGSMA board rate — the single daily rate every jeweller in Kerala follows, from Trivandrum to Kasaragod. AKGSMA publishes 22K and 18K directly; we derive 24K from the 22K purity ratio.
                   </p>
                 </div>
               </div>
               <div className="flex gap-4">
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100 text-sm font-bold text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">2</div>
                 <div>
-                  <p className="font-semibold text-zinc-800 dark:text-zinc-200">BankBazaar Kerala (Fallback)</p>
+                  <p className="font-semibold text-zinc-800 dark:text-zinc-200">BankBazaar Kerala (Gold fallback &amp; silver source)</p>
                   <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                    If the primary source is unavailable, we fall back to BankBazaar's Kerala rate pages. For gold these track the same AKGSMA board rate; the silver figure reflects the national market price (silver has no separate Kerala board rate).
+                    If AKGSMA is unavailable, we fall back to the BankBazaar Kerala gold rate, which mirrors the board rate. BankBazaar is also where our silver figure comes from — silver tracks the national market price, as it has no separate Kerala board rate.
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100 text-sm font-bold text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">3</div>
+                <div>
+                  <p className="font-semibold text-zinc-800 dark:text-zinc-200">IBJA — India Bullion &amp; Jewellers Association (Last resort)</p>
+                  <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+                    As a final fallback we use the IBJA wholesale benchmark. For Kerala, the IBJA wholesale rate tracks retail almost exactly (roughly 0% markup, verified June 2026), so it stays accurate even when both primary sources are unavailable.
                   </p>
                 </div>
               </div>

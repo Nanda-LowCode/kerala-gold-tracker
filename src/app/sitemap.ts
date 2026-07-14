@@ -135,9 +135,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ]
 
+  // Crawl-budget focus: on a low-authority domain, submitting 100+ near-identical
+  // daily snapshots buries the ~90 pages that actually rank. Submit only the most
+  // recent 30 days; older /news/[date] pages stay live and crawlable via internal
+  // links, just not actively pushed to Google. Re-expand as authority grows.
+  const recentNewsDates = newsDates.slice(-30)
   const newsRoutes: MetadataRoute.Sitemap = [
     { url: `${BASE}/news`, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 0.7 },
-    ...newsDates.map((date) => ({
+    ...recentNewsDates.map((date) => ({
       url: `${BASE}/news/${date}`,
       lastModified: new Date(date),
       changeFrequency: 'monthly' as const,
@@ -148,6 +153,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Historical year + month archive pages, enumerated from the (contiguous)
   // data range so they cover the full backfill — a "fetch all rows" approach
   // silently truncates at Supabase's 1,000-row cap.
+  //
+  // Year hubs (only a handful) are all submitted. Monthly archives, however,
+  // are 70+ thin templated pages going back to 2020; on a low-authority domain
+  // they eat crawl budget that should go to the money pages. So we submit only
+  // the CURRENT year's months and let older ones be discovered via internal
+  // links (they remain live). Re-expand once the domain earns more trust.
   const yearRoutes: MetadataRoute.Sitemap = []
   const monthRoutes: MetadataRoute.Sitemap = []
   if (firstDate && lastDate) {
@@ -162,7 +173,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.6,
       })
     }
-    const cursor = new Date(start.getFullYear(), start.getMonth(), 1)
+    const cursor = new Date(end.getFullYear(), 0, 1)
     const endMonth = new Date(end.getFullYear(), end.getMonth(), 1)
     while (cursor <= endMonth) {
       monthRoutes.push({
