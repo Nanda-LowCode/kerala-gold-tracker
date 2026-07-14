@@ -40,6 +40,7 @@ const CATEGORY_MAP: Record<string, PostCategory> = {
   "how-to-sell-old-gold-kerala": "Money & Tax",
   "gold-loan-kerala-guide": "Money & Tax",
   "nri-gold-rules-india-2026": "Money & Tax",
+  "kerala-gold-rate-nri-gulf-dirhams": "Buying Guides",
   "digital-gold-india-guide": "Investing",
   "gold-etf-vs-physical-gold-india": "Investing",
   "gold-vs-fixed-deposit-india": "Investing",
