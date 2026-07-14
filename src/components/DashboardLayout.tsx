@@ -22,6 +22,8 @@ import SilverRateCard from "@/components/SilverRateCard";
 import ExchangeTicker from "@/components/ExchangeTicker";
 import { RateCard, RateBoard } from "@/components/RateCards";
 import { VerdictDot } from "@/components/VerdictPill";
+import CurrencyRate from "@/components/CurrencyRate";
+import { getFxRates } from "@/lib/fx";
 import { GoldRate } from "@/lib/types";
 import { getCityData, getCityTowns } from "@/lib/cityData";
 import { getAllPosts } from "@/lib/mdx";
@@ -91,7 +93,10 @@ export default async function DashboardLayout({
   const yesterday = history[1] ?? null;
   const cityData = getCityData(cityName);
   const cityTowns = getCityTowns(cityName);
-  const recentNewsEntries = await getRecentNewsWithVerdicts(3);
+  const [recentNewsEntries, fx] = await Promise.all([
+    getRecentNewsWithVerdicts(3),
+    getFxRates(),
+  ]);
 
   const rate21k = today ? today.rate_22k_1g * (21 / 22) : 0;
   const yesterday21k = yesterday ? yesterday.rate_22k_1g * (21 / 22) : null;
@@ -340,6 +345,12 @@ export default async function DashboardLayout({
             <p className="-mt-1 text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">
               22K &amp; 18K are the official AKGSMA Kerala board rates. 24K is derived from the 916 rate by purity (22K&nbsp;&times;&nbsp;24&frasl;22), reflecting pure-gold value.
             </p>
+
+            {/* Multi-currency conversion — turns the Kerala rate into a diaspora
+                magnet (Gulf/NRI). Renders only when live FX is available. */}
+            {fx && (
+              <CurrencyRate rate22k={today.rate_22k_1g} rate24k={today.rate_24k_1g} fx={fx} />
+            )}
 
             {/* Should you buy today? — verdict + 30-day percentile signal */}
             <BuyTodayCard verdict={todayVerdict} cheaperThanPct={cheaperThanPct} windowDays={Math.min(BUY_WINDOW, history.length)} />
