@@ -36,6 +36,7 @@ export default function GoldCalculator({
   const [unit, setUnit] = useState<Unit>("gram");
   const [weightValue, setWeightValue] = useState<number | "">(8);
   const [makingChargePercent, setMakingChargePercent] = useState<number | "">(10);
+  const [gstIncluded, setGstIncluded] = useState(true);
 
   const rates: Record<Karat, number> = {
     "18k": rate18k,
@@ -52,7 +53,7 @@ export default function GoldCalculator({
   const tolas = parsedGrams / TOLA;
   const basePrice = parsedGrams * currentRate;
   const makingCharges = basePrice * (parsedMaking / 100);
-  const gst = (basePrice + makingCharges) * 0.03;
+  const gst = gstIncluded ? (basePrice + makingCharges) * 0.03 : 0;
   const totalPrice = basePrice + makingCharges + gst;
 
   function handleUnitChange(newUnit: Unit) {
@@ -225,6 +226,28 @@ export default function GoldCalculator({
                 </div>
               </div>
             </div>
+
+            {/* GST toggle */}
+            <div>
+              <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                GST
+              </label>
+              <div className="flex gap-1.5 rounded-lg bg-zinc-100/70 dark:bg-zinc-800/70 p-1">
+                {([true, false] as const).map((inc) => (
+                  <button
+                    key={String(inc)}
+                    onClick={() => setGstIncluded(inc)}
+                    className={`flex-1 rounded-md px-2 py-1.5 text-xs font-semibold transition-all sm:text-sm ${
+                      gstIncluded === inc
+                        ? "bg-amber-500 text-white shadow-sm ring-1 ring-amber-600/50 dark:bg-amber-600 dark:ring-amber-500/50"
+                        : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+                    }`}
+                  >
+                    {inc ? "Incl. 3% GST" : "Excl. GST"}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Output Section */}
@@ -252,7 +275,7 @@ export default function GoldCalculator({
             </div>
 
             <div className="mb-4 flex items-center justify-between text-sm">
-              <span className="text-zinc-500 dark:text-zinc-400">GST (3%)</span>
+              <span className="text-zinc-500 dark:text-zinc-400">{gstIncluded ? "GST (3%)" : "GST (not applied)"}</span>
               <span className="font-semibold text-zinc-800 dark:text-zinc-200">
                 {formatCurrency(gst)}
               </span>

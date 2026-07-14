@@ -24,13 +24,14 @@ export default function SilverCalculator({ rate999 }: { rate999: number }) {
   const [purity, setPurity] = useState("999");
   const [form, setForm] = useState("jewellery");
   const [makingPct, setMakingPct] = useState(12);
+  const [gstIncluded, setGstIncluded] = useState(true);
 
   const g = typeof grams === "number" ? grams : 0;
   const factor = PURITIES.find((p) => p.value === purity)?.factor ?? 1;
 
   const silverValue = g * rate999 * factor;
   const makingCharge = silverValue * (makingPct / 100);
-  const gst = (silverValue + makingCharge) * GST_RATE;
+  const gst = gstIncluded ? (silverValue + makingCharge) * GST_RATE : 0;
   const total = silverValue + makingCharge + gst;
 
   return (
@@ -115,6 +116,27 @@ export default function SilverCalculator({ rate999 }: { rate999: number }) {
         </div>
       </section>
 
+      {/* GST toggle */}
+      <section className="space-y-2">
+        <label className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">GST</label>
+        <div className="flex gap-2">
+          {([true, false] as const).map((inc) => (
+            <button
+              key={String(inc)}
+              type="button"
+              onClick={() => setGstIncluded(inc)}
+              className={`flex-1 rounded-xl px-3 py-2 text-sm font-semibold transition-colors ${
+                gstIncluded === inc
+                  ? "bg-slate-700 text-white dark:bg-slate-600"
+                  : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400"
+              }`}
+            >
+              {inc ? "Incl. 3% GST" : "Excl. GST"}
+            </button>
+          ))}
+        </div>
+      </section>
+
       {/* Estimate */}
       <section className="rounded-xl border border-slate-200/70 bg-slate-50/60 px-5 py-4 dark:border-zinc-700 dark:bg-zinc-900">
         <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Estimate</h2>
@@ -128,7 +150,7 @@ export default function SilverCalculator({ rate999 }: { rate999: number }) {
             <span className="font-medium">{inr(makingCharge)}</span>
           </div>
           <div className="flex justify-between text-zinc-600 dark:text-zinc-400">
-            <span>GST (3%)</span>
+            <span>{gstIncluded ? "GST (3%)" : "GST (not applied)"}</span>
             <span className="font-medium">{inr(gst)}</span>
           </div>
           <div className="border-t border-slate-200 pt-2 dark:border-zinc-700">
