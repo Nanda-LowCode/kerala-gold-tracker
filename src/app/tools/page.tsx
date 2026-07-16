@@ -46,9 +46,9 @@ const TOOLS: ToolEntry[] = [
   },
   {
     slug: "pavan-to-gram-calculator",
-    title: "Pavan ↔ Gram Converter",
+    title: "Gram to Pavan Converter",
     blurb:
-      "Quickly switch between pavan (sovereign), gram, tola, and ounce — handy for cross-checking quotes.",
+      "Convert grams to pavan (sovereign), tola and ounce — 8g, 20g, 40g and more — with today's gold value.",
     badge: "Units",
   },
   {
