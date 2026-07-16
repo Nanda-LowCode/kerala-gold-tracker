@@ -6,14 +6,14 @@ import PavanCalculator from "@/components/PavanCalculator";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Pavan to Gram Gold Calculator — Kerala Sovereign & Tola Converter",
+  title: "Gram to Pavan & Sovereign Converter — Kerala Gold Rate",
   description:
-    "Convert between pavan, sovereign, gram, and tola instantly and see the gold value at today's Kerala rate. 1 pavan = 8 grams. Free gold unit converter for Kerala buyers.",
+    "Convert grams to pavan, sovereign and tola in one tap — 8g, 10g, 20g, 40g, 100g — and see the gold value at today's Kerala 916 rate. 1 pavan = 8 grams. Free converter.",
   alternates: { canonical: "/tools/pavan-to-gram-calculator" },
   openGraph: {
-    title: "Pavan to Gram Gold Calculator — Kerala",
+    title: "Gram to Pavan Converter — Kerala Gold Rate",
     description:
-      "Convert pavan, sovereign, gram, and tola with live Kerala gold rates. Free gold unit converter.",
+      "Convert grams to pavan, sovereign and tola with today's Kerala gold value. 1 pavan = 8 grams. Free converter.",
     url: "https://www.livegoldkerala.com/tools/pavan-to-gram-calculator",
   },
 };
@@ -67,6 +67,15 @@ const REFERENCE_ROWS = [
   { label: "10 Grams", grams: 10 },
   { label: "1 Troy Ounce", grams: 31.1035 },
 ];
+
+// Common gram weights people search for ("40 gram to pavan", "20 gram how many
+// pavan", "8 gram gold rate today"), each shown as pavan + today's value.
+const GRAM_TO_PAVAN = [8, 10, 16, 20, 24, 32, 40, 50, 100];
+
+function pavanLabel(grams: number): string {
+  const p = grams / 8;
+  return Number.isInteger(p) ? `${p} pavan` : `${p.toFixed(2)} pavan`;
+}
 
 export default async function PavanToGramCalculatorPage() {
   const rates = await getLatestRates();
@@ -133,6 +142,14 @@ export default async function PavanToGramCalculatorPage() {
       },
       {
         "@type": "Question",
+        name: "How do I convert grams to pavan?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Divide the weight in grams by 8, because 1 pavan equals 8 grams. So 40 grams = 5 pavan, 20 grams = 2.5 pavan, 16 grams = 2 pavan, and 8 grams = 1 pavan.",
+        },
+      },
+      {
+        "@type": "Question",
         name: "What is a tola in gold measurement?",
         acceptedAnswer: {
           "@type": "Answer",
@@ -158,11 +175,11 @@ export default async function PavanToGramCalculatorPage() {
       <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-4 py-8 md:py-12">
         <div>
           <h1 className="text-2xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100 md:text-3xl">
-            Pavan to Gram Gold Calculator
+            Gram to Pavan Gold Converter (Kerala)
           </h1>
           <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-            Convert between pavan, sovereign, gram, and tola — and instantly see the gold value at
-            today&apos;s Kerala rate.
+            Convert grams to pavan, sovereign and tola — 8g, 10g, 20g, 40g and more — and instantly
+            see the gold value at today&apos;s Kerala 916 rate. 1 pavan = 8 grams.
           </p>
         </div>
 
@@ -230,6 +247,48 @@ export default async function PavanToGramCalculatorPage() {
               </tbody>
             </table>
           </div>
+        </section>
+
+        {/* Grams → Pavan quick table — targets "40 gram to pavan", "8 gram
+            gold rate today" and similar high-volume conversion searches. */}
+        <section className="space-y-4">
+          <h2 className="text-base font-bold text-zinc-800 dark:text-zinc-100 md:text-lg">
+            Grams to pavan conversion (with today&apos;s gold value)
+          </h2>
+          <div className="overflow-x-auto rounded-2xl border border-zinc-200/70 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-zinc-100 dark:border-zinc-800">
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">Grams</th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500">Pavan</th>
+                  {rates && <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500">22K Value</th>}
+                  {rates && <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500">24K Value</th>}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
+                {GRAM_TO_PAVAN.map((g) => (
+                  <tr key={g} className="transition-colors hover:bg-amber-50/30 dark:hover:bg-zinc-800/50">
+                    <td className="px-4 py-3 font-medium text-zinc-700 dark:text-zinc-300">{g} grams</td>
+                    <td className="px-4 py-3 text-right text-zinc-600 dark:text-zinc-400">{pavanLabel(g)}</td>
+                    {rates && (
+                      <td className="px-4 py-3 text-right font-semibold text-zinc-800 dark:text-zinc-200">
+                        ₹{Math.round(g * rates.rate_22k_1g).toLocaleString("en-IN")}
+                      </td>
+                    )}
+                    {rates && (
+                      <td className="px-4 py-3 text-right font-bold text-amber-700 dark:text-amber-400">
+                        ₹{Math.round(g * rates.rate_24k_1g).toLocaleString("en-IN")}
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400">
+            To convert grams to pavan, divide by 8 (1 pavan = 8 grams). So 40 grams = 5 pavan,
+            20 grams = 2.5 pavan, and 8 grams = 1 pavan. Values use today&apos;s Kerala board rate.
+          </p>
         </section>
 
         {/* Explainer */}

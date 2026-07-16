@@ -280,7 +280,7 @@ export default async function DashboardLayout({
                   />
                 </svg>
                 <span className="text-[10px] sm:text-xs font-semibold text-emerald-700 dark:text-emerald-400">
-                  Verified Kerala Board Rate
+                  Verified AKGSMA Board Rate
                 </span>
               </div>
               <h1 className="mt-1 text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 md:mt-4 md:text-3xl">
