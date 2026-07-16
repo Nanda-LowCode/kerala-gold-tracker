@@ -9,12 +9,12 @@ const BASE = "https://www.livegoldkerala.com";
 export const metadata: Metadata = {
   title: "Kerala Gold Price Trends (2020–2026): How 22K Gold Tripled | LiveGold Kerala",
   description:
-    "A data study of Kerala gold prices since 2020: 22K gold has tripled (+200%), with the steepest rise in 2024–2026. Year-by-year averages, highs and lows from the Kerala board rate.",
+    "A data study of Kerala gold prices since 2020: 22K gold has more than tripled, far outpacing bank fixed deposits and inflation. Year-by-year averages, annual return (CAGR), all-time high, and what ₹1 lakh of gold would be worth now.",
   alternates: { canonical: "/kerala-gold-price-trends" },
   openGraph: {
     title: "Kerala Gold Price Trends (2020–2026) — A Data Study",
     description:
-      "How 22K gold tripled in Kerala since 2020. Year-by-year averages, the 2024–2026 surge, and what ₹1 lakh of gold would be worth now.",
+      "How 22K gold tripled in Kerala since 2020, vs a bank FD and inflation. Year-by-year averages, the 2024–2026 surge, and what ₹1 lakh of gold would be worth now.",
     url: `${BASE}/kerala-gold-price-trends`,
     type: "article",
   },
@@ -80,10 +80,24 @@ export default async function GoldPriceTrendsPage() {
   const gramsFor1L = 100000 / firstRate;
   const worthNow = gramsFor1L * lastRate;
 
+  // Annualised return (CAGR) over the exact period, and an illustrative
+  // comparison against a bank FD and inflation on the same ₹1,00,000.
+  const yearsElapsed =
+    (new Date(last.date + "T00:00:00").getTime() - new Date(first.date + "T00:00:00").getTime()) /
+    (365.25 * 86400000);
+  const cagr = (Math.pow(lastRate / firstRate, 1 / yearsElapsed) - 1) * 100;
+  const FD_RATE = 0.065; // representative average Indian bank FD over the period
+  const INFLATION = 0.055; // representative average CPI over the period
+  const fdWorth = 100000 * Math.pow(1 + FD_RATE, yearsElapsed);
+  const inflWorth = 100000 * Math.pow(1 + INFLATION, yearsElapsed);
+
+  // The year that set the all-time high (for the "peaked then eased" note).
+  const highYear = annual.find((a) => a.high_22k === allHigh)?.yr ?? lastYear;
+
   const stats = [
     { label: `Total rise (22K, ${firstYear}–${lastYear})`, value: `+${totalPct}%` },
     { label: "Price multiple", value: `${multiple}×` },
-    { label: `${firstYear} avg → ${lastYear} avg`, value: `${inr(annual[0].avg_22k)} → ${inr(annual[annual.length - 1].avg_22k)}` },
+    { label: "Annual return (CAGR)", value: `~${cagr.toFixed(0)}%/yr` },
     { label: "All-time high (22K/g)", value: inr(allHigh) },
   ];
 
@@ -182,23 +196,62 @@ export default async function GoldPriceTrendsPage() {
             22K gold roughly doubled in barely two years — driven by global gold demand, a softer
             rupee, and safe-haven buying.
           </p>
+          <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+            22K gold reached an all-time high of <strong>{inr(allHigh)}/g</strong> in {highYear}
+            {lastRate < allHigh
+              ? `, and has since eased to ${inr(lastRate)}/g — about ${Math.round(((allHigh - lastRate) / allHigh) * 100)}% off the peak.`
+              : "."}{" "}
+            Day-to-day movements are shown on our{" "}
+            <Link href="/gold-rate-history" className="font-semibold text-amber-700 hover:underline dark:text-amber-400">
+              full rate history
+            </Link>.
+          </p>
         </section>
 
-        {/* Investment angle */}
+        {/* Gold vs FD vs inflation — the comparison Kerala savers actually search for */}
         <section className="mt-10 rounded-2xl border border-amber-200/60 bg-gradient-to-br from-amber-50 to-white p-5 dark:border-amber-900/40 dark:from-amber-950/20 dark:to-zinc-900">
           <h2 className="text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
-            Has gold been a good investment in Kerala?
+            Gold vs a bank FD vs inflation
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
-            On the metal price alone — yes, strongly. {inr(100000)} of 22K gold bought in{" "}
-            {firstYear} (about {gramsFor1L.toFixed(1)} g at {inr(firstRate)}/g) would be worth roughly{" "}
-            <strong>{inr(worthNow)}</strong> today at {inr(lastRate)}/g. That is the metal value only —
-            making charges and 3% GST add to what you pay at the counter, and resale is on the gold
-            value, not the making charge. See how that maths works in our{" "}
+            The question every Kerala saver asks: was gold better than leaving the money in the bank?
+            Take {inr(100000)} in {firstYear} (about {gramsFor1L.toFixed(1)} g of 22K at {inr(firstRate)}/g).
+            Over {yearsElapsed.toFixed(1)} years, here is what it became:
+          </p>
+          <div className="mt-4 space-y-2.5">
+            {[
+              { label: "22K gold", sub: `metal value · ~${cagr.toFixed(0)}%/yr`, value: worthNow, accent: true },
+              { label: "Bank fixed deposit", sub: "at ~6.5% / yr", value: fdWorth, accent: false },
+              { label: "Just keeping up with inflation", sub: "at ~5.5% / yr", value: inflWorth, accent: false },
+            ].map((row) => (
+              <div key={row.label} className="flex items-center gap-3">
+                <div className="w-36 shrink-0 sm:w-44">
+                  <p className="text-xs font-bold text-zinc-800 dark:text-zinc-200">{row.label}</p>
+                  <p className="text-[10px] text-zinc-500 dark:text-zinc-400">{row.sub}</p>
+                </div>
+                <div className="relative h-7 flex-1 overflow-hidden rounded-md bg-zinc-100 dark:bg-zinc-800">
+                  <div
+                    className={`flex h-full items-center justify-end rounded-md pr-2 ${
+                      row.accent
+                        ? "bg-gradient-to-r from-amber-400 to-amber-600"
+                        : "bg-gradient-to-r from-zinc-400 to-zinc-500 dark:from-zinc-600 dark:to-zinc-700"
+                    }`}
+                    style={{ width: `${Math.max((row.value / worthNow) * 100, 14)}%` }}
+                  >
+                    <span className="text-[11px] font-bold text-white">{inr(row.value)}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
+            Gold is the metal value only (excludes making charges &amp; 3% GST; resale is on the gold
+            value, not making charges). FD and inflation use representative average rates over the
+            period and are illustrative, not guaranteed. See the full{" "}
             <Link href="/blog/gold-vs-fixed-deposit-india" className="font-semibold text-amber-700 hover:underline dark:text-amber-400">
               gold vs fixed deposit
             </Link>{" "}
-            comparison.
+            breakdown.
           </p>
         </section>
 
