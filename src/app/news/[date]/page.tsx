@@ -83,6 +83,30 @@ function formatLongDate(d: string): string {
   });
 }
 
+// A daily update is indexable only while it's among the most-recent board-rate
+// dates — the SAME window the sitemap submits (see src/app/sitemap.ts, which
+// keeps newsDates.slice(-30)). Older snapshots are thin/templated, so Google
+// crawls-but-won't-index them and they pile up in GSC's "Crawled - currently
+// not indexed" bucket. noindex-ing them moves them to the intentional
+// "Excluded by noindex" state and concentrates crawl budget on fresh pages.
+// Kept follow:true so any link equity still flows. Mirroring the sitemap's
+// exact cutoff guarantees no page is ever both in-sitemap and noindexed.
+const RECENT_NEWS_WINDOW = 30;
+
+async function getRecentNewsCutoff(): Promise<string | null> {
+  const supabase = createSupabaseReadClient();
+  const { data } = await supabase
+    .from("daily_gold_rates")
+    .select("date")
+    .eq("city", "Kochi")
+    .neq("consensus_sources", "backfill-yahoo-calibrated")
+    .order("date", { ascending: false })
+    .limit(RECENT_NEWS_WINDOW);
+  const rows = data ?? [];
+  // Oldest of the most-recent N dates = the indexing cutoff.
+  return rows.length > 0 ? (rows[rows.length - 1].date as string) : null;
+}
+
 type RouteParams = { params: Promise<{ date: string }> };
 
 export async function generateMetadata({ params }: RouteParams): Promise<Metadata> {
@@ -95,11 +119,18 @@ export async function generateMetadata({ params }: RouteParams): Promise<Metadat
   const longDate = formatLongDate(today.date);
   const title = `Kerala Gold Rate on ${longDate}: 22K at ₹${today.rate_22k_1g.toLocaleString("en-IN")}/g`;
   const description = `Kerala gold rate on ${longDate}: 22K at ₹${today.rate_22k_1g}/g (₹${(today.rate_22k_1g * 8).toLocaleString("en-IN")}/pavan), 24K at ₹${today.rate_24k_1g}/g. Daily commentary and trend context.`;
+
+  // Noindex daily snapshots older than the sitemap's recent window (thin/
+  // templated pages that otherwise clog "Crawled - not indexed").
+  const cutoff = await getRecentNewsCutoff();
+  const isRecent = !cutoff || today.date >= cutoff;
+
   return {
     title,
     description,
     alternates: { canonical: `/news/${today.date}` },
     openGraph: { title, description, type: "article" },
+    ...(isRecent ? {} : { robots: { index: false, follow: true } }),
   };
 }
 
