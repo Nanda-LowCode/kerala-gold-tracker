@@ -4,7 +4,7 @@ import { createSupabaseReadClient } from "@/lib/supabase";
 import type { WeddingCommunity } from "@/lib/database.types";
 import WeddingBudgetCalculator from "@/components/WeddingBudgetCalculator";
 
-export const revalidate = 3600;
+export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
 export const metadata: Metadata = {
   title: "Kerala Wedding Gold Budget Calculator — How Much Gold Do You Need? | LiveGold Kerala",

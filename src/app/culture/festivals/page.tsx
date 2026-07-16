@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { createSupabaseReadClient } from "@/lib/supabase";
 
-export const revalidate = 3600;
+export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
 export const metadata: Metadata = {
   title: "Kerala Festival Gold Calendar 2026 — Onam, Chingam 1 & Auspicious Gold-Buying Days",

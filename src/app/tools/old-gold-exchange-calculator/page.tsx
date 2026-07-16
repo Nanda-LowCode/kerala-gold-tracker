@@ -3,7 +3,7 @@ import Link from "next/link";
 import { createSupabaseReadClient } from "@/lib/supabase";
 import OldGoldCalculator from "@/components/OldGoldCalculator";
 
-export const revalidate = 3600;
+export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
 export const metadata: Metadata = {
   title: "Old Gold Exchange & Melting Loss Calculator | Kerala",

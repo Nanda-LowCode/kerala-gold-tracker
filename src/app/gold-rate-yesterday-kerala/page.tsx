@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { getHistory } from "../page";
 
-export const revalidate = 3600;
+export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
 export async function generateMetadata(): Promise<Metadata> {
   const history = await getHistory();

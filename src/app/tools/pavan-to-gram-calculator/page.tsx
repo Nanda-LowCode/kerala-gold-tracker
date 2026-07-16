@@ -3,7 +3,7 @@ import Link from "next/link";
 import { createSupabaseReadClient } from "@/lib/supabase";
 import PavanCalculator from "@/components/PavanCalculator";
 
-export const revalidate = 3600;
+export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
 export const metadata: Metadata = {
   title: "Gram to Pavan & Sovereign Converter — Kerala Gold Rate",

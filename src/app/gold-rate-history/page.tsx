@@ -4,7 +4,7 @@ import { getHistory } from "../page";
 import PriceChartLazy from "@/components/PriceChartLazy";
 import { createSupabaseReadClient } from "@/lib/supabase";
 
-export const revalidate = 3600;
+export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
 export const metadata: Metadata = {
   title: "Kerala Gold Rate History — Daily 22K & 24K Price Archive | LiveGold Kerala",

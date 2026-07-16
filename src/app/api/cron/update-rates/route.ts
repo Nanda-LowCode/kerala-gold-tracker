@@ -472,8 +472,18 @@ export async function GET(request: NextRequest) {
     revalidatePath("/ml");
     // Old-gold resale page
     revalidatePath("/old-gold-rate-kerala");
-    // Silver price calculator (shows the live silver rate)
+    // Calculators + widgets that read the live rate server-side. These are now
+    // on a 24h ISR interval to cut ISR writes, so the cron is what keeps them
+    // same-day fresh whenever the board rate changes.
     revalidatePath("/tools/silver-price-calculator");
+    revalidatePath("/tools/gold-making-charge-calculator");
+    revalidatePath("/tools/pavan-to-gram-calculator");
+    revalidatePath("/tools/hallmark-gold-calculator");
+    revalidatePath("/tools/old-gold-exchange-calculator");
+    revalidatePath("/tools/gold-import-duty-calculator");
+    revalidatePath("/culture/weddings/budget-calculator");
+    revalidatePath("/kerala-gold-price-trends");
+    revalidatePath("/embed");
 
     // Ping IndexNow so Bing/Yandex reindex immediately
     if (process.env.INDEXNOW_KEY) {

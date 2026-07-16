@@ -3,7 +3,7 @@ import Link from "next/link";
 import { createSupabaseReadClient } from "@/lib/supabase";
 import GoldCalculator from "@/components/GoldCalculator";
 
-export const revalidate = 3600;
+export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
 export const metadata: Metadata = {
   title: "Gold Making Charges in Kerala 2026 — Calculator (22K, 24K + GST)",

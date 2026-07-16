@@ -8,7 +8,7 @@ import { computeVerdict, type Verdict } from "@/lib/verdict";
 import { VerdictDot } from "@/components/VerdictPill";
 import { NewsSparkline } from "@/components/NewsSparkline";
 
-export const revalidate = 3600;
+export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
 export const metadata: Metadata = {
   title: "Daily Kerala Gold Rate Updates — Live Gold Kerala",

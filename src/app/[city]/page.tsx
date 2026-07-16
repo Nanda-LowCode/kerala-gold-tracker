@@ -4,7 +4,7 @@ import DashboardLayout, { KERALA_CITIES } from "@/components/DashboardLayout";
 import { getHistory } from "../page";
 import { getCityData } from "@/lib/cityData";
 
-export const revalidate = 3600; // Revalidate every 60 minutes
+export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
 export function generateStaticParams() {
   return KERALA_CITIES.map((city) => ({

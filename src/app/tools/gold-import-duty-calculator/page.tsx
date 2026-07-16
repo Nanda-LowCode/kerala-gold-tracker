@@ -3,7 +3,7 @@ import Link from "next/link";
 import GoldImportDutyCalculator from "@/components/GoldImportDutyCalculator";
 import { createSupabaseReadClient } from "@/lib/supabase";
 
-export const revalidate = 3600;
+export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
 export const metadata: Metadata = {
   title: "NRI Gold Import Duty Calculator | Kerala",

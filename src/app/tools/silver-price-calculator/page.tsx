@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getHistory } from "@/app/page";
 import SilverCalculator from "@/components/SilverCalculator";
 
-export const revalidate = 3600;
+export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
 export const metadata: Metadata = {
   title: "Silver Price Calculator Kerala — Making Charges & GST | LiveGold Kerala",

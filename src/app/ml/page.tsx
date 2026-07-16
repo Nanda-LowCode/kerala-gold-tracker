@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { getHistory } from "@/app/page";
 
-export const revalidate = 3600;
+export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
 const inr = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
 

@@ -11,7 +11,7 @@ import { RangeBar } from "@/components/RangeBar";
 import { NewsSparkline } from "@/components/NewsSparkline";
 import { RateCard, RateBoard } from "@/components/RateCards";
 
-export const revalidate = 3600;
+export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 

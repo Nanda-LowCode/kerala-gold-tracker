@@ -3,7 +3,7 @@ import { createSupabaseReadClient } from "@/lib/supabase";
 import { GoldRate } from "@/lib/types";
 import DashboardLayout from "@/components/DashboardLayout";
 
-export const revalidate = 3600; // Revalidate every 60 minutes
+export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
 export async function getHistory(): Promise<GoldRate[]> {
   try {

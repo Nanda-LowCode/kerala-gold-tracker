@@ -1,6 +1,6 @@
 import { createSupabaseReadClient } from "@/lib/supabase";
 
-export const revalidate = 3600;
+export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
 // Self-contained, embeddable "Kerala gold rate today" widget. Served as a tiny
 // standalone HTML document (no site chrome) so other sites can drop it in an

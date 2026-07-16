@@ -3,7 +3,7 @@ import Link from "next/link";
 import { createSupabaseReadClient } from "@/lib/supabase";
 import HallmarkCalculator from "@/components/HallmarkCalculator";
 
-export const revalidate = 3600;
+export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
 export const metadata: Metadata = {
   title: "Hallmark Gold Value Calculator — 916, 750, 999 | LiveGold Kerala",
