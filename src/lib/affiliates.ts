@@ -21,7 +21,10 @@ const AMAZON_GOLD_COINS_BASE =
 export function getAffiliateOffers(): AffiliateOffer[] {
   const offers: AffiliateOffer[] = [];
 
-  const amazonTag = process.env.NEXT_PUBLIC_AMAZON_TAG;
+  // Amazon.in Associates tag. Env var wins (set NEXT_PUBLIC_AMAZON_TAG in Vercel
+  // to override, e.g. a site-specific tracking id); falls back to the account tag
+  // so the offer ships without needing an env var. The tag is public by design.
+  const amazonTag = process.env.NEXT_PUBLIC_AMAZON_TAG ?? "dashcamheros-21";
   if (amazonTag) {
     offers.push({
       id: "gold-coins",
