@@ -8,6 +8,7 @@ import TopTicker from "@/components/TopTicker";
 import SpotGoldTicker from "@/components/SpotGoldTicker";
 import EmailAlertForm from "@/components/EmailAlertForm";
 import AffiliateOffers from "@/components/AffiliateOffers";
+import AmazonGoldProducts from "@/components/AmazonGoldProducts";
 import BuyTodayCard from "@/components/BuyTodayCard";
 import GoldCalculator from "@/components/GoldCalculator";
 import OldGoldCalculator from "@/components/OldGoldCalculator";
@@ -480,6 +481,9 @@ export default async function DashboardLayout({
 
             {/* Affiliate / lead-gen offers — env-gated, renders only when configured */}
             <AffiliateOffers />
+
+            {/* Curated Amazon gold products (coins & pendants) */}
+            <AmazonGoldProducts />
 
             {/* History Table */}
             {/* Max range shown is 90 days — trim the serialized payload accordingly */}
