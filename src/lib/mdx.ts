@@ -27,6 +27,7 @@ const CATEGORY_MAP: Record<string, PostCategory> = {
   "22k-vs-24k-gold-which-to-buy-in-kerala": "Buying Guides",
   "best-time-to-buy-gold-in-kerala": "Buying Guides",
   "buy-gold-coins-kerala-guide": "Buying Guides",
+  "best-gold-coins-to-buy-kerala": "Buying Guides",
   "how-to-check-gold-purity-at-home": "Buying Guides",
   "gold-hallmarking-bis-916-guide": "Buying Guides",
   "wedding-gold-shopping-kerala": "Buying Guides",

@@ -6,9 +6,10 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import { getAllPosts, getPostBySlug, type PostMeta } from "@/lib/mdx";
 import CoinCTA from "@/components/CoinCTA";
+import AmazonGoldProducts from "@/components/AmazonGoldProducts";
 
-// Components usable inside blog MDX (e.g. <CoinCTA /> in buying guides).
-const mdxComponents = { CoinCTA };
+// Components usable inside blog MDX (e.g. <CoinCTA />, <AmazonGoldProducts />).
+const mdxComponents = { CoinCTA, AmazonGoldProducts };
 
 type Props = { params: Promise<{ slug: string }> };
 
