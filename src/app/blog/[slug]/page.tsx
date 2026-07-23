@@ -5,6 +5,10 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import { getAllPosts, getPostBySlug, type PostMeta } from "@/lib/mdx";
+import CoinCTA from "@/components/CoinCTA";
+
+// Components usable inside blog MDX (e.g. <CoinCTA /> in buying guides).
+const mdxComponents = { CoinCTA };
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -134,6 +138,7 @@ export default async function BlogPost({ params }: Props) {
                 pipe tables, which render as raw text without it. */}
             <MDXRemote
               source={post.content}
+              components={mdxComponents}
               options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
             />
           </div>
