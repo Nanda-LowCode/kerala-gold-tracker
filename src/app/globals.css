@@ -58,6 +58,13 @@ body {
 @keyframes text-shine { to { background-position: 200% center; } }
 .gold-text-shine { background-size: 200% auto; animation: text-shine 5s linear infinite; }
 
+/* Tactile press — buttons depress slightly when tapped/clicked. transform-only
+   (no layout shift); the transition eases the release. */
+@media (prefers-reduced-motion: no-preference) {
+  button:not(:disabled) { transition: transform 0.12s ease; }
+  button:not(:disabled):active { transform: scale(0.96); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .gold-shimmer::after,
   .animate-rise,

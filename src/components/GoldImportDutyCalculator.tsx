@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Calculator, Plane, Scale, User, CalendarClock, DollarSign } from "lucide-react";
 import { formatCurrency } from "@/lib/format";
+import AnimatedNumber from "@/components/AnimatedNumber";
 
 type Gender = "Male" | "Female";
 type StayDuration = "> 1 Year" | "6 to 12 Months" | "< 6 Months";
@@ -141,7 +142,7 @@ export default function GoldImportDutyCalculator({
               <p className="text-xs text-amber-700/80 dark:text-amber-700 mt-1">Payable in INR at Airport Customs</p>
             </div>
             <p className="text-3xl sm:text-4xl font-black text-amber-600 tracking-tight mt-3 sm:mt-0 drop-shadow-sm">
-              {formatCurrency(totalEstimatedDuty)}
+              <AnimatedNumber value={totalEstimatedDuty} format={formatCurrency} />
             </p>
           </div>
         </div>

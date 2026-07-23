@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import AnimatedNumber from "@/components/AnimatedNumber";
 
 const UNITS = [
   { id: "gram", label: "Gram", toGrams: 1 },
@@ -85,12 +86,12 @@ export default function PavanCalculator({ rate22k, rate24k }: { rate22k: number;
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900">
           <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500">22K Value</div>
-          <div className="mt-1 text-xl font-bold text-zinc-900 dark:text-zinc-100">{fmtRupees(totalGrams * rate22k)}</div>
+          <div className="mt-1 text-xl font-bold text-zinc-900 dark:text-zinc-100"><AnimatedNumber value={totalGrams * rate22k} format={fmtRupees} /></div>
           <div className="text-xs text-zinc-500">{fmtQty(totalGrams)}g × {fmtRupees(rate22k)}/g</div>
         </div>
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950/30">
           <div className="text-xs font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">24K Value</div>
-          <div className="mt-1 text-xl font-bold text-amber-700 dark:text-amber-400">{fmtRupees(totalGrams * rate24k)}</div>
+          <div className="mt-1 text-xl font-bold text-amber-700 dark:text-amber-400"><AnimatedNumber value={totalGrams * rate24k} format={fmtRupees} /></div>
           <div className="text-xs text-zinc-500">{fmtQty(totalGrams)}g × {fmtRupees(rate24k)}/g</div>
         </div>
       </div>

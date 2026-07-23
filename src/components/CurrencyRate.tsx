@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { FxCurrency, FxRates } from "@/lib/fx";
+import AnimatedNumber from "@/components/AnimatedNumber";
 
 const META: Record<FxCurrency, { flag: string; label: string; locale: string; dp: number }> = {
   AED: { flag: "🇦🇪", label: "UAE Dirham", locale: "en-AE", dp: 2 },
@@ -52,12 +53,14 @@ export default function CurrencyRate({
   }
 
   const perInr = fx.rates[cur]!; // currency units per 1 INR
-  const fmt = (inr: number) =>
+  // Formats an already-converted amount (so AnimatedNumber can tween the
+  // converted value and roll when you switch currency).
+  const fmtCur = (n: number) =>
     new Intl.NumberFormat(META[cur].locale, {
       style: "currency",
       currency: cur,
       maximumFractionDigits: META[cur].dp,
-    }).format(inr * perInr);
+    }).format(n);
 
   const rows = [
     { label: "22K (916)", perGram: rate22k, featured: true },
@@ -106,11 +109,11 @@ export default function CurrencyRate({
               {row.label}
             </p>
             <p className="mt-1 text-xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100">
-              {fmt(row.perGram)}
+              <AnimatedNumber value={row.perGram * perInr} format={fmtCur} />
               <span className="ml-1 text-xs font-medium text-zinc-500">/g</span>
             </p>
             <p className="mt-0.5 text-sm font-semibold text-zinc-600 dark:text-zinc-300">
-              {fmt(row.perGram * 8)}
+              <AnimatedNumber value={row.perGram * 8 * perInr} format={fmtCur} />
               <span className="ml-1 text-xs font-normal text-zinc-500">/pavan (8g)</span>
             </p>
           </div>

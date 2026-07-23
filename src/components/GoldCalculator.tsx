@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { formatCurrency } from "@/lib/format";
+import AnimatedNumber from "@/components/AnimatedNumber";
 
 const TOLA = 11.6638; // grams per tola (traditional Indian standard)
 
@@ -261,7 +262,7 @@ export default function GoldCalculator({
                 Gold Value ({karat.toUpperCase()})
               </span>
               <span className="font-semibold text-zinc-800 dark:text-zinc-200">
-                {formatCurrency(basePrice)}
+                <AnimatedNumber value={basePrice} format={formatCurrency} />
               </span>
             </div>
 
@@ -270,14 +271,14 @@ export default function GoldCalculator({
                 Making Charges ({parsedMaking}%)
               </span>
               <span className="font-semibold text-zinc-800 dark:text-zinc-200">
-                {formatCurrency(makingCharges)}
+                <AnimatedNumber value={makingCharges} format={formatCurrency} />
               </span>
             </div>
 
             <div className="mb-4 flex items-center justify-between text-sm">
               <span className="text-zinc-500 dark:text-zinc-400">{gstIncluded ? "GST (3%)" : "GST (not applied)"}</span>
               <span className="font-semibold text-zinc-800 dark:text-zinc-200">
-                {formatCurrency(gst)}
+                <AnimatedNumber value={gst} format={formatCurrency} />
               </span>
             </div>
 
@@ -292,7 +293,7 @@ export default function GoldCalculator({
                   </p>
                 </div>
                 <p className="bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent">
-                  {formatCurrency(totalPrice)}
+                  <AnimatedNumber value={totalPrice} format={formatCurrency} />
                 </p>
               </div>
             </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import AnimatedNumber from "@/components/AnimatedNumber";
 
 const GST_RATE = 0.03;
 
@@ -143,20 +144,20 @@ export default function SilverCalculator({ rate999 }: { rate999: number }) {
         <div className="space-y-2 text-sm">
           <div className="flex justify-between text-zinc-600 dark:text-zinc-400">
             <span>Silver ({g} g × {inr(rate999)}/g{purity === "925" ? " × 92.5%" : ""})</span>
-            <span className="font-medium">{inr(silverValue)}</span>
+            <span className="font-medium"><AnimatedNumber value={silverValue} format={inr} /></span>
           </div>
           <div className="flex justify-between text-zinc-600 dark:text-zinc-400">
             <span>Making charge ({makingPct}%)</span>
-            <span className="font-medium">{inr(makingCharge)}</span>
+            <span className="font-medium"><AnimatedNumber value={makingCharge} format={inr} /></span>
           </div>
           <div className="flex justify-between text-zinc-600 dark:text-zinc-400">
             <span>{gstIncluded ? "GST (3%)" : "GST (not applied)"}</span>
-            <span className="font-medium">{inr(gst)}</span>
+            <span className="font-medium"><AnimatedNumber value={gst} format={inr} /></span>
           </div>
           <div className="border-t border-slate-200 pt-2 dark:border-zinc-700">
             <div className="flex justify-between text-base font-extrabold text-zinc-900 dark:text-zinc-100">
               <span>Estimated total</span>
-              <span>{inr(total)}</span>
+              <span><AnimatedNumber value={total} format={inr} /></span>
             </div>
           </div>
         </div>

@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { sendGAEvent } from "@next/third-parties/google";
 import { formatCurrency } from "@/lib/format";
+import AnimatedNumber from "@/components/AnimatedNumber";
 
 interface OldGoldCalculatorProps {
   rate18k: number;
@@ -142,7 +143,7 @@ export default function OldGoldCalculator({
             </h3>
             
             <p className="text-center text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100 drop-shadow-sm">
-              {formatCurrency(netValue)}
+              <AnimatedNumber value={netValue} format={formatCurrency} />
             </p>
 
             <div className="mt-6 border-t border-zinc-200 dark:border-zinc-800 pt-4 text-center text-xs font-medium text-zinc-500 dark:text-zinc-400 space-y-1">
