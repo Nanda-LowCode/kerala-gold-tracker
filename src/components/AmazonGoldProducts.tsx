@@ -7,6 +7,8 @@
 // PA-API access is granted. All links are rel="sponsored nofollow" with inline
 // disclosure, per Google + ASCI rules.
 
+import { getAffiliateOffers } from "@/lib/affiliates";
+
 type Product = { title: string; emoji: string; url: string };
 
 const PRODUCTS: Product[] = [
@@ -39,6 +41,9 @@ const PRODUCTS: Product[] = [
 
 export default function AmazonGoldProducts() {
   if (PRODUCTS.length === 0) return null;
+  // "Browse the whole store" link — kept in sync with the Amazon tag (env or
+  // default) via the shared affiliates lib, so both stay on one tag.
+  const storeUrl = getAffiliateOffers().find((o) => o.id === "gold-coins")?.url;
 
   return (
     <section className="rounded-2xl border border-zinc-200/70 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
@@ -68,6 +73,17 @@ export default function AmazonGoldProducts() {
           </a>
         ))}
       </div>
+
+      {storeUrl && (
+        <a
+          href={storeUrl}
+          target="_blank"
+          rel="sponsored nofollow noopener"
+          className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-amber-700 hover:gap-1.5 dark:text-amber-400"
+        >
+          Browse more gold &amp; silver coins on Amazon <span aria-hidden>→</span>
+        </a>
+      )}
 
       <p className="mt-3 text-[10px] leading-relaxed text-zinc-500 dark:text-zinc-400">
         Sponsored links. We may earn a commission if you buy — at no extra cost to you. Prices &amp; availability shown on Amazon.

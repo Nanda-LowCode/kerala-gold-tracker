@@ -7,7 +7,11 @@ import { getAffiliateOffers } from "@/lib/affiliates";
  * affiliate links) and disclosed inline.
  */
 export default function AffiliateOffers() {
-  const offers = getAffiliateOffers();
+  // The Amazon gold-coins offer now lives in the dedicated AmazonGoldProducts
+  // grid, so exclude it here to avoid a duplicate Amazon block on the dashboard.
+  // This "Gold services" block is reserved for lead-gen offers (gold loan,
+  // digital gold) and stays hidden until one of those is configured.
+  const offers = getAffiliateOffers().filter((o) => o.id !== "gold-coins");
   if (offers.length === 0) return null;
 
   return (
