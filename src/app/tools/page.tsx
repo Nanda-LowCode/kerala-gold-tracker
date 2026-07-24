@@ -52,6 +52,13 @@ const TOOLS: ToolEntry[] = [
     badge: "Units",
   },
   {
+    slug: "gold-scheme-calculator",
+    title: "Gold Scheme Calculator",
+    blurb:
+      "Is a jeweller's monthly gold scheme worth it? See the 'free month' bonus vs the making charges — and vs buying coins.",
+    badge: "Schemes",
+  },
+  {
     slug: "silver-price-calculator",
     title: "Silver Price Calculator",
     blurb:

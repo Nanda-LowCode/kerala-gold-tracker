@@ -57,6 +57,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       'gold-import-duty-calculator',
       'hallmark-gold-calculator',
       'silver-price-calculator',
+      'gold-scheme-calculator',
     ].map((tool) => ({
       url: `${BASE}/tools/${tool}`,
       lastModified: TOOLS_DATE,

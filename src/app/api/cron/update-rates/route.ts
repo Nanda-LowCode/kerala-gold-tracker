@@ -481,6 +481,7 @@ export async function GET(request: NextRequest) {
     revalidatePath("/tools/hallmark-gold-calculator");
     revalidatePath("/tools/old-gold-exchange-calculator");
     revalidatePath("/tools/gold-import-duty-calculator");
+    revalidatePath("/tools/gold-scheme-calculator");
     revalidatePath("/culture/weddings/budget-calculator");
     revalidatePath("/kerala-gold-price-trends");
     revalidatePath("/embed");
