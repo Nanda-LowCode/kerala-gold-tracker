@@ -4,7 +4,7 @@ import { useState } from "react";
 import AnimatedNumber from "@/components/AnimatedNumber";
 
 const UNITS = [
-  { id: "gram", label: "Gram", toGrams: 1 },
+  { id: "gram", label: "Grams", toGrams: 1 },
   { id: "pavan", label: "Pavan", toGrams: 8 },
   { id: "sovereign", label: "Sovereign", toGrams: 8 },
   { id: "tola", label: "Tola", toGrams: 11.664 },
@@ -12,109 +12,169 @@ const UNITS = [
 
 type UnitId = (typeof UNITS)[number]["id"];
 
-function fmtRupees(n: number) {
-  return `₹${Math.round(n).toLocaleString("en-IN")}`;
-}
+const inr = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
+const qty = (n: number) => (Number.isInteger(n) ? n.toString() : parseFloat(n.toFixed(3)).toString());
 
-function fmtQty(n: number) {
-  if (n === Math.floor(n)) return n.toFixed(0);
-  return parseFloat(n.toFixed(3)).toString();
-}
+export default function PavanCalculator({
+  rate18k,
+  rate22k,
+  rate24k,
+}: {
+  rate18k: number;
+  rate22k: number;
+  rate24k: number;
+}) {
+  const [value, setValue] = useState<number | "">(1);
+  const [unit, setUnit] = useState<UnitId>("pavan");
+  const [copied, setCopied] = useState(false);
 
-export default function PavanCalculator({ rate22k, rate24k }: { rate22k: number; rate24k: number }) {
-  const [value, setValue] = useState(1);
-  const [fromUnit, setFromUnit] = useState<UnitId>("pavan");
+  const v = typeof value === "number" ? value : 0;
+  const grams = v * UNITS.find((u) => u.id === unit)!.toGrams;
+  const unitLabel = UNITS.find((u) => u.id === unit)!.label.toLowerCase();
 
-  const selectedUnit = UNITS.find((u) => u.id === fromUnit)!;
-  const totalGrams = value * selectedUnit.toGrams;
+  const purities = [
+    { k: "24K", sub: "999", value: grams * rate24k, featured: false },
+    { k: "22K", sub: "916", value: grams * rate22k, featured: true },
+    { k: "21K", sub: "875", value: grams * rate22k * (21 / 22), featured: false },
+    { k: "18K", sub: "750", value: grams * rate18k, featured: false },
+  ];
+
+  function copyResult() {
+    const txt = `${qty(v)} ${unitLabel} = ${qty(grams)} g = ${qty(grams / 8)} pavan · 22K value ${inr(grams * rate22k)} — livegoldkerala.com`;
+    navigator.clipboard?.writeText(txt).then(
+      () => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1600);
+      },
+      () => {}
+    );
+  }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Input */}
-      <div className="rounded-2xl border border-amber-200/50 bg-amber-50/40 p-5 dark:border-zinc-700 dark:bg-zinc-900">
-        <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300">Enter quantity</label>
-        <div className="mt-2 flex flex-wrap items-center gap-3">
-          <input
-            type="number"
-            min={0.001}
-            step={0.001}
-            value={value}
-            onChange={(e) => setValue(Math.max(0.001, parseFloat(e.target.value) || 0.001))}
-            className="w-28 rounded-xl border border-amber-300 bg-white px-3 py-2 text-lg font-bold text-zinc-900 shadow-sm outline-none focus:ring-2 focus:ring-amber-400 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
-          />
-          <div className="flex flex-wrap gap-2">
-            {UNITS.map((u) => (
-              <button
-                key={u.id}
-                onClick={() => setFromUnit(u.id)}
-                className={`rounded-full px-3 py-1.5 text-sm font-semibold transition-colors ${
-                  fromUnit === u.id
-                    ? "bg-amber-500 text-white"
-                    : "bg-white text-zinc-600 ring-1 ring-zinc-200 hover:bg-amber-50 dark:bg-zinc-800 dark:text-zinc-300 dark:ring-zinc-700"
-                }`}
-              >
-                {u.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Conversion result cards */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {UNITS.map((u) => {
-          const qty = totalGrams / u.toGrams;
-          const isPavan = u.id === "pavan";
-          return (
-            <div
+      <section className="rounded-2xl border border-zinc-200/70 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <label htmlFor="pavan-qty" className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+          Enter an amount
+        </label>
+        <input
+          id="pavan-qty"
+          type="number"
+          min={0}
+          step={0.001}
+          inputMode="decimal"
+          value={value}
+          onChange={(e) => setValue(e.target.value === "" ? "" : Math.max(0, parseFloat(e.target.value)))}
+          className="mt-2 w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-2xl font-extrabold tracking-tight text-zinc-900 outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-500/10 dark:border-zinc-700 dark:bg-zinc-950/50 dark:text-zinc-100"
+          placeholder="0"
+        />
+        {/* unit segmented control */}
+        <div className="mt-3 grid grid-cols-4 gap-1 rounded-xl bg-zinc-100/70 p-1 dark:bg-zinc-800/70">
+          {UNITS.map((u) => (
+            <button
               key={u.id}
-              className={`rounded-xl border p-3 text-center ${
-                isPavan
-                  ? "border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30"
-                  : "border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900"
+              onClick={() => setUnit(u.id)}
+              className={`rounded-lg px-2 py-1.5 text-xs font-semibold transition-all sm:text-sm ${
+                unit === u.id
+                  ? "bg-amber-500 text-white shadow-sm"
+                  : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
               }`}
             >
-              <div className="text-[10px] font-semibold uppercase tracking-wider text-zinc-500">{u.label}</div>
-              <div className="mt-1 text-xl font-bold text-zinc-900 dark:text-zinc-100">{fmtQty(qty)}</div>
-              {isPavan && <div className="text-[10px] text-amber-600 dark:text-amber-400">Kerala standard</div>}
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Gold value */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900">
-          <div className="text-xs font-semibold uppercase tracking-wider text-zinc-500">22K Value</div>
-          <div className="mt-1 text-xl font-bold text-zinc-900 dark:text-zinc-100"><AnimatedNumber value={totalGrams * rate22k} format={fmtRupees} /></div>
-          <div className="text-xs text-zinc-500">{fmtQty(totalGrams)}g × {fmtRupees(rate22k)}/g</div>
-        </div>
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950/30">
-          <div className="text-xs font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">24K Value</div>
-          <div className="mt-1 text-xl font-bold text-amber-700 dark:text-amber-400"><AnimatedNumber value={totalGrams * rate24k} format={fmtRupees} /></div>
-          <div className="text-xs text-zinc-500">{fmtQty(totalGrams)}g × {fmtRupees(rate24k)}/g</div>
-        </div>
-      </div>
-
-      {/* Quick pavan presets */}
-      <div>
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-500">Quick presets</p>
-        <div className="flex flex-wrap gap-2">
-          {[0.5, 1, 2, 4, 8, 10, 16].map((pavans) => (
-            <button
-              key={pavans}
-              onClick={() => { setValue(pavans); setFromUnit("pavan"); }}
-              className="rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-semibold text-zinc-700 transition-colors hover:border-amber-300 hover:bg-amber-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
-            >
-              {pavans} pavan{pavans !== 0.5 && pavans !== 1 ? "s" : ""}
+              {u.label}
             </button>
           ))}
         </div>
-      </div>
+        {/* presets */}
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {[0.5, 1, 2, 4, 8, 10].map((p) => (
+            <button
+              key={p}
+              onClick={() => {
+                setValue(p);
+                setUnit("pavan");
+              }}
+              className="rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-1 text-[11px] font-semibold text-zinc-600 transition-colors hover:border-amber-300 hover:bg-amber-50 hover:text-amber-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
+            >
+              {p} pavan
+            </button>
+          ))}
+        </div>
+      </section>
 
-      <p className="text-xs text-zinc-500 dark:text-zinc-400">
-        * Raw gold value only — making charges and 3% GST not included. 1 pavan = 1 sovereign = 8 grams. 1 tola = 11.664 grams.
-      </p>
+      {/* Conversion hero */}
+      <section className="relative overflow-hidden rounded-2xl border border-amber-300/60 bg-gradient-to-br from-amber-50 to-white p-5 shadow-lg shadow-amber-100/50 dark:border-amber-800/50 dark:from-amber-950/30 dark:to-zinc-900 dark:shadow-none">
+        <p className="text-sm text-zinc-600 dark:text-zinc-300">
+          {v > 0 ? (
+            <>
+              <span className="font-bold text-zinc-900 dark:text-zinc-100">{qty(v)} {unitLabel}</span> equals
+            </>
+          ) : (
+            "Enter an amount above to convert"
+          )}
+        </p>
+        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {UNITS.map((u) => {
+            const q = grams / u.toGrams;
+            const isPavan = u.id === "pavan";
+            return (
+              <div
+                key={u.id}
+                className={`rounded-xl p-3 text-center ${
+                  isPavan
+                    ? "bg-amber-500 text-white shadow-md shadow-amber-500/30"
+                    : "bg-white/70 ring-1 ring-inset ring-amber-200/50 dark:bg-zinc-900/60 dark:ring-zinc-700/50"
+                }`}
+              >
+                <div className={`text-lg font-extrabold tracking-tight ${isPavan ? "text-white" : "text-zinc-900 dark:text-zinc-100"}`}>
+                  {qty(q)}
+                </div>
+                <div className={`text-[10px] font-semibold uppercase tracking-wider ${isPavan ? "text-amber-50" : "text-zinc-500 dark:text-zinc-400"}`}>
+                  {u.label}
+                  {isPavan ? " ★" : ""}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Gold value by purity */}
+      <section className="rounded-2xl border border-zinc-200/70 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <h2 className="text-sm font-bold text-zinc-800 dark:text-zinc-100">
+            Gold value today <span className="font-normal text-zinc-400">· {qty(grams)} g</span>
+          </h2>
+          <button
+            onClick={copyResult}
+            className="shrink-0 rounded-lg bg-zinc-100 px-2.5 py-1 text-[11px] font-semibold text-zinc-600 transition-colors hover:bg-amber-100 hover:text-amber-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-amber-950/40"
+          >
+            {copied ? "Copied ✓" : "Copy"}
+          </button>
+        </div>
+        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+          {purities.map((p) => (
+            <div
+              key={p.k}
+              className={`rounded-xl p-3 ${
+                p.featured
+                  ? "bg-amber-50 ring-1 ring-inset ring-amber-300/60 dark:bg-amber-950/30 dark:ring-amber-700/50"
+                  : "bg-zinc-50 ring-1 ring-inset ring-zinc-200/60 dark:bg-zinc-950/40 dark:ring-zinc-800"
+              }`}
+            >
+              <div className="flex items-baseline gap-1">
+                <span className={`text-sm font-extrabold ${p.featured ? "text-amber-700 dark:text-amber-400" : "text-zinc-700 dark:text-zinc-300"}`}>{p.k}</span>
+                <span className="text-[9px] font-semibold uppercase tracking-wider text-zinc-400">{p.sub}</span>
+              </div>
+              <div className="mt-1 text-base font-bold text-zinc-900 dark:text-zinc-100">
+                <AnimatedNumber value={p.value} format={inr} />
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="mt-3 text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">
+          Raw gold value only — making charges &amp; 3% GST not included. 1 pavan = 1 sovereign = 8 g · 1 tola = 11.664 g. 21K is derived from the 916 rate.
+        </p>
+      </section>
     </div>
   );
 }

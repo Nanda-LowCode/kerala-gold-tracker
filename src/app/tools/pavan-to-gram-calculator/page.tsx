@@ -23,7 +23,7 @@ async function getLatestRates() {
     const supabase = createSupabaseReadClient();
     const { data, error } = await supabase
       .from("daily_gold_rates")
-      .select("rate_22k_1g, rate_24k_1g")
+      .select("rate_18k_1g, rate_22k_1g, rate_24k_1g")
       .eq("city", "Kochi")
       .order("date", { ascending: false })
       .limit(1)
@@ -184,7 +184,7 @@ export default async function PavanToGramCalculatorPage() {
         </div>
 
         {rates ? (
-          <PavanCalculator rate22k={rates.rate_22k_1g} rate24k={rates.rate_24k_1g} />
+          <PavanCalculator rate18k={rates.rate_18k_1g} rate22k={rates.rate_22k_1g} rate24k={rates.rate_24k_1g} />
         ) : (
           <div className="rounded-2xl border border-zinc-200/70 bg-white p-8 text-center shadow-md dark:border-zinc-800 dark:bg-zinc-900">
             <p className="text-sm text-zinc-500">
