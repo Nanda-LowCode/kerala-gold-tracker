@@ -1,108 +1,128 @@
 "use client";
 
 import { useState } from "react";
+import AnimatedNumber from "@/components/AnimatedNumber";
 
 const HALLMARKS = [
-  { karat: 24, label: "24K (999 Fine)", badge: "999", purity: 1 },
-  { karat: 22, label: "22K (916 Hallmark)", badge: "916", purity: 22 / 24 },
-  { karat: 18, label: "18K (750 Hallmark)", badge: "750", purity: 18 / 24 },
-  { karat: 14, label: "14K (585 Hallmark)", badge: "585", purity: 14 / 24 },
-  { karat: 9, label: "9K (375 Hallmark)", badge: "375", purity: 9 / 24 },
+  { karat: 24, label: "Pure gold", badge: "999", purity: 1 },
+  { karat: 22, label: "Standard hallmark", badge: "916", purity: 22 / 24 },
+  { karat: 18, label: "18K hallmark", badge: "750", purity: 18 / 24 },
+  { karat: 14, label: "14K hallmark", badge: "585", purity: 14 / 24 },
+  { karat: 9, label: "9K hallmark", badge: "375", purity: 9 / 24 },
 ];
 
-function fmt(n: number) {
-  return `₹${Math.round(n).toLocaleString("en-IN")}`;
-}
+const inr = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
 
 export default function HallmarkCalculator({ rate24k }: { rate24k: number }) {
-  const [weight, setWeight] = useState(8);
+  const [weight, setWeight] = useState<number | "">(8);
+  const [copied, setCopied] = useState(false);
+
+  const w = typeof weight === "number" ? weight : 0;
+  const featured = HALLMARKS.find((h) => h.karat === 22)!;
+  const others = HALLMARKS.filter((h) => h.karat !== 22);
+
+  const perGram = (purity: number) => rate24k * purity;
+  const value = (purity: number) => perGram(purity) * w;
+
+  function copyResult() {
+    const lines = HALLMARKS.map((h) => `${h.badge} (${h.karat}K) ${inr(value(h.purity))}`).join(" · ");
+    navigator.clipboard?.writeText(`${w}g gold value — ${lines} — livegoldkerala.com`).then(
+      () => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1600);
+      },
+      () => {}
+    );
+  }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Weight input */}
-      <div className="rounded-2xl border border-amber-200/50 bg-amber-50/40 p-5 dark:border-zinc-700 dark:bg-zinc-900">
-        <label className="block text-sm font-semibold text-zinc-700 dark:text-zinc-300" htmlFor="weight">
-          Gold Weight (grams)
+      <section className="rounded-2xl border border-zinc-200/70 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <label htmlFor="hallmark-weight" className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+          Gold weight
         </label>
         <div className="mt-2 flex items-center gap-3">
           <input
-            id="weight"
+            id="hallmark-weight"
             type="number"
-            min={0.1}
-            max={1000}
+            min={0}
+            max={5000}
             step={0.1}
+            inputMode="decimal"
             value={weight}
-            onChange={(e) => setWeight(Math.max(0.1, parseFloat(e.target.value) || 0.1))}
-            className="w-32 rounded-xl border border-amber-300 bg-white px-3 py-2 text-lg font-bold text-zinc-900 shadow-sm outline-none focus:ring-2 focus:ring-amber-400 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+            onChange={(e) => setWeight(e.target.value === "" ? "" : Math.max(0, parseFloat(e.target.value)))}
+            className="w-36 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-2xl font-extrabold tracking-tight text-zinc-900 outline-none focus:border-amber-400 focus:ring-4 focus:ring-amber-500/10 dark:border-zinc-700 dark:bg-zinc-950/50 dark:text-zinc-100"
+            placeholder="0"
           />
-          <span className="text-sm text-zinc-500">grams</span>
-          <span className="text-xs text-zinc-500">({(weight / 8).toFixed(2)} pavan)</span>
+          <div className="text-sm text-zinc-500 dark:text-zinc-400">
+            grams
+            <span className="ml-1 block text-xs text-zinc-400">{(w / 8).toFixed(2)} pavan</span>
+          </div>
         </div>
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className="mt-3 flex flex-wrap gap-1.5">
           {[1, 2, 4, 8, 10, 16].map((g) => (
             <button
               key={g}
               onClick={() => setWeight(g)}
-              className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
-                weight === g
-                  ? "bg-amber-500 text-white"
-                  : "bg-white text-zinc-600 ring-1 ring-zinc-200 hover:bg-amber-50 dark:bg-zinc-800 dark:text-zinc-300 dark:ring-zinc-700"
-              }`}
+              className="rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-1 text-[11px] font-semibold text-zinc-600 transition-colors hover:border-amber-300 hover:bg-amber-50 hover:text-amber-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
             >
-              {g}g{g === 8 ? " (1 pavan)" : ""}
+              {g}g{g === 8 ? " · 1 pavan" : ""}
             </button>
           ))}
         </div>
-      </div>
+      </section>
 
-      {/* Hallmark table */}
-      <div className="overflow-x-auto rounded-2xl border border-zinc-200/70 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-zinc-100 dark:border-zinc-800">
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Purity</th>
-              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Rate/g</th>
-              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-                Value for {weight}g
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
-            {HALLMARKS.map((h) => {
-              const ratePerGram = rate24k * h.purity;
-              const totalValue = ratePerGram * weight;
-              const is22k = h.karat === 22;
-              return (
-                <tr key={h.karat} className={`transition-colors hover:bg-amber-50/30 dark:hover:bg-zinc-800/50 ${is22k ? "bg-amber-50/50 dark:bg-amber-950/20" : ""}`}>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ring-1 ring-inset ${
-                        is22k
-                          ? "bg-amber-100 text-amber-800 ring-amber-300/60 dark:bg-amber-900/40 dark:text-amber-200 dark:ring-amber-500/40"
-                          : "bg-zinc-100 text-zinc-600 ring-zinc-200/60 dark:bg-zinc-800 dark:text-zinc-400 dark:ring-zinc-700"
-                      }`}>
-                        {h.badge}
-                      </span>
-                      <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">{h.label}</span>
-                      {is22k && <span className="text-[9px] font-bold uppercase text-amber-600 dark:text-amber-400">★ Most common</span>}
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-right text-sm font-semibold text-zinc-800 dark:text-zinc-200">
-                    {fmt(ratePerGram)}
-                  </td>
-                  <td className="px-4 py-3 text-right text-sm font-bold text-amber-700 dark:text-amber-400">
-                    {fmt(totalValue)}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+      {/* Featured 22K hero */}
+      <section className="relative overflow-hidden rounded-2xl border border-amber-300/60 bg-gradient-to-br from-amber-50 to-white p-5 shadow-lg shadow-amber-100/50 dark:border-amber-800/50 dark:from-amber-950/30 dark:to-zinc-900 dark:shadow-none">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-800 ring-1 ring-inset ring-amber-300/60 dark:bg-amber-900/40 dark:text-amber-200 dark:ring-amber-500/40">
+              {featured.badge}
+            </span>
+            <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-300">22K · standard hallmark</span>
+          </div>
+          <button
+            onClick={copyResult}
+            className="shrink-0 rounded-lg bg-white/70 px-2.5 py-1 text-[11px] font-semibold text-zinc-600 ring-1 ring-inset ring-amber-200/60 transition-colors hover:bg-amber-100 hover:text-amber-700 dark:bg-zinc-800 dark:text-zinc-300 dark:ring-zinc-700"
+          >
+            {copied ? "Copied ✓" : "Copy"}
+          </button>
+        </div>
+        <p className="mt-2 bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent">
+          <AnimatedNumber value={value(featured.purity)} format={inr} />
+        </p>
+        <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+          for {w || 0}g at {inr(perGram(featured.purity))}/g
+        </p>
+      </section>
 
-      <p className="text-xs text-zinc-500 dark:text-zinc-400">
-        * Gold value only — does not include making charges or GST. Based on today&apos;s Kerala board rate.
-      </p>
+      {/* Other purities */}
+      <section className="rounded-2xl border border-zinc-200/70 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <h2 className="mb-3 text-sm font-bold text-zinc-800 dark:text-zinc-100">
+          Value at other purities <span className="font-normal text-zinc-400">· {w || 0} g</span>
+        </h2>
+        <div className="grid grid-cols-2 gap-2.5">
+          {others.map((h) => (
+            <div key={h.karat} className="rounded-xl bg-zinc-50 p-3 ring-1 ring-inset ring-zinc-200/60 dark:bg-zinc-950/40 dark:ring-zinc-800">
+              <div className="flex items-center gap-1.5">
+                <span className="rounded-full bg-zinc-200/70 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+                  {h.badge}
+                </span>
+                <span className="text-sm font-extrabold text-zinc-700 dark:text-zinc-300">{h.karat}K</span>
+                <span className="text-[10px] text-zinc-400">{inr(perGram(h.purity))}/g</span>
+              </div>
+              <div className="mt-1 text-base font-bold text-zinc-900 dark:text-zinc-100">
+                <AnimatedNumber value={value(h.purity)} format={inr} />
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="mt-3 text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">
+          Match the number stamped on your piece (999 / 916 / 750 / 585 / 375) to read its true gold value.
+          Gold value only — making charges &amp; GST not included. Based on today&apos;s Kerala board rate.
+        </p>
+      </section>
     </div>
   );
 }
