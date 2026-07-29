@@ -17,19 +17,23 @@ export const metadata: Metadata = {
   },
 };
 
-async function getLatestRate24k(): Promise<number | null> {
+// 22K and 18K are quoted separately on the Kerala board — they are not exactly
+// 22/24 and 18/24 of the 24K rate (18K runs ~₹45/g above the derived figure).
+// Pass the stored rates through so this page agrees with the homepage and the
+// other calculators. 14K/9K aren't quoted anywhere, so those stay derived.
+async function getLatestRates() {
   try {
     const supabase = createSupabaseReadClient();
     const { data, error } = await supabase
       .from("daily_gold_rates")
-      .select("rate_24k_1g")
+      .select("rate_18k_1g, rate_22k_1g, rate_24k_1g")
       .eq("city", "Kochi")
       .order("date", { ascending: false })
       .limit(1)
       .single();
 
     if (error || !data) return null;
-    return data.rate_24k_1g;
+    return data;
   } catch {
     return null;
   }
@@ -44,7 +48,7 @@ const HALLMARK_INFO = [
 ];
 
 export default async function HallmarkGoldCalculatorPage() {
-  const rate24k = await getLatestRate24k();
+  const rates = await getLatestRates();
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -141,8 +145,12 @@ export default async function HallmarkGoldCalculatorPage() {
           </p>
         </div>
 
-        {rate24k ? (
-          <HallmarkCalculator rate24k={rate24k} />
+        {rates ? (
+          <HallmarkCalculator
+            rate18k={rates.rate_18k_1g}
+            rate22k={rates.rate_22k_1g}
+            rate24k={rates.rate_24k_1g}
+          />
         ) : (
           <div className="rounded-2xl border border-zinc-200/70 bg-white p-8 text-center shadow-md dark:border-zinc-800 dark:bg-zinc-900">
             <p className="text-sm text-zinc-500">Gold rates are currently unavailable. Please check back shortly.</p>

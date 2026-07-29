@@ -1,22 +1,35 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 type BannerState = "pending" | "sunday" | null;
 
+// The banner depends on the *viewer's* current IST date, which the server can't
+// know at build time — so it must stay client-only to avoid a hydration
+// mismatch. This renders nothing on the server and on the first client paint,
+// then flips to true once hydrated, letting the state be derived during render
+// instead of pushed in via setState-in-effect.
+const subscribe = () => () => {};
+const useHydrated = () =>
+  useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false
+  );
+
+function bannerState(latestDate: string): BannerState {
+  const todayIST = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+  if (latestDate >= todayIST) return null;
+
+  const dayInIST = new Date().toLocaleDateString("en-US", {
+    timeZone: "Asia/Kolkata",
+    weekday: "long",
+  });
+  return dayInIST === "Sunday" ? "sunday" : "pending";
+}
+
 export default function RatesPendingBanner({ latestDate }: { latestDate: string }) {
-  const [state, setState] = useState<BannerState>(null);
-
-  useEffect(() => {
-    const todayIST = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
-    if (latestDate >= todayIST) return;
-
-    const dayInIST = new Date().toLocaleDateString("en-US", {
-      timeZone: "Asia/Kolkata",
-      weekday: "long",
-    });
-    setState(dayInIST === "Sunday" ? "sunday" : "pending");
-  }, [latestDate]);
+  const state = useHydrated() ? bannerState(latestDate) : null;
 
   if (!state) return null;
 

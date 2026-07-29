@@ -13,19 +13,34 @@ const HALLMARKS = [
 
 const inr = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
 
-export default function HallmarkCalculator({ rate24k }: { rate24k: number }) {
+export default function HallmarkCalculator({
+  rate18k,
+  rate22k,
+  rate24k,
+}: {
+  rate18k: number;
+  rate22k: number;
+  rate24k: number;
+}) {
   const [weight, setWeight] = useState<number | "">(8);
   const [copied, setCopied] = useState(false);
 
   const w = typeof weight === "number" ? weight : 0;
-  const featured = HALLMARKS.find((h) => h.karat === 22)!;
-  const others = HALLMARKS.filter((h) => h.karat !== 22);
 
-  const perGram = (purity: number) => rate24k * purity;
-  const value = (purity: number) => perGram(purity) * w;
+  // 24K/22K/18K are quoted on the Kerala board, so use those rates directly —
+  // 18K in particular sits ~₹45/g above a straight 18/24 share of the 24K rate,
+  // and deriving it made this page disagree with the rest of the site. 14K and
+  // 9K aren't quoted anywhere, so they stay a purity share of 24K.
+  const quoted: Record<number, number> = { 24: rate24k, 22: rate22k, 18: rate18k };
+  const rows = HALLMARKS.map((h) => ({ ...h, rate: quoted[h.karat] ?? rate24k * h.purity }));
+
+  const featured = rows.find((h) => h.karat === 22)!;
+  const others = rows.filter((h) => h.karat !== 22);
+
+  const value = (rate: number) => rate * w;
 
   function copyResult() {
-    const lines = HALLMARKS.map((h) => `${h.badge} (${h.karat}K) ${inr(value(h.purity))}`).join(" · ");
+    const lines = rows.map((h) => `${h.badge} (${h.karat}K) ${inr(value(h.rate))}`).join(" · ");
     navigator.clipboard?.writeText(`${w}g gold value — ${lines} — livegoldkerala.com`).then(
       () => {
         setCopied(true);
@@ -90,10 +105,10 @@ export default function HallmarkCalculator({ rate24k }: { rate24k: number }) {
           </button>
         </div>
         <p className="mt-2 bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent">
-          <AnimatedNumber value={value(featured.purity)} format={inr} />
+          <AnimatedNumber value={value(featured.rate)} format={inr} />
         </p>
         <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-          for {w || 0}g at {inr(perGram(featured.purity))}/g
+          for {w || 0}g at {inr(featured.rate)}/g
         </p>
       </section>
 
@@ -110,10 +125,10 @@ export default function HallmarkCalculator({ rate24k }: { rate24k: number }) {
                   {h.badge}
                 </span>
                 <span className="text-sm font-extrabold text-zinc-700 dark:text-zinc-300">{h.karat}K</span>
-                <span className="text-[10px] text-zinc-400">{inr(perGram(h.purity))}/g</span>
+                <span className="text-[10px] text-zinc-400">{inr(h.rate)}/g</span>
               </div>
               <div className="mt-1 text-base font-bold text-zinc-900 dark:text-zinc-100">
-                <AnimatedNumber value={value(h.purity)} format={inr} />
+                <AnimatedNumber value={value(h.rate)} format={inr} />
               </div>
             </div>
           ))}
