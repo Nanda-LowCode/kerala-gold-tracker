@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 
 const CITIES = [
-  "trivandrum", "ernakulam", "kozhikode", "calicut", "thrissur", "kollam",
+  "trivandrum", "ernakulam", "kozhikode", "thrissur", "kollam",
   "palakkad", "kannur", "alappuzha", "kottayam", "malappuram",
   "pathanamthitta", "idukki", "wayanad", "kasaragod",
 ];

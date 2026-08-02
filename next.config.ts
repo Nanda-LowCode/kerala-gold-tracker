@@ -32,6 +32,11 @@ const nextConfig: NextConfig = {
       { source: "/blog/gold-rate-kozhikode-today", destination: "/kozhikode", permanent: true },
       { source: "/blog/gold-rate-thrissur-today", destination: "/thrissur", permanent: true },
       { source: "/blog/gold-rate-trivandrum-today", destination: "/trivandrum", permanent: true },
+      // Calicut is the old name for Kozhikode — one city, so collapse the two
+      // near-duplicate pages into /kozhikode to stop them splitting ranking
+      // signal. /kozhikode names "Calicut" in its content, so it still serves
+      // "gold rate today calicut" searches.
+      { source: "/calicut", destination: "/kozhikode", permanent: true },
     ];
   },
   async headers() {

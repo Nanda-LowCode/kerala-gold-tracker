@@ -45,7 +45,7 @@ export const CITY_DATA: Record<string, CityData> = {
     id: "kozhikode",
     metaDescriptionPrefix: "Get the current daily gold price in Kozhikode.",
     insightTitle: "A Legacy of Gold Trade in Calicut",
-    insightContent: "Kozhikode's historical connection to ancient trade routes translates into a rich legacy of gold craftsmanship. From the bustling lanes near Mittai Theruvu to premium showrooms, the Kozhikode gold market is characterized by a strong demand for classic Malabar designs and high-purity investments.",
+    insightContent: "Kozhikode — historically known as Calicut — carries a rich legacy of gold craftsmanship rooted in its ancient trade routes. From the bustling lanes near Mittai Theruvu to premium showrooms, the Calicut gold market is characterized by strong demand for classic Malabar designs and high-purity investments. The gold rate in Calicut is the same uniform Kerala board rate shown above.",
     localMarketFaq: {
       q: "Where are the best places to buy gold in Kozhikode?",
       a: "SM Street (Mittai Theruvu) near Mananchira Square has Kozhikode's oldest gold trading lanes — this is the place for traditional Malabar designs with filigree work and antique finishes that are rarely available elsewhere in Kerala. Mavoor Road and GH Road have major chain showrooms. The area around Palayam and Nadakkav caters to middle-market buyers. Kozhikode is particularly known for 'Malabar gold' — heavier ornaments with distinct North Kerala craftsmanship.",

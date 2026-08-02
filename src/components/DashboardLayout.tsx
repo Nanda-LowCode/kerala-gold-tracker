@@ -43,7 +43,6 @@ export const KERALA_CITIES = [
   "trivandrum",
   "ernakulam",
   "kozhikode",
-  "calicut",
   "thrissur",
   "kollam",
   "palakkad",
