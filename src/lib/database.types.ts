@@ -294,6 +294,36 @@ export interface Database {
         };
         Relationships: [];
       };
+      feedback: {
+        Row: {
+          id: number;
+          created_at: string;
+          message: string;
+          type: string | null;
+          email: string | null;
+          page: string | null;
+          user_agent: string | null;
+        };
+        Insert: {
+          id?: number;
+          created_at?: string;
+          message: string;
+          type?: string | null;
+          email?: string | null;
+          page?: string | null;
+          user_agent?: string | null;
+        };
+        Update: {
+          id?: number;
+          created_at?: string;
+          message?: string;
+          type?: string | null;
+          email?: string | null;
+          page?: string | null;
+          user_agent?: string | null;
+        };
+        Relationships: [];
+      };
       email_alerts: {
         Row: {
           id: number;

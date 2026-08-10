@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 import InstallPrompt from "@/components/InstallPrompt";
+import FeedbackWidget from "@/components/FeedbackWidget";
 import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -78,6 +79,7 @@ export default function RootLayout({
           <SiteNav />
           {children}
           <SiteFooter />
+          <FeedbackWidget />
           <InstallPrompt />
           <Analytics />
           <SpeedInsights />
