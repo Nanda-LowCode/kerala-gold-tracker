@@ -78,10 +78,18 @@ export async function generateMetadata({ params }: RouteParams): Promise<Metadat
   const high = Math.max(...r22);
   const low = Math.min(...r22);
   const avg = Math.round(r22.reduce((a, b) => a + b, 0) / r22.length);
-  const title = `Gold Rate in Kerala ${label} — Daily 22K & 24K Prices`;
+  const now = new Date();
+  const isCurrent = Number(year) === now.getFullYear() && mIdx === now.getMonth();
+  const latest = rows[rows.length - 1];
+  const title = isCurrent
+    ? `Gold Rate in Kerala ${label}: 22K ₹${latest.rate_22k_1g}/g Today — Daily Prices`
+    : `Gold Rate in Kerala ${label} — Daily 22K & 24K Prices`;
+  const description = isCurrent
+    ? `Kerala gold rate in ${label}: latest 22K is ${inr(latest.rate_22k_1g)}/gram (${inr(latest.rate_22k_1g * 8)}/pavan), 24K ${inr(latest.rate_24k_1g)}/gram. So far this month 22K has ranged ${inr(low)}–${inr(high)} (avg ${inr(avg)}). Updated daily.`
+    : `Kerala gold rate in ${label}: 22K ranged ${inr(low)}–${inr(high)} per gram (average ${inr(avg)}, ${inr(avg * 8)}/pavan). Day-by-day 22K and 24K board rates for the full month.`;
   return {
     title,
-    description: `Kerala gold rate in ${label}: 22K ranged ${inr(low)}–${inr(high)} per gram (average ${inr(avg)}, ${inr(avg * 8)}/pavan). Day-by-day 22K and 24K board rates for the full month.`,
+    description,
     alternates: { canonical: `/gold-rate-history/${year}/${month.toLowerCase()}` },
     openGraph: { title, description: `Day-by-day Kerala gold rates for ${label}.`, type: "article" },
   };
@@ -108,6 +116,9 @@ export default async function MonthHistoryPage({ params }: RouteParams) {
   const next = new Date(Number(year), mIdx + 1, 1);
   const now = new Date();
   const hasNext = next <= new Date(now.getFullYear(), now.getMonth(), 1);
+  const isCurrentMonth = Number(year) === now.getFullYear() && mIdx === now.getMonth();
+  const latest = rows[rows.length - 1];
+  const latestDate = new Date(latest.date + "T00:00:00").toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" });
 
   const stats = [
     { label: "Average (22K/g)", value: inr(avg) },
@@ -140,11 +151,39 @@ export default async function MonthHistoryPage({ params }: RouteParams) {
         <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100 md:text-3xl">
           Gold Rate in Kerala — {label}
         </h1>
-        <p className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
-          In {label}, the 22K gold rate in Kerala ranged between {inr(low)} and {inr(high)} per gram,
-          averaging {inr(avg)}/g ({inr(avg * 8)} per pavan). Over the month the rate{" "}
-          {change >= 0 ? "rose" : "fell"} {inr(Math.abs(change))} per gram ({pct >= 0 ? "+" : ""}
-          {pct.toFixed(1)}%).
+
+        {isCurrentMonth && (
+          <section className="mt-3 rounded-2xl border border-amber-300/60 bg-gradient-to-br from-amber-50 to-white p-5 shadow-md shadow-amber-100/50 dark:border-amber-800/50 dark:from-amber-950/30 dark:to-zinc-900 dark:shadow-none">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">
+              Latest · {latestDate}
+            </p>
+            <p className="mt-1 text-2xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100">
+              22K {inr(latest.rate_22k_1g)}/g
+              <span className="ml-2 text-lg font-bold text-zinc-500 dark:text-zinc-400">· 24K {inr(latest.rate_24k_1g)}/g</span>
+            </p>
+            <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+              {inr(latest.rate_22k_1g * 8)} per pavan ·{" "}
+              <Link href="/" className="font-semibold text-amber-700 hover:underline dark:text-amber-400">see today&apos;s live rate →</Link>
+            </p>
+          </section>
+        )}
+
+        <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+          {isCurrentMonth ? (
+            <>
+              So far in {label}, the 22K gold rate in Kerala has ranged between {inr(low)} and {inr(high)} per
+              gram, averaging {inr(avg)}/g ({inr(avg * 8)} per pavan). This month the rate has{" "}
+              {change >= 0 ? "risen" : "fallen"} {inr(Math.abs(change))} per gram ({pct >= 0 ? "+" : ""}
+              {pct.toFixed(1)}%). The full day-by-day board rate is below, updated daily.
+            </>
+          ) : (
+            <>
+              In {label}, the 22K gold rate in Kerala ranged between {inr(low)} and {inr(high)} per gram,
+              averaging {inr(avg)}/g ({inr(avg * 8)} per pavan). Over the month the rate{" "}
+              {change >= 0 ? "rose" : "fell"} {inr(Math.abs(change))} per gram ({pct >= 0 ? "+" : ""}
+              {pct.toFixed(1)}%).
+            </>
+          )}
         </p>
 
         {isEstimated && (

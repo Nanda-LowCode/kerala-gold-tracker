@@ -466,6 +466,12 @@ export async function GET(request: NextRequest) {
     revalidatePath(`/news/${today}`);
     // Rate-history pages that show today's data
     revalidatePath("/gold-rate-history");
+    // Current-month archive page leads with the live latest rate.
+    {
+      const d = new Date(today + "T00:00:00");
+      const monthSlug = ["january","february","march","april","may","june","july","august","september","october","november","december"][d.getMonth()];
+      revalidatePath(`/gold-rate-history/${d.getFullYear()}/${monthSlug}`);
+    }
     revalidatePath("/gold-rate-yesterday-kerala");
     revalidatePath("/silver-rate-kerala");
     // Malayalam rate page
