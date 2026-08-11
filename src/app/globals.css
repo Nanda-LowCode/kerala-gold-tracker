@@ -115,6 +115,49 @@ body {
 .mb-moving .mb-leg-f     { animation: mb-stride 0.56s ease-in-out infinite; }
 .mb-moving .mb-leg-b     { animation: mb-stride 0.56s ease-in-out infinite; animation-delay: -0.28s; }
 
+/* ---------------------------------------------------------------------------
+   Onam seasonal dressing (rendered only inside the Onam window by OnamTheme).
+   Kasavu = the gold zari trim on a Kerala set-mundu; here it's a woven-looking
+   band across the top of the page. Purely decorative, no layout shift.
+   --------------------------------------------------------------------------- */
+.onam-kasavu {
+  height: 7px;
+  background-image:
+    /* fine vertical zari weave */
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.5) 0 1px,
+      rgba(255, 255, 255, 0) 1px 5px
+    ),
+    /* gold trim, darker at the edges like real zari */
+    linear-gradient(
+      to bottom,
+      #9a6a12 0 1px,
+      #e7bd52 1px 2px,
+      #fbeec2 2px 4px,
+      #e7bd52 4px 6px,
+      #9a6a12 6px 7px
+    );
+}
+.dark .onam-kasavu {
+  background-image:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.22) 0 1px, rgba(255, 255, 255, 0) 1px 5px),
+    linear-gradient(to bottom, #6b4a0d 0 1px, #b8912f 1px 2px, #e0c77c 2px 4px, #b8912f 4px 6px, #6b4a0d 6px 7px);
+}
+
+/* A soft marigold wash behind the top of the page — reads as festive warmth
+   rather than a graphic. Sits under all content. */
+.onam-glow {
+  background:
+    radial-gradient(60% 100% at 22% 0%, rgba(251, 146, 60, 0.16), transparent 70%),
+    radial-gradient(55% 100% at 78% 0%, rgba(250, 204, 21, 0.2), transparent 70%);
+}
+.dark .onam-glow {
+  background:
+    radial-gradient(60% 100% at 22% 0%, rgba(251, 146, 60, 0.09), transparent 70%),
+    radial-gradient(55% 100% at 78% 0%, rgba(250, 204, 21, 0.08), transparent 70%);
+}
+
 /* Pookalam petal burst when he blesses — each petal flies out along its own
    --dx/--dy and fades (fill: forwards keeps it invisible after). */
 @keyframes petal-burst {

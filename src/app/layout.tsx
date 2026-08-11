@@ -7,6 +7,7 @@ import Script from "next/script";
 import InstallPrompt from "@/components/InstallPrompt";
 import FeedbackWidget from "@/components/FeedbackWidget";
 import OnamMahabaliLoader from "@/components/OnamMahabaliLoader";
+import OnamTheme from "@/components/OnamTheme";
 import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -77,6 +78,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: `{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.livegoldkerala.com/#organization","name":"Live Gold Kerala","url":"https://www.livegoldkerala.com"},{"@type":"WebSite","@id":"https://www.livegoldkerala.com/#website","url":"https://www.livegoldkerala.com","name":"Live Gold Kerala","publisher":{"@id":"https://www.livegoldkerala.com/#organization"}}]}` }} />
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          <OnamTheme />
           <SiteNav />
           {children}
           <SiteFooter />
