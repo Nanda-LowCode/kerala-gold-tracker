@@ -72,3 +72,34 @@ body {
   .gold-text-shine { animation: none !important; }
   .animate-rise { opacity: 1 !important; transform: none !important; }
 }
+
+/* ---------------------------------------------------------------------------
+   Onam — King Mahabali strolls across the bottom of the screen, waving a
+   blessing. Walk moves him across then holds him off-screen (a rest gap so he
+   isn't perpetually on screen); bob is the walking bounce; wave is the raised
+   hand. Pausing (.is-blessing) freezes the walk/bob while he stops to bless.
+   --------------------------------------------------------------------------- */
+@keyframes mahabali-walk {
+  0%   { transform: translateX(-24vw); }
+  46%  { transform: translateX(102vw); }
+  100% { transform: translateX(102vw); } /* holds off-screen right = rest */
+}
+@keyframes mahabali-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+@keyframes mahabali-wave {
+  0%, 100% { transform: rotate(4deg); }
+  50%      { transform: rotate(-20deg); }
+}
+.mahabali-walk { animation: mahabali-walk 34s linear infinite; }
+.mahabali-bob  { animation: mahabali-bob 0.5s ease-in-out infinite; }
+.mahabali-wave { transform-box: view-box; transform-origin: 77px 63px; animation: mahabali-wave 0.85s ease-in-out infinite; }
+.mahabali-walk.is-blessing,
+.mahabali-bob.is-blessing { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mahabali-walk,
+  .mahabali-bob,
+  .mahabali-wave { animation: none !important; }
+}
