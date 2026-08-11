@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Gold Calculators & Tools — Live Gold Kerala",
+  title: "Gold Calculators for Kerala — Making Charge, Pavan & Hallmark",
   description:
     "Free gold & silver calculators for Kerala: making-charge estimator, old-gold exchange value, NRI import duty, hallmark purity, pavan-to-gram conversion, and a silver price calculator.",
   alternates: { canonical: "/tools" },
