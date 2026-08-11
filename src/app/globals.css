@@ -74,29 +74,46 @@ body {
 }
 
 /* ---------------------------------------------------------------------------
-   Onam — King Mahabali strolls across the bottom of the screen, waving a
-   blessing. Walk moves him across then holds him off-screen (a rest gap so he
-   isn't perpetually on screen); bob is the walking bounce; wave is the raised
-   hand. Pausing (.is-blessing) freezes the walk/bob while he stops to bless.
+   Onam — King Mahabali. His position along the screen is driven by JS (Web
+   Animations API in OnamMahabali.tsx: walk in → stop and greet → walk on →
+   rest off-screen), so a tap-blessing can pause him exactly where he stands.
+   These keyframes are his gait: leg stride, step bounce, body rock and arm
+   swing, all gated by .mb-moving so he stands still while greeting/blessing.
+   The wave never stops — he's friendly.
    --------------------------------------------------------------------------- */
-@keyframes mahabali-walk {
-  0%   { transform: translateX(-24vw); }
-  46%  { transform: translateX(102vw); }
-  100% { transform: translateX(102vw); } /* holds off-screen right = rest */
-}
 @keyframes mahabali-bob {
   0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-4px); }
+  50%      { transform: translateY(-3px); }
 }
 @keyframes mahabali-wave {
   0%, 100% { transform: rotate(4deg); }
   50%      { transform: rotate(-20deg); }
 }
-.mahabali-walk { animation: mahabali-walk 34s linear infinite; }
-.mahabali-bob  { animation: mahabali-bob 0.5s ease-in-out infinite; }
+@keyframes mb-stride {
+  0%, 100% { transform: translate(2.6px, 0) rotate(4deg); }
+  50%      { transform: translate(-2.6px, -1.5px) rotate(-6deg); }
+}
+@keyframes mb-rock {
+  0%, 100% { transform: rotate(1.2deg); }
+  50%      { transform: rotate(-1.2deg); }
+}
+@keyframes mb-arm-swing {
+  0%, 100% { transform: rotate(7deg); }
+  50%      { transform: rotate(-7deg); }
+}
 .mahabali-wave { transform-box: view-box; transform-origin: 77px 63px; animation: mahabali-wave 0.85s ease-in-out infinite; }
-.mahabali-walk.is-blessing,
-.mahabali-bob.is-blessing { animation-play-state: paused; }
+.mb-figure { transform-box: view-box; transform-origin: 60px 148px; }
+.mb-arm-rest { transform-box: view-box; transform-origin: 43px 63px; }
+.mb-leg-f, .mb-leg-b { transform-box: view-box; }
+.mb-leg-f { transform-origin: 68px 137px; }
+.mb-leg-b { transform-origin: 51px 137px; }
+/* Gait runs only while he's actually travelling. Stride legs are offset half
+   a cycle from each other; rock and arm swing span a full two-step cycle. */
+.mb-moving .mahabali-bob { animation: mahabali-bob 0.56s ease-in-out infinite; }
+.mb-moving .mb-figure    { animation: mb-rock 1.12s ease-in-out infinite; }
+.mb-moving .mb-arm-rest  { animation: mb-arm-swing 1.12s ease-in-out infinite; }
+.mb-moving .mb-leg-f     { animation: mb-stride 0.56s ease-in-out infinite; }
+.mb-moving .mb-leg-b     { animation: mb-stride 0.56s ease-in-out infinite; animation-delay: -0.28s; }
 
 /* Pookalam petal burst when he blesses — each petal flies out along its own
    --dx/--dy and fades (fill: forwards keeps it invisible after). */
@@ -111,8 +128,11 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mahabali-walk,
   .mahabali-bob,
-  .mahabali-wave { animation: none !important; }
+  .mahabali-wave,
+  .mb-figure,
+  .mb-arm-rest,
+  .mb-leg-f,
+  .mb-leg-b { animation: none !important; }
   .mahabali-petal { display: none; }
 }

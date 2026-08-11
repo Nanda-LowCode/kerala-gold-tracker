@@ -83,7 +83,13 @@ export default function OnamMahabali({ rate22k = null, change = null }: OnamMaha
   const [show, setShow] = useState(false);
   const [blessing, setBlessing] = useState<string | null>(null);
   const [petals, setPetals] = useState<Petal[]>([]);
+  const [moving, setMoving] = useState(false);
   const tappedOnce = useRef(false);
+  const walkerRef = useRef<HTMLDivElement>(null);
+  const animRef = useRef<Animation | null>(null);
+  const xRef = useRef(-24); // current position in vw
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const blessingRef = useRef(false);
 
   // Gate on mount: only render inside the Onam window, and not if dismissed.
   // Entrance is deferred a beat so the page settles first (and so setState
@@ -107,6 +113,87 @@ export default function OnamMahabali({ rate22k = null, change = null }: OnamMaha
     const t = setTimeout(() => setBlessing(null), 8000);
     return () => clearTimeout(t);
   }, [blessing]);
+
+  // A blessing freezes him exactly mid-stride; he resumes when it clears.
+  useEffect(() => {
+    blessingRef.current = !!blessing;
+    const a = animRef.current;
+    if (!a) return;
+    if (blessing && a.playState === "running") a.pause();
+    else if (!blessing && a.playState === "paused") a.play();
+  }, [blessing]);
+
+  // The stroll itself: enter from the left, stop once or twice to face you and
+  // wave, walk on, exit right, rest off-screen, repeat — with randomised stops
+  // and pace so no two crossings look alike. Web Animations API (not CSS
+  // keyframes) so the blessing pause/resume lands exactly where he stands.
+  useEffect(() => {
+    if (!show) return;
+    const el = walkerRef.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.style.transform = "translateX(16px)"; // no journey — he just stands near the corner
+      return;
+    }
+    let cancelled = false;
+    const wait = (ms: number) =>
+      new Promise<void>((resolve) => {
+        timerRef.current = setTimeout(resolve, ms);
+      });
+
+    async function walkTo(target: number) {
+      const speed = 4.6 + Math.random() * 1.6; // vw/s — a stroll, not a march
+      const duration = (Math.abs(target - xRef.current) / speed) * 1000;
+      setMoving(true);
+      const a = el!.animate(
+        [
+          { transform: `translateX(${xRef.current}vw)` },
+          { transform: `translateX(${target}vw)` },
+        ],
+        // Near-linear with soft start/stop — nobody accelerates like a metronome.
+        { duration, easing: "cubic-bezier(0.3, 0.05, 0.7, 0.95)", fill: "forwards" },
+      );
+      animRef.current = a;
+      if (blessingRef.current) a.pause();
+      try {
+        await a.finished;
+      } catch {
+        return; // cancelled (unmount/dismiss)
+      }
+      el!.style.transform = `translateX(${target}vw)`;
+      a.cancel();
+      animRef.current = null;
+      xRef.current = target;
+      setMoving(false);
+    }
+
+    (async () => {
+      while (!cancelled) {
+        xRef.current = -24;
+        el.style.transform = "translateX(-24vw)";
+        // One or two greeting stops on the way across, then exit right.
+        const stops =
+          Math.random() < 0.5
+            ? [14 + Math.random() * 18, 105]
+            : [12 + Math.random() * 14, 48 + Math.random() * 22, 105];
+        for (const target of stops) {
+          if (cancelled) return;
+          while (blessingRef.current) await wait(250); // never wander off mid-blessing
+          await walkTo(target);
+          if (cancelled) return;
+          if (target < 100) await wait(1700 + Math.random() * 1800); // stop, face you, wave
+        }
+        await wait(9000 + Math.random() * 9000); // off-screen breather
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      if (timerRef.current) clearTimeout(timerRef.current);
+      animRef.current?.cancel();
+      animRef.current = null;
+    };
+  }, [show]);
 
   function dismiss(e: React.MouseEvent) {
     e.stopPropagation();
@@ -158,12 +245,15 @@ export default function OnamMahabali({ rate22k = null, change = null }: OnamMaha
       className="pointer-events-none fixed inset-x-0 bottom-0 z-30 h-0 select-none"
       aria-hidden={false}
     >
-      {/* Walk = horizontal stroll; freezes while blessing. */}
+      {/* Position along the screen is driven by the journey effect above. */}
       <div
-        className={`mahabali-walk absolute bottom-1 left-0 ${blessing ? "is-blessing" : ""}`}
+        ref={walkerRef}
+        className="absolute bottom-1 left-0 will-change-transform"
+        style={{ transform: "translateX(-24vw)" }}
       >
-        {/* Bob = walking bounce; also freezes while blessing. */}
-        <div className={`mahabali-bob relative ${blessing ? "is-blessing" : ""}`}>
+        {/* .mb-moving gates the gait (stride, bob, rock, arm swing). */}
+        <div className={moving && !blessing ? "mb-moving" : ""}>
+          <div className="mahabali-bob relative">
           {/* Pookalam petal burst — re-keyed per blessing so each tap re-fires. */}
           {petals.map((p) => (
             <span
@@ -216,6 +306,7 @@ export default function OnamMahabali({ rate22k = null, change = null }: OnamMaha
           >
             ✕
           </button>
+          </div>
         </div>
       </div>
     </div>
@@ -256,11 +347,17 @@ function MahabaliSvg() {
       {/* Ground shadow */}
       <ellipse cx="60" cy="149" rx="26" ry="2.6" fill="#000" opacity="0.1" />
 
-      {/* ---- Legs & sandals (mid-stride, behind mundu) ---- */}
-      <rect x="48.5" y="138" width="6.5" height="8" rx="3" fill="#d67a40" />
-      <rect x="65" y="138" width="6.5" height="8" rx="3" fill="#d67a40" />
-      <ellipse cx="51" cy="147.5" rx="5.5" ry="2.3" fill="#8a5a2b" />
-      <ellipse cx="68.5" cy="147.5" rx="5.5" ry="2.3" fill="#8a5a2b" />
+      {/* Everything below rocks gently as one body while he walks. */}
+      <g className="mb-figure">
+      {/* ---- Legs & sandals (stride alternates while walking) ---- */}
+      <g className="mb-leg-b">
+        <rect x="48.5" y="138" width="6.5" height="8" rx="3" fill="#d67a40" />
+        <ellipse cx="51" cy="147.5" rx="5.5" ry="2.3" fill="#8a5a2b" />
+      </g>
+      <g className="mb-leg-f">
+        <rect x="65" y="138" width="6.5" height="8" rx="3" fill="#d67a40" />
+        <ellipse cx="68.5" cy="147.5" rx="5.5" ry="2.3" fill="#8a5a2b" />
+      </g>
 
       {/* ---- Mundu (white dhoti with kasavu border) ---- */}
       <path
@@ -294,11 +391,13 @@ function MahabaliSvg() {
       <circle cx="60" cy="71.5" r="3.4" fill="url(#mb-gold)" stroke="#a86a10" strokeWidth="0.8" />
       <circle cx="60" cy="71.5" r="1.3" fill="#d3382c" />
 
-      {/* ---- Resting arm (screen-left) with armlet + bangle ---- */}
-      <path d="M43 63 Q31 72 34 88" fill="none" stroke="#e08a4e" strokeWidth="9" strokeLinecap="round" />
-      <circle cx="34.5" cy="89.5" r="5.2" fill="#e08a4e" />
-      <path d="M37.8 65.2 L45.2 68.8" stroke="url(#mb-gold)" strokeWidth="3.4" />
-      <path d="M31.4 83.4 L38.4 84.8" stroke="url(#mb-gold)" strokeWidth="2.6" />
+      {/* ---- Resting arm (screen-left) with armlet + bangle — swings while walking ---- */}
+      <g className="mb-arm-rest">
+        <path d="M43 63 Q31 72 34 88" fill="none" stroke="#e08a4e" strokeWidth="9" strokeLinecap="round" />
+        <circle cx="34.5" cy="89.5" r="5.2" fill="#e08a4e" />
+        <path d="M37.8 65.2 L45.2 68.8" stroke="url(#mb-gold)" strokeWidth="3.4" />
+        <path d="M31.4 83.4 L38.4 84.8" stroke="url(#mb-gold)" strokeWidth="2.6" />
+      </g>
 
       {/* ---- Blessing arm (screen-right) — the animated group ---- */}
       <g className="mahabali-wave">
@@ -385,6 +484,7 @@ function MahabaliSvg() {
       />
       <circle cx="60" cy="103" r="4.2" fill="#ffdf6b" stroke="#a86a10" strokeWidth="0.8" />
       <circle cx="60" cy="103" r="1.5" fill="#d3382c" />
+      </g>
     </svg>
   );
 }
