@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { createSupabaseReadClient } from "@/lib/supabase";
 import PavanCalculator from "@/components/PavanCalculator";
+import RelatedTools from "@/components/RelatedTools";
 
 export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
@@ -314,26 +315,7 @@ export default async function PavanToGramCalculatorPage() {
           </p>
         </section>
 
-        <div className="flex flex-wrap items-center justify-center gap-3">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-700 ring-1 ring-inset ring-amber-200/60 transition-colors hover:bg-amber-100 dark:bg-amber-950/30 dark:text-amber-400 dark:ring-amber-800/60"
-          >
-            ← Today&apos;s Gold Rate
-          </Link>
-          <Link
-            href="/tools/gold-making-charge-calculator"
-            className="inline-flex items-center gap-1.5 rounded-full bg-zinc-50 px-4 py-2 text-sm font-semibold text-zinc-700 ring-1 ring-inset ring-zinc-200/60 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:text-zinc-300 dark:ring-zinc-700"
-          >
-            Making Charge Calculator →
-          </Link>
-          <Link
-            href="/tools/hallmark-gold-calculator"
-            className="inline-flex items-center gap-1.5 rounded-full bg-zinc-50 px-4 py-2 text-sm font-semibold text-zinc-700 ring-1 ring-inset ring-zinc-200/60 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:text-zinc-300 dark:ring-zinc-700"
-          >
-            Hallmark Calculator →
-          </Link>
-        </div>
+        <RelatedTools exclude={["/tools/pavan-to-gram-calculator"]} />
       </main>
 
     </>

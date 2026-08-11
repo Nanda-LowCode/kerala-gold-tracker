@@ -10,6 +10,7 @@ import { VerdictPill } from "@/components/VerdictPill";
 import { RangeBar } from "@/components/RangeBar";
 import { NewsSparkline } from "@/components/NewsSparkline";
 import { RateCard, RateBoard } from "@/components/RateCards";
+import RelatedTools from "@/components/RelatedTools";
 
 export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
@@ -318,6 +319,8 @@ export default async function NewsDay({ params }: RouteParams) {
           {prev ? <NavCard direction="prev" date={prev} /> : <div />}
           {next ? <NavCard direction="next" date={next} /> : <div />}
         </nav>
+
+        <RelatedTools heading="Gold tools & guides" />
 
         {/* CTA + internal links — these daily pages rank well, so they pass
             authority to the city pages and money guides linked from here. */}

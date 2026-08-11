@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { createSupabaseReadClient } from "@/lib/supabase";
 import GoldCalculator from "@/components/GoldCalculator";
+import RelatedTools from "@/components/RelatedTools";
 
 export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
@@ -141,6 +142,8 @@ export default async function GoldMakingChargeCalculatorPage() {
             quick way to plan your jewelry budget before visiting a store.
           </p>
         </section>
+
+        <RelatedTools exclude={["/tools/gold-making-charge-calculator"]} />
 
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Link
