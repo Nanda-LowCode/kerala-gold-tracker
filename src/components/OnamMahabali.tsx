@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 /**
@@ -16,36 +17,79 @@ export const ONAM_START = new Date("2026-08-11T00:00:00+05:30");
 export const ONAM_END = new Date("2026-09-06T23:59:59+05:30");
 const DISMISS_KEY = "onam-2026-mahabali-dismissed";
 
+/** A blessing plus its language, so the bubble can carry a correct lang attribute. */
+interface Line {
+  text: string;
+  ml?: boolean;
+}
+const en = (text: string): Line => ({ text });
+const ml = (text: string): Line => ({ text, ml: true });
+
 // Blessings — a mix of Onam warmth and gentle gold-site humour.
-const BLESSINGS = [
-  "ഓണാശംസകൾ! 🌼 May your gold rate dip the day *before* you buy.",
-  "Blessings, my child! 🙏 Even in Pataala I check livegoldkerala.com.",
-  "Onam greetings! ✨ May your making charges be low and your wastage lower.",
-  "I rise but once a year — unlike the gold rate, which climbs every day. 📈",
-  "May your sadhya be grand 🍛 and your 22K be a true 916.",
-  "Blessed be! 💰 I ruled all Kerala and *still* can't afford a full pavan today.",
-  "Happy Onam! 🌸 Buy gold if you must — but read the bill line by line.",
+// Malayalam wording follows the vocabulary already used on /ml
+// (സ്വർണ്ണ വില, പവൻ, പണിക്കൂലി, തേയ്മാനം).
+const BLESSINGS_EN: Line[] = [
+  en("Blessings, my child! 🙏 Even in Pataala I check livegoldkerala.com."),
+  en("Onam greetings! ✨ May your making charges be low and your wastage lower."),
+  en("I rise but once a year — unlike the gold rate, which climbs every day. 📈"),
+  en("May your sadhya be grand 🍛 and your 22K be a true 916."),
+  en("Blessed be! 💰 I ruled all Kerala and *still* can't afford a full pavan today."),
+  en("Happy Onam! 🌸 Buy gold if you must — but read the bill line by line."),
+];
+
+const BLESSINGS_ML: Line[] = [
+  ml("ഓണാശംസകൾ! 🌼 നിങ്ങൾ വാങ്ങുന്നതിന്റെ തലേദിവസം വില കുറയട്ടെ!"),
+  ml("അനുഗ്രഹം, കുഞ്ഞേ! 🙏 പാതാളത്തിലിരുന്നും ഞാൻ സ്വർണ്ണവില നോക്കാറുണ്ട്."),
+  ml("ഓണാശംസകൾ! ✨ പണിക്കൂലി കുറയട്ടെ, തേയ്മാനം അതിലും കുറയട്ടെ."),
+  ml("ഞാൻ വർഷത്തിൽ ഒരിക്കലേ ഉയരൂ — സ്വർണ്ണവിലയോ എന്നും ഉയരുന്നു! 📈"),
+  ml("സദ്യ ഗംഭീരമാകട്ടെ 🍛 നിങ്ങളുടെ 22K യഥാർത്ഥ 916 ആകട്ടെ."),
+  ml("ഞാൻ കേരളം മുഴുവൻ ഭരിച്ചവനാണ് — എന്നിട്ടും ഇന്നൊരു പവൻ വാങ്ങാൻ കാശില്ല! 💰"),
+  ml("ഹാപ്പി ഓണം! 🌸 സ്വർണ്ണം വാങ്ങിക്കോളൂ — പക്ഷേ ബില്ല് വരിവരിയായി വായിക്കണം."),
 ];
 
 /** Lines that react to today's actual rate — he *knows* the board rate. */
-function buildRateLines(rate22k: number | null, change: number | null): string[] {
+function buildRateLines(
+  rate22k: number | null,
+  change: number | null,
+  malayalam: boolean,
+): Line[] {
   if (rate22k == null) return [];
   const rate = `₹${rate22k.toLocaleString("en-IN")}`;
-  const lines = [`Today's 22K is ${rate}/g. In my day the whole kingdom cost less. 👑`];
+  const d = change != null ? `₹${Math.abs(change).toLocaleString("en-IN")}` : "";
+
+  if (malayalam) {
+    const lines = [
+      ml(`ഇന്നത്തെ 22K വില ${rate}/ഗ്രാം. എന്റെ കാലത്ത് രാജ്യം മുഴുവൻ ഇതിലും വിലകുറവായിരുന്നു! 👑`),
+    ];
+    if (change != null && change < 0) {
+      lines.push(
+        ml(`സ്വർഗ്ഗം പുഞ്ചിരിക്കുന്നു! 🌤️ ഇന്ന് 22K ${d} കുറഞ്ഞു — പോയി വിലപേശിക്കോളൂ, കുഞ്ഞേ.`),
+        ml(`${d} കുറഞ്ഞു! വാമനൻ പോലും ഇത്ര നന്നായി താഴ്ത്തിയിട്ടില്ല. 😄`),
+      );
+    } else if (change != null && change > 0) {
+      lines.push(
+        ml(`ഇന്ന് ${d} കൂടി, കുഞ്ഞേ. ഞാൻ പോലും വില കുറയാൻ കാത്തിരിക്കുകയാണ് — പാതാളം എന്റേതായിട്ടും. 🥲`),
+        ml(`22K ഒറ്റരാത്രികൊണ്ട് ${d} കയറി. ഞാൻ പാതാളത്തിൽ നിന്ന് കയറുന്നതിലും വേഗത്തിൽ! 📈`),
+      );
+    } else if (change === 0) {
+      lines.push(ml("ഇന്ന് വിലയ്ക്ക് മാറ്റമില്ല — അപൂർവ്വമായ ഒരു സമാധാനം. ആസ്വദിക്കൂ. ⚖️"));
+    }
+    return lines;
+  }
+
+  const lines = [en(`Today's 22K is ${rate}/g. In my day the whole kingdom cost less. 👑`)];
   if (change != null && change < 0) {
-    const d = `₹${Math.abs(change).toLocaleString("en-IN")}`;
     lines.push(
-      `The heavens smile! 🌤️ 22K is down ${d} today — go forth and bargain, my child.`,
-      `A dip of ${d}! Not even Vamana pushes things down this well. 😄`,
+      en(`The heavens smile! 🌤️ 22K is down ${d} today — go forth and bargain, my child.`),
+      en(`A dip of ${d}! Not even Vamana pushes things down this well. 😄`),
     );
   } else if (change != null && change > 0) {
-    const d = `₹${change.toLocaleString("en-IN")}`;
     lines.push(
-      `Up ${d} today, my child. Even I wait for a dip — and I own Pataala. 🥲`,
-      `22K rose ${d} overnight. It climbs faster than I climb out of the netherworld. 📈`,
+      en(`Up ${d} today, my child. Even I wait for a dip — and I own Pataala. 🥲`),
+      en(`22K rose ${d} overnight. It climbs faster than I climb out of the netherworld. 📈`),
     );
   } else if (change === 0) {
-    lines.push("The rate hasn't moved today — a rare moment of peace. Savour it. ⚖️");
+    lines.push(en("The rate hasn't moved today — a rare moment of peace. Savour it. ⚖️"));
   }
   return lines;
 }
@@ -81,9 +125,12 @@ interface OnamMahabaliProps {
 
 export default function OnamMahabali({ rate22k = null, change = null }: OnamMahabaliProps) {
   const [show, setShow] = useState(false);
-  const [blessing, setBlessing] = useState<string | null>(null);
+  const [blessing, setBlessing] = useState<Line | null>(null);
   const [petals, setPetals] = useState<Petal[]>([]);
   const [moving, setMoving] = useState(false);
+  // On the Malayalam site he speaks only Malayalam; elsewhere he mixes both,
+  // which is how Malayalis actually talk.
+  const isMlSite = (usePathname() ?? "").startsWith("/ml");
   const tappedOnce = useRef(false);
   const walkerRef = useRef<HTMLDivElement>(null);
   const animRef = useRef<Animation | null>(null);
@@ -207,13 +254,14 @@ export default function OnamMahabali({ rate22k = null, change = null }: OnamMaha
 
   function bless() {
     setPetals(makePetals());
-    const rateLines = buildRateLines(rate22k, change);
+    const rateLines = buildRateLines(rate22k, change, isMlSite);
+    const general = isMlSite ? BLESSINGS_ML : [...BLESSINGS_EN, ...BLESSINGS_ML];
     setBlessing((prev) => {
       // First tap gets a rate-aware line (he knows today's board rate);
       // after that, pick fresh from the full pool.
       const pool = (
-        !tappedOnce.current && rateLines.length > 0 ? rateLines : [...BLESSINGS, ...rateLines]
-      ).filter((b) => b !== prev);
+        !tappedOnce.current && rateLines.length > 0 ? rateLines : [...general, ...rateLines]
+      ).filter((b) => b.text !== prev?.text);
       tappedOnce.current = true;
       return pool[Math.floor(Math.random() * pool.length)];
     });
@@ -223,17 +271,23 @@ export default function OnamMahabali({ rate22k = null, change = null }: OnamMaha
 
   // WhatsApp share — the blessing + today's rate + a link back. User-initiated,
   // opens WhatsApp's own composer (nothing is sent automatically).
+  // The forwarded message follows the language of the blessing itself.
+  const shareMl = blessing?.ml ?? false;
+  const delta =
+    change != null && change !== 0
+      ? ` (${change > 0 ? "▲" : "▼"} ₹${Math.abs(change).toLocaleString("en-IN")})`
+      : "";
   const shareText = blessing
     ? [
-        `🪔 ${blessing.replace(/\*/g, "")}`,
+        `🪔 ${blessing.text.replace(/\*/g, "")}`,
         rate22k != null
-          ? `Today's 22K in Kerala: ₹${rate22k.toLocaleString("en-IN")}/g${
-              change != null && change !== 0
-                ? ` (${change > 0 ? "▲" : "▼"} ₹${Math.abs(change).toLocaleString("en-IN")})`
-                : ""
-            }`
+          ? shareMl
+            ? `ഇന്നത്തെ കേരള 22K സ്വർണ്ണവില: ₹${rate22k.toLocaleString("en-IN")}/ഗ്രാം${delta}`
+            : `Today's 22K in Kerala: ₹${rate22k.toLocaleString("en-IN")}/g${delta}`
           : null,
-        "Live rate: https://www.livegoldkerala.com",
+        shareMl
+          ? "തത്സമയ നിരക്ക്: https://www.livegoldkerala.com"
+          : "Live rate: https://www.livegoldkerala.com",
       ]
         .filter(Boolean)
         .join("\n")
@@ -272,8 +326,14 @@ export default function OnamMahabali({ rate22k = null, change = null }: OnamMaha
           ))}
           {/* Speech bubble */}
           {blessing && (
-            <div className="animate-rise absolute bottom-[105%] left-1/2 w-56 -translate-x-1/3 rounded-2xl border border-amber-300 bg-white px-3.5 py-2.5 text-[13px] font-medium leading-snug text-zinc-800 shadow-xl dark:border-amber-500/50 dark:bg-zinc-900 dark:text-zinc-100">
-              {blessing}
+            <div
+              lang={blessing.ml ? "ml" : undefined}
+              className={`animate-rise absolute bottom-[105%] left-1/2 -translate-x-1/3 rounded-2xl border border-amber-300 bg-white px-3.5 py-2.5 font-medium text-zinc-800 shadow-xl dark:border-amber-500/50 dark:bg-zinc-900 dark:text-zinc-100 ${
+                // Malayalam script needs a touch more room and line height.
+                blessing.ml ? "w-64 text-[13px] leading-relaxed" : "w-56 text-[13px] leading-snug"
+              }`}
+            >
+              {blessing.text}
               <a
                 href={waHref}
                 target="_blank"
@@ -281,7 +341,7 @@ export default function OnamMahabali({ rate22k = null, change = null }: OnamMaha
                 onClick={(e) => e.stopPropagation()}
                 className="pointer-events-auto mt-1.5 flex w-fit items-center gap-1 rounded-full bg-emerald-600 px-2.5 py-1 text-[11px] font-bold text-white shadow-sm transition-colors hover:bg-emerald-700"
               >
-                Share the blessing 🪔
+                {blessing.ml ? "അനുഗ്രഹം പങ്കുവയ്ക്കൂ 🪔" : "Share the blessing 🪔"}
               </a>
               <span className="absolute -bottom-1.5 left-8 h-3 w-3 rotate-45 border-b border-r border-amber-300 bg-white dark:border-amber-500/50 dark:bg-zinc-900" />
             </div>
@@ -290,8 +350,10 @@ export default function OnamMahabali({ rate22k = null, change = null }: OnamMaha
           <button
             type="button"
             onClick={bless}
-            aria-label="Tap King Mahabali for an Onam blessing"
-            title="Onaashamsakal! Tap me 🙏"
+            aria-label={
+              isMlSite ? "ഓണാശംസകൾക്കായി മാവേലിയെ തൊടുക" : "Tap King Mahabali for an Onam blessing"
+            }
+            title={isMlSite ? "ഓണാശംസകൾ! എന്നെ തൊടൂ 🙏" : "Onaashamsakal! Tap me 🙏"}
             className="pointer-events-auto block cursor-pointer bg-transparent p-0"
           >
             <MahabaliSvg />
