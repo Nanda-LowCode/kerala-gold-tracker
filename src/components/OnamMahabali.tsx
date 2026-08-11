@@ -255,13 +255,21 @@ export default function OnamMahabali({ rate22k = null, change = null }: OnamMaha
   function bless() {
     setPetals(makePetals());
     const rateLines = buildRateLines(rate22k, change, isMlSite);
-    const general = isMlSite ? BLESSINGS_ML : [...BLESSINGS_EN, ...BLESSINGS_ML];
     setBlessing((prev) => {
-      // First tap gets a rate-aware line (he knows today's board rate);
-      // after that, pick fresh from the full pool.
-      const pool = (
-        !tappedOnce.current && rateLines.length > 0 ? rateLines : [...general, ...rateLines]
-      ).filter((b) => b.text !== prev?.text);
+      let candidates: Line[];
+      if (!tappedOnce.current && rateLines.length > 0) {
+        // First tap always reacts to today's board rate.
+        candidates = rateLines;
+      } else if (isMlSite) {
+        // The Malayalam site is Malayalam throughout.
+        candidates = [...BLESSINGS_ML, ...rateLines];
+      } else {
+        // Main (English) site: English by default, with the occasional Malayalam
+        // line as a seasonal treat — roughly one blessing in four.
+        candidates =
+          Math.random() < 0.25 ? BLESSINGS_ML : [...BLESSINGS_EN, ...rateLines];
+      }
+      const pool = candidates.filter((b) => b.text !== prev?.text);
       tappedOnce.current = true;
       return pool[Math.floor(Math.random() * pool.length)];
     });
