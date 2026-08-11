@@ -94,6 +94,11 @@ function buildRateLines(
   return lines;
 }
 
+// Where he waits off-screen before each crossing. Kept close to the edge so he
+// walks into view within a few seconds — on mobile especially, sessions are
+// short and a long entrance means most visitors never see him.
+const START_X = -18;
+
 // Pookalam palette — marigold, jasmine, a touch of red.
 const PETAL_COLORS = ["#fbbf24", "#f59e0b", "#fb923c", "#f97316", "#fde68a", "#fff7ed", "#ef4444"];
 
@@ -134,7 +139,7 @@ export default function OnamMahabali({ rate22k = null, change = null }: OnamMaha
   const tappedOnce = useRef(false);
   const walkerRef = useRef<HTMLDivElement>(null);
   const animRef = useRef<Animation | null>(null);
-  const xRef = useRef(-24); // current position in vw
+  const xRef = useRef(START_X); // current position in vw
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const blessingRef = useRef(false);
 
@@ -149,7 +154,7 @@ export default function OnamMahabali({ rate22k = null, change = null }: OnamMaha
     } catch {
       /* private mode — just show him */
     }
-    const t = setTimeout(() => setShow(true), 1500);
+    const t = setTimeout(() => setShow(true), 700);
     return () => clearTimeout(t);
   }, []);
 
@@ -216,13 +221,14 @@ export default function OnamMahabali({ rate22k = null, change = null }: OnamMaha
 
     (async () => {
       while (!cancelled) {
-        xRef.current = -24;
-        el.style.transform = "translateX(-24vw)";
-        // One or two greeting stops on the way across, then exit right.
+        xRef.current = START_X;
+        el.style.transform = `translateX(${START_X}vw)`;
+        // One or two greeting stops on the way across, then exit right. The
+        // first stop is early so he's on screen quickly.
         const stops =
           Math.random() < 0.5
-            ? [14 + Math.random() * 18, 105]
-            : [12 + Math.random() * 14, 48 + Math.random() * 22, 105];
+            ? [10 + Math.random() * 14, 105]
+            : [8 + Math.random() * 12, 46 + Math.random() * 22, 105];
         for (const target of stops) {
           if (cancelled) return;
           while (blessingRef.current) await wait(250); // never wander off mid-blessing
@@ -230,7 +236,7 @@ export default function OnamMahabali({ rate22k = null, change = null }: OnamMaha
           if (cancelled) return;
           if (target < 100) await wait(1700 + Math.random() * 1800); // stop, face you, wave
         }
-        await wait(9000 + Math.random() * 9000); // off-screen breather
+        await wait(5000 + Math.random() * 5000); // off-screen breather
       }
     })();
 
@@ -310,8 +316,13 @@ export default function OnamMahabali({ rate22k = null, change = null }: OnamMaha
       {/* Position along the screen is driven by the journey effect above. */}
       <div
         ref={walkerRef}
-        className="absolute bottom-1 left-0 will-change-transform"
-        style={{ transform: "translateX(-24vw)" }}
+        className="absolute left-0 will-change-transform"
+        style={{
+          transform: `translateX(${START_X}vw)`,
+          // Clear the iOS home indicator / browser bottom bar so his feet
+          // aren't cut off on phones.
+          bottom: "calc(0.25rem + env(safe-area-inset-bottom, 0px))",
+        }}
       >
         {/* .mb-moving gates the gait (stride, bob, rock, arm swing). */}
         <div className={moving && !blessing ? "mb-moving" : ""}>
@@ -394,7 +405,7 @@ function MahabaliSvg() {
     <svg
       viewBox="0 0 120 152"
       xmlns="http://www.w3.org/2000/svg"
-      className="h-auto w-[64px] drop-shadow-md sm:w-[86px]"
+      className="h-auto w-[72px] drop-shadow-md sm:w-[86px]"
       role="img"
       aria-label="King Mahabali"
     >
