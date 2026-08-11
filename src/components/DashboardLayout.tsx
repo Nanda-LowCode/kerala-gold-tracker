@@ -29,6 +29,19 @@ import { GoldRate } from "@/lib/types";
 import { getCityData, getCityTowns } from "@/lib/cityData";
 import { getAllPosts } from "@/lib/mdx";
 
+/**
+ * Days until Thiruvonam 2026 (26 Aug), in IST. Returns null outside the
+ * 30-day run-up (chip hides itself after the festival). Pages revalidate
+ * daily via the update-rates cron, so the count stays fresh.
+ */
+function getDaysToThiruvonam(): number | null {
+  const nowIST = new Date(Date.now() + 5.5 * 3600 * 1000);
+  const today = Date.UTC(nowIST.getUTCFullYear(), nowIST.getUTCMonth(), nowIST.getUTCDate());
+  const thiruvonam = Date.UTC(2026, 7, 26);
+  const days = Math.round((thiruvonam - today) / 86400000);
+  return days >= 0 && days <= 30 ? days : null;
+}
+
 function formatDate(dateStr: string): string {
   return new Date(dateStr + "T00:00:00").toLocaleDateString("en-IN", {
     weekday: "long",
@@ -318,6 +331,23 @@ export default async function DashboardLayout({
                     : `${change22k > 0 ? "Up" : "Down"} ₹${Math.abs(change22k).toLocaleString("en-IN")}/g (22K) since yesterday · ${((Math.abs(change22k) / yesterday.rate_22k_1g) * 100).toFixed(2)}%`}
                 </p>
               )}
+              {/* Seasonal: Onam countdown → the Onam gold guide. Hides itself after the festival. */}
+              {(() => {
+                const daysToOnam = getDaysToThiruvonam();
+                if (daysToOnam === null) return null;
+                return (
+                  <Link
+                    href="/blog/onam-gold-buying-guide-kerala-2026"
+                    className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-amber-300/70 bg-gradient-to-r from-amber-50 to-orange-50 px-3 py-1 text-xs font-bold text-amber-800 shadow-sm transition-colors hover:from-amber-100 hover:to-orange-100 dark:border-amber-700/50 dark:from-amber-950/40 dark:to-orange-950/30 dark:text-amber-300"
+                  >
+                    <span aria-hidden>🌼</span>
+                    {daysToOnam === 0
+                      ? "Happy Thiruvonam!"
+                      : `${daysToOnam} day${daysToOnam === 1 ? "" : "s"} to Thiruvonam`}
+                    <span className="font-semibold opacity-80">· Onam Gold Guide →</span>
+                  </Link>
+                );
+              })()}
             </section>
 
             {/* Rate Cards: 22K hero + rate board — lead with the number users came for,

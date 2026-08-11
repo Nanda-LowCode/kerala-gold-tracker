@@ -50,6 +50,30 @@ function buildRateLines(rate22k: number | null, change: number | null): string[]
   return lines;
 }
 
+// Pookalam palette — marigold, jasmine, a touch of red.
+const PETAL_COLORS = ["#fbbf24", "#f59e0b", "#fb923c", "#f97316", "#fde68a", "#fff7ed", "#ef4444"];
+
+interface Petal {
+  id: number;
+  dx: number;
+  dy: number;
+  rot: number;
+  delay: number;
+  color: string;
+}
+
+/** A fresh burst of petals, scattered up and outward from his crown. */
+function makePetals(): Petal[] {
+  return Array.from({ length: 14 }, (_, i) => ({
+    id: Date.now() + i,
+    dx: Math.round(Math.random() * 140 - 70),
+    dy: Math.round(-30 - Math.random() * 85),
+    rot: Math.round(Math.random() * 360 - 180),
+    delay: Math.random() * 0.15,
+    color: PETAL_COLORS[i % PETAL_COLORS.length],
+  }));
+}
+
 interface OnamMahabaliProps {
   rate22k?: number | null;
   change?: number | null;
@@ -58,6 +82,7 @@ interface OnamMahabaliProps {
 export default function OnamMahabali({ rate22k = null, change = null }: OnamMahabaliProps) {
   const [show, setShow] = useState(false);
   const [blessing, setBlessing] = useState<string | null>(null);
+  const [petals, setPetals] = useState<Petal[]>([]);
   const tappedOnce = useRef(false);
 
   // Gate on mount: only render inside the Onam window, and not if dismissed.
@@ -94,6 +119,7 @@ export default function OnamMahabali({ rate22k = null, change = null }: OnamMaha
   }
 
   function bless() {
+    setPetals(makePetals());
     const rateLines = buildRateLines(rate22k, change);
     setBlessing((prev) => {
       // First tap gets a rate-aware line (he knows today's board rate);
@@ -138,6 +164,22 @@ export default function OnamMahabali({ rate22k = null, change = null }: OnamMaha
       >
         {/* Bob = walking bounce; also freezes while blessing. */}
         <div className={`mahabali-bob relative ${blessing ? "is-blessing" : ""}`}>
+          {/* Pookalam petal burst — re-keyed per blessing so each tap re-fires. */}
+          {petals.map((p) => (
+            <span
+              key={p.id}
+              className="mahabali-petal left-1/2 top-5 h-2.5 w-1.5 rounded-full"
+              style={
+                {
+                  background: p.color,
+                  animationDelay: `${p.delay}s`,
+                  "--dx": `${p.dx}px`,
+                  "--dy": `${p.dy}px`,
+                  "--rot": `${p.rot}deg`,
+                } as React.CSSProperties
+              }
+            />
+          ))}
           {/* Speech bubble */}
           {blessing && (
             <div className="animate-rise absolute bottom-[105%] left-1/2 w-56 -translate-x-1/3 rounded-2xl border border-amber-300 bg-white px-3.5 py-2.5 text-[13px] font-medium leading-snug text-zinc-800 shadow-xl dark:border-amber-500/50 dark:bg-zinc-900 dark:text-zinc-100">
