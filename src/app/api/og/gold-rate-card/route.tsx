@@ -8,23 +8,44 @@ function fmt(n: number): string {
   return "₹" + n.toLocaleString("en-IN");
 }
 
+function changeBadge(change: number, light: boolean) {
+  if (change === 0) return null;
+  const up = change > 0;
+  const bg = light
+    ? up ? "rgba(22,163,74,0.18)" : "rgba(220,38,38,0.18)"
+    : up ? "rgba(74,222,128,0.18)" : "rgba(248,113,113,0.18)";
+  const fg = light
+    ? up ? "#15803d" : "#b91c1c"
+    : up ? "#86efac" : "#fca5a5";
+  return (
+    <span style={{ display: "flex", alignItems: "center", gap: "4px", background: bg, borderRadius: "10px", padding: "4px 14px", fontSize: "22px", fontWeight: 700, color: fg, marginTop: "8px" }}>
+      {up ? "▲" : "▼"} {fmt(Math.abs(change))}
+    </span>
+  );
+}
+
 export async function GET() {
   const supabase = createSupabaseReadClient();
-  const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
 
-  const { data } = await supabase
+  const { data: rows } = await supabase
     .from("daily_gold_rates")
-    .select("rate_22k_1g, rate_24k_1g")
-    .eq("date", today)
+    .select("date, rate_22k_1g, rate_24k_1g")
     .eq("city", "Kochi")
-    .single();
+    .order("date", { ascending: false })
+    .limit(2);
 
-  const rate22k = data?.rate_22k_1g ?? 0;
-  const rate24k = data?.rate_24k_1g ?? 0;
+  const latest = rows?.[0];
+  const prev = rows?.[1];
+
+  const rate22k = latest?.rate_22k_1g ?? 0;
+  const rate24k = latest?.rate_24k_1g ?? 0;
   const pavan22k = rate22k * 8;
   const pavan24k = rate24k * 8;
+  const change22k = prev ? rate22k - prev.rate_22k_1g : 0;
+  const change24k = prev ? rate24k - prev.rate_24k_1g : 0;
 
-  const dateFormatted = new Date(today + "T00:00:00").toLocaleDateString("en-IN", {
+  const dateStr = latest?.date ?? new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+  const dateFormatted = new Date(dateStr + "T00:00:00").toLocaleDateString("en-IN", {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -120,7 +141,8 @@ export async function GET() {
             <span style={{ fontSize: "62px", fontWeight: 800, color: "#0d0500", lineHeight: "1" }}>
               {fmt(rate22k)}
             </span>
-            <span style={{ fontSize: "18px", color: "#4a2800", marginBottom: "18px" }}>per gram</span>
+            <span style={{ fontSize: "18px", color: "#4a2800", marginBottom: change22k ? "6px" : "18px" }}>per gram</span>
+            {changeBadge(change22k, true)}
             <div style={{ width: "85%", height: "1px", background: "#5a3d00", display: "flex", marginBottom: "18px" }} />
             <span style={{ fontSize: "34px", fontWeight: 700, color: "#1a0a00" }}>
               {fmt(pavan22k)}
@@ -150,7 +172,8 @@ export async function GET() {
             <span style={{ fontSize: "62px", fontWeight: 800, color: "#fff8e0", lineHeight: "1" }}>
               {fmt(rate24k)}
             </span>
-            <span style={{ fontSize: "18px", color: "#ffe0a0", marginBottom: "18px" }}>per gram</span>
+            <span style={{ fontSize: "18px", color: "#ffe0a0", marginBottom: change24k ? "6px" : "18px" }}>per gram</span>
+            {changeBadge(change24k, false)}
             <div style={{ width: "85%", height: "1px", background: "#7a5c20", display: "flex", marginBottom: "18px" }} />
             <span style={{ fontSize: "34px", fontWeight: 700, color: "#fff8e0" }}>
               {fmt(pavan24k)}
