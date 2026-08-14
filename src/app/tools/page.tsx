@@ -13,9 +13,19 @@ interface ToolEntry {
   title: string;
   blurb: string;
   badge: string;
+  /** Overrides the default /tools/{slug} path for tools that live elsewhere. */
+  href?: string;
 }
 
 const TOOLS: ToolEntry[] = [
+  {
+    slug: "my-gold",
+    href: "/my-gold",
+    title: "My Gold",
+    blurb:
+      "Add the gold you own and see what it's worth today — each purchase priced from the actual board rate on the day you bought it.",
+    badge: "New",
+  },
   {
     slug: "gold-making-charge-calculator",
     title: "Making Charge Calculator",
@@ -91,7 +101,7 @@ export default function ToolsIndex() {
         {TOOLS.map((tool, i) => (
           <li key={tool.slug} className={i === 0 ? "sm:col-span-2" : ""}>
             <Link
-              href={`/tools/${tool.slug}`}
+              href={tool.href ?? `/tools/${tool.slug}`}
               className={`group relative flex h-full flex-col gap-3 overflow-hidden rounded-2xl border bg-white p-5 shadow-md transition-all hover:-translate-y-0.5 dark:bg-zinc-900 md:p-6 ${
                 i === 0
                   ? "border-amber-300 shadow-amber-200/40 hover:shadow-xl hover:shadow-amber-300/40 dark:border-amber-500/40 dark:shadow-none"

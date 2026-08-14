@@ -5,6 +5,7 @@ import Link from "next/link";
 // internal linking for SEO). Order = rough priority; each page excludes itself.
 const LINKS: { href: string; label: string; blurb: string }[] = [
   { href: "/", label: "Today's Gold Rate", blurb: "Live 22K & 24K Kerala rate" },
+  { href: "/my-gold", label: "My Gold", blurb: "Track what your gold is worth" },
   { href: "/tools/gold-making-charge-calculator", label: "Making Charge Calculator", blurb: "Real showroom price + GST" },
   { href: "/tools/pavan-to-gram-calculator", label: "Gram ↔ Pavan Converter", blurb: "Convert + today's value" },
   { href: "/tools/hallmark-gold-calculator", label: "Hallmark Value", blurb: "916 / 750 / 999 gold value" },

@@ -50,6 +50,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const TOOLS_DATE = new Date('2026-05-01')
   const toolRoutes: MetadataRoute.Sitemap = [
     { url: `${BASE}/tools`, lastModified: TOOLS_DATE, changeFrequency: 'monthly' as const, priority: 0.85 },
+    // Not under /tools — it holds the user's own saved portfolio, not a one-shot calculator.
+    { url: `${BASE}/my-gold`, lastModified: new Date(), changeFrequency: 'monthly' as const, priority: 0.9 },
     ...[
       'pavan-to-gram-calculator',
       'gold-making-charge-calculator',

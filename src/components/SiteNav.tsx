@@ -14,6 +14,7 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { label: "Today", href: "/" },
+  { label: "My Gold", href: "/my-gold", prefix: true },
   { label: "Daily News", href: "/news", prefix: true },
   { label: "Calculators", href: "/tools", prefix: true },
   { label: "Jewellers", href: "/jewellers", prefix: true },
