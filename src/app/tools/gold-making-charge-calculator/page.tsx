@@ -6,18 +6,47 @@ import RelatedTools from "@/components/RelatedTools";
 
 export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
-export const metadata: Metadata = {
-  title: "Gold Making Charges in Kerala 2026 — Calculator (22K, 24K + GST)",
-  description:
-    "Calculate making charges for gold in Kerala with live board rates. Our free Kerala gold calculator adds making charges (8%–25%) and 3% GST to show the real showroom price per gram and per pavan for 22K, 24K and 18K.",
-  alternates: { canonical: "/tools/gold-making-charge-calculator" },
-  openGraph: {
-    title: "Gold Making Charges in Kerala 2026 — Calculator (22K, 24K + GST)",
-    description:
-      "Free tool to estimate Kerala jewelry prices with making charges and GST included.",
-    url: "https://www.livegoldkerala.com/tools/gold-making-charge-calculator",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  let rateSnippet = "";
+  let descRate = "";
+
+  try {
+    const supabase = createSupabaseReadClient();
+    const { data } = await supabase
+      .from("daily_gold_rates")
+      .select("date, rate_22k_1g")
+      .eq("city", "Kochi")
+      .order("date", { ascending: false })
+      .limit(1)
+      .single();
+
+    if (data) {
+      const rate = data.rate_22k_1g;
+      const dateStr = new Date(data.date + "T00:00:00").toLocaleDateString("en-IN", {
+        month: "short",
+        day: "numeric",
+      });
+      rateSnippet = ` — 22K @ ₹${rate.toLocaleString("en-IN")}/g (${dateStr})`;
+      descRate = `Today's 22K board rate is ₹${rate.toLocaleString("en-IN")}/gram. `;
+    }
+  } catch {
+    // fall through to static fallback
+  }
+
+  const title = `Gold Making Charges in Kerala 2026 — Calculator${rateSnippet}`;
+  const description = `${descRate}Calculate making charges (8%–25%) and 3% GST to see the real showroom price per gram and per pavan for 22K, 24K and 18K gold. Free calculator.`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: "/tools/gold-making-charge-calculator" },
+    openGraph: {
+      title: `Gold Making Charge Calculator — Kerala 2026`,
+      description,
+      url: "https://www.livegoldkerala.com/tools/gold-making-charge-calculator",
+    },
+  };
+}
 
 async function getLatestRates() {
   try {

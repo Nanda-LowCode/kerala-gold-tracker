@@ -6,18 +6,51 @@ import RelatedTools from "@/components/RelatedTools";
 
 export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
-export const metadata: Metadata = {
-  title: "Gram to Pavan & Sovereign Converter — Kerala Gold Rate",
-  description:
-    "Convert grams to pavan, sovereign and tola in one tap — 8g, 10g, 20g, 40g, 100g — and see the gold value at today's Kerala 916 rate. 1 pavan = 8 grams. Free converter.",
-  alternates: { canonical: "/tools/pavan-to-gram-calculator" },
-  openGraph: {
-    title: "Gram to Pavan Converter — Kerala Gold Rate",
-    description:
-      "Convert grams to pavan, sovereign and tola with today's Kerala gold value. 1 pavan = 8 grams. Free converter.",
-    url: "https://www.livegoldkerala.com/tools/pavan-to-gram-calculator",
-  },
-};
+function fmt(n: number): string {
+  return "₹" + n.toLocaleString("en-IN");
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  let pavanPrice = "";
+  let descRate = "";
+
+  try {
+    const supabase = createSupabaseReadClient();
+    const { data } = await supabase
+      .from("daily_gold_rates")
+      .select("date, rate_22k_1g, rate_24k_1g")
+      .eq("city", "Kochi")
+      .order("date", { ascending: false })
+      .limit(1)
+      .single();
+
+    if (data) {
+      const pavan22k = data.rate_22k_1g * 8;
+      const dateStr = new Date(data.date + "T00:00:00").toLocaleDateString("en-IN", {
+        month: "short",
+        day: "numeric",
+      });
+      pavanPrice = ` (${dateStr}): ${fmt(pavan22k)}`;
+      descRate = `1 pavan (8 grams) of 22K gold costs ${fmt(pavan22k)} in Kerala today. `;
+    }
+  } catch {
+    // fall through to static fallback
+  }
+
+  const title = `1 Pavan Gold Rate Today${pavanPrice} — Kerala 22K Price`;
+  const description = `${descRate}Convert grams to pavan, sovereign and tola and see the gold value at today's Kerala 916 rate. 1 pavan = 8 grams. Free calculator.`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: "/tools/pavan-to-gram-calculator" },
+    openGraph: {
+      title,
+      description,
+      url: "https://www.livegoldkerala.com/tools/pavan-to-gram-calculator",
+    },
+  };
+}
 
 async function getLatestRates() {
   try {
