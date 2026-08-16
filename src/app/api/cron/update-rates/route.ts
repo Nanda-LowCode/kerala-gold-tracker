@@ -552,14 +552,69 @@ export async function GET(request: NextRequest) {
             console.log(`[gold-cron] Fired price-drop alerts to ${alertSubs.length} users.`);
           }
 
-          // General daily broadcast to all subscribers
-          const payload = JSON.stringify({
-            title: `Gold Rate: ₹${data.rate_22k_1g.toLocaleString("en-IN")}/g`,
+          // Capture today's rates in locals: the `data` narrowing from the
+          // earlier `if (!data) return` doesn't propagate into the closure below.
+          const rate22kToday = data.rate_22k_1g;
+          const rate24kToday = data.rate_24k_1g;
+          const rate18kToday = data.rate_18k_1g ?? 0;
+
+          // Generic broadcast payload — used for subscribers who haven't
+          // opted into portfolio push, and as the fallback when portfolio
+          // computation somehow produces nothing.
+          const genericPayload = JSON.stringify({
+            title: `Gold Rate: ₹${rate22kToday.toLocaleString("en-IN")}/g`,
             body: changeText || `Today's 22K gold rate has been updated.`,
             url: "/"
           });
 
+          // Portfolio push swaps the generic body for a personalised one:
+          // "Your gold: ₹X,XX,XXX (▲ ₹Y today · +Z% total)". Yesterday's rate
+          // gives the daily change; the user's stored cost basis gives % gain.
+          function portfolioPayload(sub: {
+            portfolio_grams_18k: number | null;
+            portfolio_grams_22k: number | null;
+            portfolio_grams_24k: number | null;
+            portfolio_cost: number | null;
+          }): string | null {
+            const g18 = sub.portfolio_grams_18k ?? 0;
+            const g22 = sub.portfolio_grams_22k ?? 0;
+            const g24 = sub.portfolio_grams_24k ?? 0;
+            if (g18 === 0 && g22 === 0 && g24 === 0) return null;
+
+            const value = g18 * rate18kToday + g22 * rate22kToday + g24 * rate24kToday;
+
+            let body = `Your gold: ₹${Math.round(value).toLocaleString("en-IN")}`;
+
+            if (yesterdayRate22k !== null && rate22kToday > 0) {
+              // The cron only stores yesterday's 22K rate. 18K/24K rates track
+              // 22K proportionally on the same board, so scaling today's value
+              // by the 22K ratio is an accurate-enough estimate of yesterday.
+              const yValue = value * (yesterdayRate22k / rate22kToday);
+              const dayDiff = Math.round(value - yValue);
+              if (dayDiff !== 0) {
+                body += dayDiff > 0
+                  ? ` (▲ ₹${dayDiff.toLocaleString("en-IN")} today`
+                  : ` (▼ ₹${Math.abs(dayDiff).toLocaleString("en-IN")} today`;
+                if (sub.portfolio_cost && sub.portfolio_cost > 0) {
+                  const totalPct = ((value - sub.portfolio_cost) / sub.portfolio_cost) * 100;
+                  const sign = totalPct >= 0 ? "+" : "−";
+                  body += ` · ${sign}${Math.abs(totalPct).toFixed(1)}% total`;
+                }
+                body += ")";
+              }
+            }
+
+            return JSON.stringify({
+              title: `Gold today: ₹${rate22kToday.toLocaleString("en-IN")}/g`,
+              body,
+              url: "/my-gold",
+            });
+          }
+
+          let portfolioCount = 0;
           const pushPromises = subscriptions.map(async (sub) => {
+            const payload = portfolioPayload(sub) ?? genericPayload;
+            if (payload !== genericPayload) portfolioCount++;
             try {
               await webpush.sendNotification(
                 {
@@ -582,7 +637,9 @@ export async function GET(request: NextRequest) {
           });
 
           await Promise.allSettled(pushPromises);
-          console.log(`[gold-cron] Broadcasted push notifications to ${subscriptions.length} devices.`);
+          console.log(
+            `[gold-cron] Broadcasted push notifications to ${subscriptions.length} devices (${portfolioCount} personalised).`
+          );
         }
       } catch (err) {
         console.error("[gold-cron] Failed during Push Notification broadcast:", err);

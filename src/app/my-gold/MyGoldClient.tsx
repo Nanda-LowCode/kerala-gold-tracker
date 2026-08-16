@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { Plus, Trash2, Pencil, Lock, X } from "lucide-react";
 import { formatCurrency } from "@/lib/format";
 import AnimatedNumber from "@/components/AnimatedNumber";
+import PortfolioPushToggle from "@/components/PortfolioPushToggle";
 import {
   computePortfolio,
   subscribeHoldings,
@@ -238,6 +239,8 @@ export default function MyGoldClient({ today }: { today: ResolvedRate }) {
           </p>
         </section>
       )}
+
+      {holdings.length > 0 && <PortfolioPushToggle totals={totals} />}
 
       {/* Holdings */}
       {holdings.length === 0 && hydrated ? (

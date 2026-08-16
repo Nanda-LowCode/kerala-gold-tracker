@@ -46,6 +46,11 @@ export interface Database {
           auth: string;
           created_at: string | null;
           target_rate: number | null;
+          portfolio_grams_18k: number | null;
+          portfolio_grams_22k: number | null;
+          portfolio_grams_24k: number | null;
+          portfolio_cost: number | null;
+          portfolio_updated_at: string | null;
         };
         Insert: {
           endpoint: string;
@@ -53,6 +58,11 @@ export interface Database {
           auth: string;
           created_at?: string | null;
           target_rate?: number | null;
+          portfolio_grams_18k?: number | null;
+          portfolio_grams_22k?: number | null;
+          portfolio_grams_24k?: number | null;
+          portfolio_cost?: number | null;
+          portfolio_updated_at?: string | null;
         };
         Update: {
           endpoint?: string;
@@ -60,6 +70,11 @@ export interface Database {
           auth?: string;
           created_at?: string | null;
           target_rate?: number | null;
+          portfolio_grams_18k?: number | null;
+          portfolio_grams_22k?: number | null;
+          portfolio_grams_24k?: number | null;
+          portfolio_cost?: number | null;
+          portfolio_updated_at?: string | null;
         };
         Relationships: [];
       };
