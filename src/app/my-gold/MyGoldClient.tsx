@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Plus, Trash2, Pencil, Lock, X } from "lucide-react";
 import { formatCurrency } from "@/lib/format";
@@ -58,8 +59,15 @@ export default function MyGoldClient({ today }: { today: ResolvedRate }) {
 
   const [rates, setRates] = useState<Record<string, ResolvedRate | null>>({});
 
+  // Arriving from the pavan converter carries the weight across, so the visitor
+  // lands with the form half-filled instead of facing an empty one.
+  const searchParams = useSearchParams();
+
   // Form state
-  const [grams, setGrams] = useState("");
+  const [grams, setGrams] = useState(() => {
+    const g = Number(searchParams.get("g"));
+    return Number.isFinite(g) && g > 0 ? String(g) : "";
+  });
   const [karat, setKarat] = useState<Karat>(22);
   const [date, setDate] = useState("");
   const [price, setPrice] = useState("");

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { createSupabaseReadClient } from "@/lib/supabase";
 import RelatedTools from "@/components/RelatedTools";
@@ -72,7 +73,14 @@ export default async function MyGoldPage() {
         </div>
 
         {today ? (
-          <MyGoldClient today={today} />
+          // MyGoldClient reads ?g= to prefill, so it needs a Suspense boundary to
+          // keep this page prerendered. The heading and copy above stay in the
+          // static HTML; only the interactive tracker streams in.
+          <Suspense
+            fallback={<div aria-hidden className="h-[420px] animate-pulse rounded-2xl bg-zinc-100 dark:bg-zinc-800/50" />}
+          >
+            <MyGoldClient today={today} />
+          </Suspense>
         ) : (
           <div className="rounded-2xl border border-zinc-200/70 bg-white p-8 text-center shadow-md dark:border-zinc-800 dark:bg-zinc-900">
             <p className="text-sm text-zinc-500 dark:text-zinc-400">

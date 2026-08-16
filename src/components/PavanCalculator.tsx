@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import AnimatedNumber from "@/components/AnimatedNumber";
 
 const UNITS = [
@@ -175,6 +176,31 @@ export default function PavanCalculator({
           Raw gold value only — making charges &amp; 3% GST not included. 1 pavan = 1 sovereign = 8 g · 1 tola = 11.664 g. 21K is derived from the 916 rate.
         </p>
       </section>
+
+      {/* Hand-off to the portfolio tracker. Someone converting a weight to pavan is
+          usually holding that gold and wondering what it's worth — the most natural
+          moment on the site to offer to keep tracking it. */}
+      {grams > 0 && (
+        <Link
+          href={`/my-gold?g=${qty(grams)}`}
+          className="group flex items-center justify-between gap-3 rounded-2xl border border-amber-200/70 bg-amber-50/60 p-4 transition-colors hover:border-amber-300 hover:bg-amber-100/60 dark:border-amber-800/40 dark:bg-amber-950/20 dark:hover:bg-amber-950/40"
+        >
+          <span>
+            <span className="block text-sm font-bold text-amber-800 dark:text-amber-300">
+              Own this {qty(grams)} g? Track it in My Gold
+            </span>
+            <span className="mt-0.5 block text-xs text-amber-700/80 dark:text-amber-400/70">
+              Tell us the date you bought and we&apos;ll price it from that day&apos;s board rate — then follow the gain.
+            </span>
+          </span>
+          <span
+            aria-hidden
+            className="shrink-0 text-lg font-bold text-amber-600 transition-transform group-hover:translate-x-0.5 dark:text-amber-400"
+          >
+            →
+          </span>
+        </Link>
+      )}
     </div>
   );
 }
