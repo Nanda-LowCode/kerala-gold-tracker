@@ -49,8 +49,9 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     // Lead with the exact head phrase "Gold Rate Today" — matches how people
     // type the query and how every top-ranking competitor titles their page.
-    // "Kerala" comes second so the state qualifier still anchors the geo intent.
-    title: `Gold Rate Today Kerala (${dateFormatted}): 22K ₹${today.rate_22k_1g}/g · AKGSMA`,
+    // AKGSMA sits right next to the price (not at the end) to protect the CTR
+    // of that established query, where eyes focus on the number regardless.
+    title: `Gold Rate Today Kerala — AKGSMA 22K ₹${today.rate_22k_1g}/g (${dateFormatted})`,
     description: `Gold rate today in Kerala: 22K (916) at ₹${today.rate_22k_1g}/gram (₹${(today.rate_22k_1g * 8).toLocaleString("en-IN")}/pavan), 24K at ₹${today.rate_24k_1g}/gram. Live AKGSMA board rate — verified daily by 10 AM IST.`,
     alternates: { canonical: "/", languages: { "en-IN": "/", "ml-IN": "/ml", "x-default": "/" } },
   };
