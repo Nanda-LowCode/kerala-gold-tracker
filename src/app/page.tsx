@@ -47,8 +47,11 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 
   return {
-    title: `Kerala Gold Rate Today, ${dateFormatted} (AKGSMA): 22K ₹${today.rate_22k_1g}/g`,
-    description: `Today's gold rate in Kerala: 22 Karat (916) is ₹${today.rate_22k_1g}/gram (₹${(today.rate_22k_1g * 8).toLocaleString("en-IN")}/pavan) and 24 Karat is ₹${today.rate_24k_1g}/gram. Live AKGSMA Kerala board rate, updated daily by 10 AM IST.`,
+    // Lead with the exact head phrase "Gold Rate Today" — matches how people
+    // type the query and how every top-ranking competitor titles their page.
+    // "Kerala" comes second so the state qualifier still anchors the geo intent.
+    title: `Gold Rate Today Kerala (${dateFormatted}): 22K ₹${today.rate_22k_1g}/g · AKGSMA`,
+    description: `Gold rate today in Kerala: 22K (916) at ₹${today.rate_22k_1g}/gram (₹${(today.rate_22k_1g * 8).toLocaleString("en-IN")}/pavan), 24K at ₹${today.rate_24k_1g}/gram. Live AKGSMA board rate — verified daily by 10 AM IST.`,
     alternates: { canonical: "/", languages: { "en-IN": "/", "ml-IN": "/ml", "x-default": "/" } },
   };
 }

@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
 
   if (!today) {
     return {
-      title: `Today's Gold Rate in ${cityName} | LiveGold Kerala`,
+      title: `Gold Rate Today in ${cityName}, Kerala | LiveGold Kerala`,
       description: `${descPrefix}View the most recent 22K and 24K gold rates in ${cityName}, Kerala.`,
       alternates: { canonical: `/${p.city}` },
     };
@@ -35,8 +35,11 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
   });
 
   return {
-    title: `Today's Gold Rate in ${cityName} (${dateFormatted}): 22K @ ₹${today.rate_22k_1g}/g`,
-    description: `${descPrefix}Current gold price in Kerala today: 22 Karat is ₹${today.rate_22k_1g} per gram (₹${today.rate_22k_1g * 8} per pavan). 24 Karat is ₹${today.rate_24k_1g} per gram. Live tracking.`,
+    // Same lead-with-the-head-phrase treatment as the homepage — city pages
+    // are the ones Google actually surfaces for geo-personalised "gold rate
+    // today" searches (see /kottayam picking up 76 impressions).
+    title: `Gold Rate Today in ${cityName} (${dateFormatted}): 22K ₹${today.rate_22k_1g}/g`,
+    description: `${descPrefix}Gold rate today in ${cityName}, Kerala: 22K at ₹${today.rate_22k_1g}/gram (₹${(today.rate_22k_1g * 8).toLocaleString("en-IN")}/pavan), 24K at ₹${today.rate_24k_1g}/gram. Live AKGSMA board rate.`,
     alternates: { canonical: `/${p.city}` },
   };
 }

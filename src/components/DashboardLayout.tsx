@@ -297,7 +297,7 @@ export default async function DashboardLayout({
                 </span>
               </div>
               <h1 className="mt-1 text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 md:mt-4 md:text-3xl">
-                Today&apos;s Gold Rate in {region}
+                Gold Rate Today in {region}
               </h1>
               <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400 md:mt-1 md:text-sm">
                 <time dateTime={`${today.date}T10:00:00+05:30`}>{formatDate(today.date)}</time> · Updated by 10 AM IST · {region}
