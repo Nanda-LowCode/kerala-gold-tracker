@@ -88,6 +88,10 @@ export default function PriceChart({ history }: { history: GoldRate[] }) {
       intersect: false,
     },
     plugins: {
+      // The karat pills above the chart already show which series is
+      // selected — a Chart.js legend below just duplicates that (and
+      // previously printed "undefined" because the dataset carried no label).
+      legend: { display: false },
       tooltip: {
         backgroundColor: "rgba(255, 255, 255, 0.95)",
         titleColor: "#a1a1aa",

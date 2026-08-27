@@ -59,6 +59,7 @@ export default function SilverChart({ series }: { series: { date: string; rate: 
     maintainAspectRatio: false,
     interaction: { mode: "index" as const, intersect: false },
     plugins: {
+      legend: { display: false },
       tooltip: {
         backgroundColor: "rgba(255,255,255,0.95)",
         titleColor: "#a1a1aa",
