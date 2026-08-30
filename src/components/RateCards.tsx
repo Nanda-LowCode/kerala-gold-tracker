@@ -61,7 +61,9 @@ export function RateCard({
         </div>
 
         <p
-          className={`font-voice bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 dark:from-amber-400 dark:via-yellow-400 dark:to-amber-500 bg-clip-text font-semibold text-transparent ${
+          className={`bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 dark:from-amber-400 dark:via-yellow-400 dark:to-amber-500 bg-clip-text ${
+            featured ? "font-voice font-semibold" : "font-bold tracking-tight"
+          } text-transparent ${
             compact
               ? "mt-2 text-3xl md:text-4xl"
               : "mt-2 text-4xl md:text-5xl"
