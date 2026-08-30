@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import PriceChartLazy from "@/components/PriceChartLazy";
+import DailyTrendSpark from "@/components/DailyTrendSpark";
 import HistoryTable from "@/components/HistoryTable";
 import FAQ from "@/components/FAQ";
 import TodayVsYesterday from "@/components/TodayVsYesterday";
@@ -22,7 +23,6 @@ import PriceAlertInput from "@/components/PriceAlertInput";
 import SilverRateCard from "@/components/SilverRateCard";
 import ExchangeTicker from "@/components/ExchangeTicker";
 import { RateCard, RateBoard } from "@/components/RateCards";
-import { VerdictDot } from "@/components/VerdictPill";
 import CurrencyRate from "@/components/CurrencyRate";
 import { getFxRates } from "@/lib/fx";
 import { GoldRate } from "@/lib/types";
@@ -69,26 +69,6 @@ export const KERALA_CITIES = [
   "kasaragod",
 ];
 
-async function getRecentNewsWithVerdicts(limit = 3) {
-  const { createSupabaseReadClient } = await import("@/lib/supabase");
-  const { computeStats } = await import("@/lib/commentary");
-  const { computeVerdict } = await import("@/lib/verdict");
-  const supabase = createSupabaseReadClient();
-  const { data } = await supabase
-    .from("daily_gold_rates")
-    .select("date, city, rate_18k_1g, rate_22k_1g, rate_24k_1g, rate_silver_1g")
-    .eq("city", "Kochi")
-    .order("date", { ascending: false })
-    .limit(30);
-  const all = (data ?? []) as GoldRate[];
-  return all.slice(0, limit).map((row, i) => {
-    const window = all.slice(i, i + 30);
-    const stats = window.length >= 5 ? computeStats(window) : null;
-    const verdict = stats ? computeVerdict(stats) : null;
-    return { date: row.date, rate22k: row.rate_22k_1g, verdict };
-  });
-}
-
 export default async function DashboardLayout({
   history,
   cityName,
@@ -106,10 +86,7 @@ export default async function DashboardLayout({
   const yesterday = history[1] ?? null;
   const cityData = getCityData(cityName);
   const cityTowns = getCityTowns(cityName);
-  const [recentNewsEntries, fx] = await Promise.all([
-    getRecentNewsWithVerdicts(3),
-    getFxRates(),
-  ]);
+  const fx = await getFxRates();
 
   const rate21k = today ? today.rate_22k_1g * (21 / 22) : 0;
   const yesterday21k = yesterday ? yesterday.rate_22k_1g * (21 / 22) : null;
@@ -529,7 +506,7 @@ export default async function DashboardLayout({
         <aside className="flex flex-col gap-4 md:gap-8 xl:col-span-1 xl:sticky xl:top-24 xl:self-start">
 
         {/* Daily news section — fresh-content signal for SEO */}
-        <RecentDailyUpdates entries={recentNewsEntries} />
+        <DailyTrendSpark history={history} />
 
         {/* Blog links — direct crawl path from indexed homepage to blog articles */}
         <RecentArticles />
@@ -639,51 +616,6 @@ export default async function DashboardLayout({
   );
 }
 
-
-function RecentDailyUpdates({
-  entries,
-}: {
-  entries: { date: string; rate22k: number; verdict: import("@/lib/verdict").Verdict | null }[];
-}) {
-  if (entries.length === 0) return null;
-  return (
-    <section>
-      <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
-          Daily Market Updates
-        </h2>
-        <Link
-          href="/news"
-          className="text-xs font-semibold text-amber-700 hover:underline dark:text-amber-400"
-        >
-          All updates →
-        </Link>
-      </div>
-      <div className="grid gap-2 sm:grid-cols-3">
-        {entries.map((e) => (
-          <Link
-            key={e.date}
-            href={`/news/${e.date}`}
-            className="group rounded-xl border border-zinc-200/60 bg-white px-4 py-3 shadow-sm transition-colors hover:border-amber-200 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-amber-800/40"
-          >
-            <div className="flex items-center justify-between gap-2">
-              <p className="text-[10px] font-medium uppercase tracking-wider text-zinc-500">
-                {new Date(e.date + "T00:00:00").toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" })}
-              </p>
-              {e.verdict && <VerdictDot verdict={e.verdict} />}
-            </div>
-            <p className="mt-0.5 text-sm font-semibold leading-snug text-zinc-800 group-hover:text-amber-700 dark:text-zinc-200 dark:group-hover:text-amber-400">
-              22K at ₹{e.rate22k.toLocaleString("en-IN")}/g
-            </p>
-            <p className="mt-0.5 text-[11px] text-zinc-500">
-              {e.verdict ? e.verdict.headline : "Daily update"}
-            </p>
-          </Link>
-        ))}
-      </div>
-    </section>
-  );
-}
 
 function RecentArticles() {
   const posts = getAllPosts().slice(0, 4);
