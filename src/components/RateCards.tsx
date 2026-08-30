@@ -45,11 +45,9 @@ export function RateCard({
         <div className="mb-2 flex flex-col items-start gap-2 lg:flex-row lg:items-center lg:justify-between">
           <p className={`font-semibold text-zinc-800 dark:text-zinc-200 ${compact ? "text-sm" : "text-base"}`}>{label}</p>
           <div className="flex flex-wrap items-center gap-1.5">
-            {featured && (
-              <span className="shrink-0 rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-white shadow-sm ring-1 ring-inset ring-amber-600/30">
-                ★ Popular
-              </span>
-            )}
+            {/* "★ Popular" pill removed — the card is already larger and the
+                H2 says "22 Karat Gold", so a badge that adds no information
+                was just competing with the 916 HALLMARK badge next to it. */}
             <span
               className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ring-1 ring-inset ${
                 featured
@@ -63,10 +61,10 @@ export function RateCard({
         </div>
 
         <p
-          className={`bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 dark:from-amber-400 dark:via-yellow-400 dark:to-amber-500 bg-clip-text font-bold tracking-tight text-transparent ${
+          className={`font-voice bg-gradient-to-br from-amber-600 via-yellow-500 to-amber-700 dark:from-amber-400 dark:via-yellow-400 dark:to-amber-500 bg-clip-text font-semibold text-transparent ${
             compact
-              ? "mt-2 text-2xl md:text-3xl"
-              : "mt-2 text-3xl md:text-4xl"
+              ? "mt-2 text-3xl md:text-4xl"
+              : "mt-2 text-4xl md:text-5xl"
           }`}
         >
           {animate ? <CountUp value={ratePerGram} /> : formatCurrency(ratePerGram)}

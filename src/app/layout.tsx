@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist } from "next/font/google";
+import { Geist, Fraunces } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -17,6 +17,21 @@ const geist = Geist({
   variable: "--font-geist",
   subsets: ["latin"],
   display: "swap", // avoid invisible text while the (self-hosted) font loads
+});
+
+// Reserved for the pieces that carry the site's identity: the hero rate
+// number and the page H1. Not a body face — Fraunces sprayed across a
+// dashboard reads editorial, which is not what a rate-checker wants.
+// Optical sizing lets the same file render tight for the H1 and generous
+// for the giant number.
+const fraunces = Fraunces({
+  variable: "--font-display",
+  subsets: ["latin"],
+  // Variable font: dropping `weight` gives the full weight range, and Next.js
+  // requires that when passing `axes`. opsz is auto-driven by font-size on the
+  // element; SOFT tunes letterform warmth (higher = softer).
+  axes: ["SOFT"],
+  display: "swap",
 });
 
 // Next 16: themeColor belongs in the viewport export, not metadata.
@@ -67,7 +82,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geist.variable} h-full antialiased`} suppressHydrationWarning>
+    <html lang="en" className={`${geist.variable} ${fraunces.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col bg-gradient-to-b from-amber-50 to-white font-sans text-gray-900 dark:from-zinc-950 dark:to-zinc-950 dark:text-zinc-200 transition-colors duration-300">
         {/* Resource hints — React 19 hoists these to <head>. They let the browser
             open connections to the deferred analytics origins earlier; none block

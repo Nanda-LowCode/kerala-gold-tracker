@@ -296,7 +296,7 @@ export default async function DashboardLayout({
                   Verified AKGSMA Board Rate
                 </span>
               </div>
-              <h1 className="mt-1 text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 md:mt-4 md:text-3xl">
+              <h1 className="font-voice mt-1 text-2xl font-semibold text-zinc-900 dark:text-zinc-100 md:mt-4 md:text-4xl">
                 Gold Rate Today in {region}
               </h1>
               <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400 md:mt-1 md:text-sm">

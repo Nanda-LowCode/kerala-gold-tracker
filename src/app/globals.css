@@ -4,12 +4,27 @@
 /* Enable class-based dark mode compatible with next-themes */
 @custom-variant dark (&:where(.dark, .dark *));
 
-:root {
-  --font-sans: var(--font-geist);
+/* Register fonts in Tailwind v4's theme so `font-sans` and `font-voice`
+   generate the right font-family utilities. */
+@theme {
+  --font-sans: var(--font-geist), system-ui, sans-serif;
+  --font-voice: var(--font-display), Georgia, "Times New Roman", serif;
 }
 
 body {
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: var(--font-sans);
+}
+
+/* Reserved for the site's signature moments — the hero rate number and the
+   page H1. Applied via the `font-voice` utility (which Tailwind generates
+   from --font-voice above). This rule adds optical sizing + the SOFT axis so
+   the letterforms warm slightly against the amber palette without going
+   "warm-cream editorial". Not a body face — Fraunces sprayed across a rate
+   dashboard reads like a magazine, which is not the job here. */
+.font-voice {
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 30;
+  letter-spacing: -0.02em;
 }
 
 /* ---------------------------------------------------------------------------
