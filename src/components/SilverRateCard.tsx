@@ -1,12 +1,32 @@
 import { formatCurrency } from "@/lib/format";
 
+/** Optional label overrides for non-English rendering (Malayalam, etc.). */
+export interface SilverRateLabels {
+  title?: string;
+  subtitle?: string;
+  perGramSuffix?: string;
+  per100gSuffix?: string;
+  noChangeLabel?: string;
+}
+
+const DEFAULT_LABELS: Required<SilverRateLabels> = {
+  title: "Silver Rate Today",
+  subtitle: "Ag 999 · Kerala Board Rate",
+  perGramSuffix: "/g",
+  per100gSuffix: "per 100g",
+  noChangeLabel: "No change",
+};
+
 export default function SilverRateCard({
   ratePerGram,
   change,
+  labels,
 }: {
   ratePerGram: number;
   change: number | null;
+  labels?: SilverRateLabels;
 }) {
+  const L = { ...DEFAULT_LABELS, ...(labels ?? {}) };
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200/70 bg-white px-5 py-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
       <div className="flex items-center gap-3">
@@ -15,10 +35,10 @@ export default function SilverRateCard({
         </div>
         <div>
           <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">
-            Silver Rate Today
+            {L.title}
           </p>
           <p className="text-[10px] font-medium text-zinc-500 dark:text-zinc-400">
-            Ag 999 · Kerala Board Rate
+            {L.subtitle}
           </p>
         </div>
       </div>
@@ -27,23 +47,23 @@ export default function SilverRateCard({
         <div className="text-right">
           <p className="text-2xl font-bold tracking-tight text-slate-700 dark:text-slate-300">
             {formatCurrency(ratePerGram)}
-            <span className="ml-1 text-xs font-medium text-zinc-500">/g</span>
+            <span className="ml-1 text-xs font-medium text-zinc-500">{L.perGramSuffix}</span>
           </p>
           <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
-            {formatCurrency(ratePerGram * 100)} per 100g
+            {formatCurrency(ratePerGram * 100)} {L.per100gSuffix}
           </p>
         </div>
-        {change !== null && <SilverChangeBadge change={change} />}
+        {change !== null && <SilverChangeBadge change={change} noChangeLabel={L.noChangeLabel} />}
       </div>
     </div>
   );
 }
 
-function SilverChangeBadge({ change }: { change: number }) {
+function SilverChangeBadge({ change, noChangeLabel }: { change: number; noChangeLabel: string }) {
   if (change === 0) {
     return (
       <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
-        No change
+        {noChangeLabel}
       </span>
     );
   }

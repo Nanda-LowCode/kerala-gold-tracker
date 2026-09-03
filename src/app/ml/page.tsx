@@ -1,6 +1,10 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { getHistory } from "@/app/page";
+import { getFxRates } from "@/lib/fx";
+import CurrencyRate from "@/components/CurrencyRate";
+import SilverRateCard from "@/components/SilverRateCard";
+import DailyTrendSpark from "@/components/DailyTrendSpark";
 
 export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
@@ -33,7 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function MalayalamRatePage() {
-  const history = await getHistory();
+  const [history, fx] = await Promise.all([getHistory(), getFxRates()]);
   const today = history[0] ?? null;
   const yesterday = history[1] ?? null;
 
@@ -46,6 +50,10 @@ export default async function MalayalamRatePage() {
   }
 
   const change = yesterday ? today.rate_22k_1g - yesterday.rate_22k_1g : null;
+  const silverChange =
+    today.rate_silver_1g != null && yesterday?.rate_silver_1g != null
+      ? today.rate_silver_1g - yesterday.rate_silver_1g
+      : null;
   const dateMl = new Date(today.date + "T00:00:00").toLocaleDateString("ml-IN", {
     weekday: "long",
     day: "numeric",
@@ -184,6 +192,67 @@ export default async function MalayalamRatePage() {
           </div>
         </section>
 
+        {/* Silver rate — parallel to gold, sits right under the weight table */}
+        {today.rate_silver_1g != null && (
+          <div className="mt-6">
+            <SilverRateCard
+              ratePerGram={today.rate_silver_1g}
+              change={silverChange}
+              labels={{
+                title: "ഇന്നത്തെ വെള്ളി വില",
+                subtitle: "Ag 999 · കേരള ബോർഡ് നിരക്ക്",
+                perGramSuffix: "/ഗ്രാം",
+                per100gSuffix: "100 ഗ്രാമിന്",
+                noChangeLabel: "മാറ്റമില്ല",
+              }}
+            />
+          </div>
+        )}
+
+        {/* Currency conversion for Gulf / diaspora — the highest-value addition
+            for the /ml page, since the confirmed audience for /ml includes
+            UAE, Qatar, Saudi, Oman traffic that /ml previously ignored. */}
+        {fx && (
+          <div className="mt-6">
+            <CurrencyRate
+              rate22k={today.rate_22k_1g}
+              rate24k={today.rate_24k_1g}
+              fx={fx}
+              labels={{
+                title: "നിങ്ങളുടെ കറൻസിയിൽ സ്വർണ്ണ വില",
+                description:
+                  "ഗൾഫിലും വിദേശത്തുമുള്ള മലയാളികൾക്ക് — ഇന്നത്തെ ബോർഡ് നിരക്ക്, തത്സമയം കൺവേർട്ട് ചെയ്തത്.",
+                currencyLabel: "കറൻസി തിരഞ്ഞെടുക്കുക",
+                perGramSuffix: "/ഗ്രാം",
+                perPavanSuffix: "/പവൻ (8 ഗ്രാം)",
+                // Interpolated on the server (client components can't take a
+                // function prop across the RSC boundary — see CurrencyRate).
+                footnote: `കേരള ബോർഡ് നിരക്കിൽ നിന്ന് (22K-ന് ₹${today.rate_22k_1g.toLocaleString("en-IN")}/ഗ്രാം) ഇന്നത്തെ എക്സ്ചേഞ്ച് നിരക്കിൽ കൺവേർട്ട് ചെയ്തത്${
+                  fx.asOf
+                    ? ` (FX തീയതി: ${new Date(fx.asOf).toLocaleDateString("en-IN", { day: "numeric", month: "short" })})`
+                    : ""
+                }. സ്വർണ്ണത്തിന്റെ മൂല്യം മാത്രം — പണിക്കൂലിയോ 3% GST-യോ പ്രാദേശിക കസ്റ്റംസ് ഡ്യൂട്ടിയോ ഇതിൽ ഉൾപ്പെടില്ല.`,
+              }}
+            />
+          </div>
+        )}
+
+        {/* 14-day sparkline — same visual language as the English homepage;
+            gives Malayalam users the trend shape they get in English. */}
+        <div className="mt-6">
+          <DailyTrendSpark
+            history={history}
+            labels={{
+              heading: (days) => `കഴിഞ്ഞ ${days} ദിവസത്തെ നിരക്ക്`,
+              linkLabel: "ദിനംപ്രതി കുറിപ്പുകൾ →",
+              noChangeLabel: "മാറ്റമില്ല",
+              ariaLabel: ({ days, fromValue, fromDate, toValue, toDate }) =>
+                `കഴിഞ്ഞ ${days} ദിവസത്തെ 22K സ്വർണ്ണ വില: ${fromDate}-ന് ${fromValue} മുതൽ ${toDate}-ന് ${toValue} വരെ`,
+              markerLabel: (date) => `${date}-ലെ ദിനക്കുറിപ്പ്`,
+            }}
+          />
+        </div>
+
         {/* Source note */}
         <p className="mt-4 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
           * 22K, 18K നിരക്കുകൾ ഔദ്യോഗിക AKGSMA കേരള ബോർഡ് നിരക്കാണ്. 24K നിരക്ക് 916 നിരക്കിൽ നിന്ന്
@@ -203,14 +272,31 @@ export default async function MalayalamRatePage() {
           </div>
         </section>
 
-        {/* Cross-links to the English tools */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Link href="/" className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-700 ring-1 ring-inset ring-amber-200/60 transition-colors hover:bg-amber-100 dark:bg-amber-950/30 dark:text-amber-400 dark:ring-amber-800/60">
-            തത്സമയ ഡാഷ്ബോർഡ് (English) →
-          </Link>
-          <Link href="/tools/gold-making-charge-calculator" className="inline-flex items-center gap-1.5 rounded-full bg-zinc-50 px-4 py-2 text-sm font-semibold text-zinc-700 ring-1 ring-inset ring-zinc-200/60 transition-colors hover:bg-zinc-100 dark:bg-zinc-800 dark:text-zinc-300 dark:ring-zinc-700">
-            പണിക്കൂലി കാൽക്കുലേറ്റർ →
-          </Link>
+        {/* Cross-links — a broader set now that /ml is a hub, not a leaf.
+            English destinations are labelled in Malayalam so a Malayalam
+            reader knows what they're clicking into. */}
+        <div className="mt-8">
+          <p className="mb-3 text-center text-[11px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+            കൂടുതൽ ടൂളുകൾ &amp; വിവരങ്ങൾ
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {[
+              { href: "/tools/pavan-to-gram-calculator", label: "പവൻ ↔ ഗ്രാം കൺവേർട്ടർ" },
+              { href: "/tools/gold-making-charge-calculator", label: "പണിക്കൂലി കാൽക്കുലേറ്റർ" },
+              { href: "/my-gold", label: "എന്റെ സ്വർണ്ണം (Track)" },
+              { href: "/gold-rate-history", label: "മുൻകാല നിരക്കുകൾ" },
+              { href: "/jewellers", label: "ജ്വല്ലറികൾ" },
+              { href: "/", label: "English Dashboard" },
+            ].map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold text-zinc-700 shadow-sm ring-1 ring-inset ring-zinc-200/70 transition-colors hover:border-amber-300 hover:bg-amber-50 hover:text-amber-700 dark:bg-zinc-900 dark:text-zinc-300 dark:ring-zinc-800 dark:hover:bg-amber-950/20 dark:hover:text-amber-400"
+              >
+                {l.label} →
+              </Link>
+            ))}
+          </div>
         </div>
       </main>
     </>

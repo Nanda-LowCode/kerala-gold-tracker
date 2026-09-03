@@ -20,6 +20,30 @@ const H = 96;
 const PAD_X = 12;
 const PAD_Y = 14;
 
+/** Optional label overrides for non-English rendering (Malayalam, etc.). */
+export interface DailyTrendSparkLabels {
+  heading?: (days: number) => string;
+  linkLabel?: string;
+  noChangeLabel?: string;
+  ariaLabel?: (args: {
+    days: number;
+    fromValue: string;
+    fromDate: string;
+    toValue: string;
+    toDate: string;
+  }) => string;
+  markerLabel?: (date: string) => string;
+}
+
+const DEFAULT_LABELS: Required<DailyTrendSparkLabels> = {
+  heading: (days) => `Last ${days} days`,
+  linkLabel: "Daily notes →",
+  noChangeLabel: "No change",
+  ariaLabel: ({ days, fromValue, fromDate, toValue, toDate }) =>
+    `22K gold rate over the last ${days} days, from ${fromValue} on ${fromDate} to ${toValue} on ${toDate}`,
+  markerLabel: (date) => `Daily note for ${date}`,
+};
+
 function formatShortDate(iso: string): string {
   return new Date(iso + "T00:00:00").toLocaleDateString("en-IN", {
     month: "short",
@@ -31,7 +55,14 @@ function formatINR(n: number): string {
   return "₹" + n.toLocaleString("en-IN");
 }
 
-export default function DailyTrendSpark({ history }: { history: GoldRate[] }) {
+export default function DailyTrendSpark({
+  history,
+  labels,
+}: {
+  history: GoldRate[];
+  labels?: DailyTrendSparkLabels;
+}) {
+  const L = { ...DEFAULT_LABELS, ...(labels ?? {}) };
   // `history` arrives newest-first from the page loader; the sparkline reads
   // left-to-right (oldest → newest), so flip a slice.
   const window = history.slice(0, WINDOW).reverse();
@@ -73,7 +104,7 @@ export default function DailyTrendSpark({ history }: { history: GoldRate[] }) {
 
   const chipLabel =
     change === 0
-      ? "No change"
+      ? L.noChangeLabel
       : `${change > 0 ? "▲" : "▼"} ${formatINR(Math.abs(change))} (${change > 0 ? "+" : "−"}${Math.abs(changePct).toFixed(2)}%)`;
 
   // The three most recent points get filled markers with links; older days
@@ -84,13 +115,13 @@ export default function DailyTrendSpark({ history }: { history: GoldRate[] }) {
     <section>
       <div className="mb-3 flex items-baseline justify-between gap-3">
         <h2 className="text-base font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
-          Last {window.length} days
+          {L.heading(window.length)}
         </h2>
         <Link
           href="/news"
           className="shrink-0 text-xs font-semibold text-amber-700 hover:underline dark:text-amber-400"
         >
-          Daily notes →
+          {L.linkLabel}
         </Link>
       </div>
 
@@ -118,7 +149,13 @@ export default function DailyTrendSpark({ history }: { history: GoldRate[] }) {
             preserveAspectRatio="none"
             className="h-full w-full"
             role="img"
-            aria-label={`22K gold rate over the last ${window.length} days, from ${formatINR(first.r.rate_22k_1g)} on ${formatShortDate(first.r.date)} to ${formatINR(last.r.rate_22k_1g)} on ${formatShortDate(last.r.date)}`}
+            aria-label={L.ariaLabel({
+              days: window.length,
+              fromValue: formatINR(first.r.rate_22k_1g),
+              fromDate: formatShortDate(first.r.date),
+              toValue: formatINR(last.r.rate_22k_1g),
+              toDate: formatShortDate(last.r.date),
+            })}
           >
             <defs>
               <linearGradient id={gradientId} x1="0" x2="0" y1="0" y2="1">
@@ -151,7 +188,7 @@ export default function DailyTrendSpark({ history }: { history: GoldRate[] }) {
               <Link
                 key={p.r.date}
                 href={`/news/${p.r.date}`}
-                aria-label={`Daily note for ${formatShortDate(p.r.date)}`}
+                aria-label={L.markerLabel(formatShortDate(p.r.date))}
                 className="group absolute flex h-5 w-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full transition-transform hover:scale-125 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500"
                 style={{ left: `${(p.x / W) * 100}%`, top: `${(p.y / H) * 100}%` }}
               >

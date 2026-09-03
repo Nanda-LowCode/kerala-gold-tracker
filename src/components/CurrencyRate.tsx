@@ -21,15 +21,45 @@ const META: Record<FxCurrency, { flag: string; label: string; locale: string; dp
 
 const STORAGE_KEY = "lgk_fx_currency";
 
+/**
+ * Optional label overrides for non-English rendering (Malayalam, etc.).
+ *
+ * `footnote` is a plain string — this is a client component, and function
+ * props can't cross the server/client boundary. Callers who need dynamic
+ * text (e.g. the FX-as-of date) interpolate it on the server before passing.
+ */
+export interface CurrencyRateLabels {
+  title?: string;
+  description?: string;
+  currencyLabel?: string;
+  perGramSuffix?: string;
+  perPavanSuffix?: string;
+  footnote?: string;
+}
+
+const DEFAULT_LABELS: Required<CurrencyRateLabels> = {
+  title: "Gold rate in your currency",
+  description: "For NRIs & the Kerala diaspora — today's board rate, converted live.",
+  currencyLabel: "Choose currency",
+  perGramSuffix: "/g",
+  perPavanSuffix: "/pavan (8g)",
+  // Empty string sentinel — the render falls back to the interpolated default
+  // when the caller hasn't supplied a language-specific override.
+  footnote: "",
+};
+
 export default function CurrencyRate({
   rate22k,
   rate24k,
   fx,
+  labels,
 }: {
   rate22k: number;
   rate24k: number;
   fx: FxRates;
+  labels?: CurrencyRateLabels;
 }) {
+  const L = { ...DEFAULT_LABELS, ...(labels ?? {}) };
   const available = (Object.keys(fx.rates) as FxCurrency[]).filter((c) => META[c]);
   // Default to AED (largest Gulf-Malayali base); fall back to whatever is first.
   const [cur, setCur] = useState<FxCurrency>(
@@ -72,14 +102,14 @@ export default function CurrencyRate({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-base font-bold text-zinc-900 dark:text-zinc-100">
-            Gold rate in your currency
+            {L.title}
           </h2>
           <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
-            For NRIs &amp; the Kerala diaspora — today&apos;s board rate, converted live.
+            {L.description}
           </p>
         </div>
         <label className="relative inline-flex items-center self-start sm:self-auto">
-          <span className="sr-only">Choose currency</span>
+          <span className="sr-only">{L.currencyLabel}</span>
           <select
             value={cur}
             onChange={(e) => pick(e.target.value as FxCurrency)}
@@ -110,26 +140,32 @@ export default function CurrencyRate({
             </p>
             <p className="mt-1 text-xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100">
               <AnimatedNumber value={row.perGram * perInr} format={fmtCur} />
-              <span className="ml-1 text-xs font-medium text-zinc-500">/g</span>
+              <span className="ml-1 text-xs font-medium text-zinc-500">{L.perGramSuffix}</span>
             </p>
             <p className="mt-0.5 text-sm font-semibold text-zinc-600 dark:text-zinc-300">
               <AnimatedNumber value={row.perGram * 8 * perInr} format={fmtCur} />
-              <span className="ml-1 text-xs font-normal text-zinc-500">/pavan (8g)</span>
+              <span className="ml-1 text-xs font-normal text-zinc-500">{L.perPavanSuffix}</span>
             </p>
           </div>
         ))}
       </div>
 
       <p className="mt-3 text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">
-        Converted from the Kerala board rate (₹{rate22k.toLocaleString("en-IN")}/g for 22K) at
-        today&apos;s exchange rate
-        {fx.asOf
-          ? ` (FX as of ${new Date(fx.asOf).toLocaleDateString("en-IN", {
-              day: "numeric",
-              month: "short",
-            })})`
-          : ""}
-        . Indicative gold value only — excludes making charges, GST and local import duties.
+        {L.footnote ? (
+          L.footnote
+        ) : (
+          <>
+            Converted from the Kerala board rate (₹{rate22k.toLocaleString("en-IN")}/g for 22K) at
+            today&apos;s exchange rate
+            {fx.asOf
+              ? ` (FX as of ${new Date(fx.asOf).toLocaleDateString("en-IN", {
+                  day: "numeric",
+                  month: "short",
+                })})`
+              : ""}
+            . Indicative gold value only — excludes making charges, GST and local import duties.
+          </>
+        )}
       </p>
     </section>
   );
