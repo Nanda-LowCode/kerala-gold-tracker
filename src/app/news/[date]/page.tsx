@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { createSupabaseReadClient } from "@/lib/supabase";
 import type { GoldRate } from "@/lib/types";
 import { computeStats, generateCommentary } from "@/lib/commentary";
@@ -16,10 +16,33 @@ export const revalidate = 86400; // daily; freshness pushed on-demand by the upd
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
-async function getDayWithHistory(
-  date: string
-): Promise<{ today: GoldRate; history: GoldRate[] } | null> {
-  if (!ISO_DATE.test(date)) return null;
+const MONTH_SLUGS = [
+  "january", "february", "march", "april", "may", "june",
+  "july", "august", "september", "october", "november", "december",
+];
+
+/** URL of the month-archive page that owns any given calendar date. */
+function monthArchiveUrl(date: string): string {
+  const d = new Date(date + "T00:00:00Z");
+  return `/gold-rate-history/${d.getUTCFullYear()}/${MONTH_SLUGS[d.getUTCMonth()]}`;
+}
+
+type DayResolution =
+  | { kind: "ok"; today: GoldRate; history: GoldRate[] }
+  | { kind: "backfill"; redirectTo: string }
+  | { kind: "missing" };
+
+/**
+ * Resolves what should happen at /news/{date}:
+ * - "ok"       → render the daily commentary
+ * - "backfill" → 301 to the month archive; those dates are calibrated
+ *                estimates, not real board rates, and never had a real
+ *                daily-update page. Redirecting (rather than 404-ing) tells
+ *                Google the URL moved, so it stops re-crawling forever.
+ * - "missing"  → 404
+ */
+async function resolveDay(date: string): Promise<DayResolution> {
+  if (!ISO_DATE.test(date)) return { kind: "missing" };
   const supabase = createSupabaseReadClient();
   const { data, error } = await supabase
     .from("daily_gold_rates")
@@ -28,13 +51,13 @@ async function getDayWithHistory(
     .lte("date", date)
     .order("date", { ascending: false })
     .limit(31);
-  if (error || !data || data.length === 0) return null;
-  if (data[0].date !== date) return null;
-  // Estimated backfill dates aren't real daily updates — they live in the
-  // /gold-rate-history/[year] pages, not as individual news articles.
-  if ((data[0] as { consensus_sources?: string | null }).consensus_sources === "backfill-yahoo-calibrated") return null;
-  return { today: data[0] as GoldRate, history: data as GoldRate[] };
+  if (error || !data || data.length === 0 || data[0].date !== date) return { kind: "missing" };
+  if ((data[0] as { consensus_sources?: string | null }).consensus_sources === "backfill-yahoo-calibrated") {
+    return { kind: "backfill", redirectTo: monthArchiveUrl(date) };
+  }
+  return { kind: "ok", today: data[0] as GoldRate, history: data as GoldRate[] };
 }
+
 
 async function getNeighbours(
   date: string
@@ -112,11 +135,12 @@ type RouteParams = { params: Promise<{ date: string }> };
 
 export async function generateMetadata({ params }: RouteParams): Promise<Metadata> {
   const { date } = await params;
-  const result = await getDayWithHistory(date);
-  if (!result) {
+  const r = await resolveDay(date);
+  if (r.kind === "backfill") permanentRedirect(r.redirectTo);
+  if (r.kind === "missing") {
     return { title: "Daily Update Not Found", robots: { index: false } };
   }
-  const { today } = result;
+  const { today } = r;
   const longDate = formatLongDate(today.date);
   const title = `Kerala Gold Rate on ${longDate}: 22K at ₹${today.rate_22k_1g.toLocaleString("en-IN")}/g`;
   const description = `Kerala gold rate on ${longDate}: 22K at ₹${today.rate_22k_1g}/g (₹${(today.rate_22k_1g * 8).toLocaleString("en-IN")}/pavan), 24K at ₹${today.rate_24k_1g}/g. Daily commentary and trend context.`;
@@ -137,10 +161,11 @@ export async function generateMetadata({ params }: RouteParams): Promise<Metadat
 
 export default async function NewsDay({ params }: RouteParams) {
   const { date } = await params;
-  const result = await getDayWithHistory(date);
-  if (!result) notFound();
+  const r = await resolveDay(date);
+  if (r.kind === "backfill") permanentRedirect(r.redirectTo);
+  if (r.kind === "missing") notFound();
 
-  const { today, history } = result;
+  const { today, history } = r;
   const stats = computeStats(history);
   const paragraphs = generateCommentary(stats);
   const verdict = computeVerdict(stats);
