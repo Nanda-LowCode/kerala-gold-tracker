@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import AnimatedNumber from "@/components/AnimatedNumber";
+import NativeShareButton from "@/components/NativeShareButton";
 
 const UNITS = [
   { id: "gram", label: "Grams", toGrams: 1 },
@@ -175,6 +176,24 @@ export default function PavanCalculator({
         <p className="mt-3 text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">
           Raw gold value only — making charges &amp; 3% GST not included. 1 pavan = 1 sovereign = 8 g · 1 tola = 11.664 g. 21K is derived from the 916 rate.
         </p>
+
+        {/* Share this specific calc — the moment after "gotcha" is when
+            people want to send it to the family group. Copy is text-only;
+            share attaches the rate card image + link. */}
+        {grams > 0 && (
+          <div className="mt-3 flex justify-end">
+            <NativeShareButton
+              text={`${qty(v)} ${unitLabel} = ${qty(grams)} g of 22K gold = ${inr(grams * rate22k)} at today's Kerala board rate.`}
+              url="https://www.livegoldkerala.com/tools/pavan-to-gram-calculator"
+              imageUrl="/api/og/gold-rate-card"
+              imageFilename="kerala-gold-rate.png"
+              label="Share this"
+              utmSource="pavan_calc_share"
+              utmCampaign="calculation"
+              variant="outline"
+            />
+          </div>
+        )}
       </section>
 
       {/* Hand-off to the portfolio tracker. Someone converting a weight to pavan is

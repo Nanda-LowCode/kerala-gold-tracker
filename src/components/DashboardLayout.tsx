@@ -15,7 +15,7 @@ import GoldCalculator from "@/components/GoldCalculator";
 import OldGoldCalculator from "@/components/OldGoldCalculator";
 import CtaBanner from "@/components/CtaBanner";
 import RatesPendingBanner from "@/components/RatesPendingBanner";
-import WhatsAppShare from "@/components/WhatsAppShare";
+import NativeShareButton from "@/components/NativeShareButton";
 import WhatsAppFollow from "@/components/WhatsAppFollow";
 import ThemeToggle from "@/components/ThemeToggle";
 import NotificationToggle from "@/components/NotificationToggle";
@@ -415,34 +415,40 @@ export default async function DashboardLayout({
             {/* Live Exchange Rate Ticker — USD/AED/QAR/OMR to INR */}
             <ExchangeTicker />
 
-            {/* Share today's rate — WhatsApp text + Image download in one card */}
+            {/* Share today's rate — one tap opens the OS share sheet with the
+                rate card image + text + link attached. Falls back to WhatsApp
+                on desktop / older browsers. Replaces the earlier two-step
+                "Share text OR download image" pattern; on mobile (82% of
+                traffic) this reaches Instagram, iMessage, Signal, Telegram,
+                email etc. in a single tap rather than WhatsApp only. */}
             {change22k !== null && (
               <section className="rounded-2xl border border-zinc-200/70 bg-white p-4 shadow-md shadow-amber-100/40 dark:border-zinc-800 dark:bg-zinc-900 dark:shadow-none md:p-5">
-                <div className="mb-3 flex items-center justify-between">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
-                    Share today&apos;s rate
-                  </p>
-                  <p className="hidden text-[10px] text-zinc-500 sm:block">
-                    WhatsApp · Instagram · anywhere
-                  </p>
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-bold text-zinc-800 dark:text-zinc-100">
+                      Send today&apos;s rate to your family
+                    </p>
+                    <p className="mt-0.5 text-[11px] text-zinc-500 dark:text-zinc-400">
+                      Attaches the rate card image · WhatsApp, Instagram, anywhere
+                    </p>
+                  </div>
                 </div>
-                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                  <WhatsAppShare
-                    currentRate22k={today.rate_22k_1g}
-                    priceChange={change22k}
-                  />
-                  <a
-                    href="/api/og/gold-rate-card"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 rounded-xl border border-amber-200/60 bg-amber-50/50 px-4 py-3 text-sm font-semibold text-amber-800 shadow-sm transition-all hover:bg-amber-100/70 hover:border-amber-300 dark:border-amber-800/40 dark:bg-amber-950/20 dark:text-amber-400 dark:hover:bg-amber-900/30"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                    Download Rate Card
-                  </a>
-                </div>
+                <NativeShareButton
+                  text={
+                    change22k < 0
+                      ? `📉 Kerala gold rate dropped by ₹${Math.abs(change22k)} today — 22K now ₹${today.rate_22k_1g.toLocaleString("en-IN")}/g.`
+                      : change22k > 0
+                        ? `📈 Kerala gold rate up ₹${change22k} today — 22K now ₹${today.rate_22k_1g.toLocaleString("en-IN")}/g.`
+                        : `Today's Kerala gold rate: 22K at ₹${today.rate_22k_1g.toLocaleString("en-IN")}/g.`
+                  }
+                  url="https://www.livegoldkerala.com/"
+                  imageUrl="/api/og/gold-rate-card"
+                  imageFilename={`kerala-gold-rate-${today.date}.png`}
+                  label="Share today's rate"
+                  utmSource="home_share"
+                  utmCampaign="rate_card"
+                  title="Share with family and friends"
+                />
               </section>
             )}
 

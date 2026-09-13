@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { Plus, Trash2, Pencil, Lock, X } from "lucide-react";
 import { formatCurrency } from "@/lib/format";
 import AnimatedNumber from "@/components/AnimatedNumber";
+import NativeShareButton from "@/components/NativeShareButton";
 import PortfolioPushToggle from "@/components/PortfolioPushToggle";
 import {
   computePortfolio,
@@ -237,6 +238,24 @@ export default function MyGoldClient({ today }: { today: ResolvedRate }) {
             {formatCurrency(today.rate_22k_1g)}/g · 24K {formatCurrency(today.rate_24k_1g)}/g.
             This is the metal value only — it excludes making charges and GST.
           </p>
+
+          {/* Share the total. Real Kerala pattern — value update flows into
+              the family group WhatsApp. Attaches the rate card as evidence
+              so the recipient can see why today matters (up/down chip on
+              the card). */}
+          <div className="mt-4 flex justify-start border-t border-zinc-100 pt-4 dark:border-zinc-800">
+            <NativeShareButton
+              text={`My gold is worth ${formatCurrency(totals.currentValue)} at today's Kerala board rate (${totals.totalGrams.toFixed(1)}g · ${(totals.totalGrams / 8).toFixed(2)} pavan).`}
+              url="https://www.livegoldkerala.com/my-gold"
+              imageUrl="/api/og/gold-rate-card"
+              imageFilename={`kerala-gold-rate-${today.date}.png`}
+              label="Share with family"
+              utmSource="my_gold_share"
+              utmCampaign="portfolio_value"
+              variant="outline"
+              title="Send your portfolio value to your family group"
+            />
+          </div>
         </section>
       )}
 
