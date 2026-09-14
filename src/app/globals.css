@@ -217,6 +217,47 @@ body {
     radial-gradient(55% 100% at 78% 0%, rgba(250, 204, 21, 0.09), transparent 70%);
 }
 
+/* Vishu trim — kanikonna yellow bracketed with green (the shrub's leaves)
+   and a hint of Krishna-blue. Same 7px footprint so nothing shifts when
+   the theme swaps between seasons. */
+.vishu-trim {
+  height: 7px;
+  background-image:
+    linear-gradient(
+      to bottom,
+      #166534 0 1px,
+      #fde047 1px 2px,
+      #facc15 2px 4px,
+      #eab308 4px 5px,
+      #2563eb 5px 6px,
+      #166534 6px 7px
+    );
+}
+.dark .vishu-trim {
+  background-image:
+    linear-gradient(
+      to bottom,
+      #14532d 0 1px,
+      #ca8a04 1px 2px,
+      #b8860b 2px 4px,
+      #a16207 4px 5px,
+      #1e40af 5px 6px,
+      #14532d 6px 7px
+    );
+}
+
+/* Vishu wash — sunlit kanikonna yellow with a soft Krishna-blue whisper. */
+.vishu-glow {
+  background:
+    radial-gradient(60% 100% at 22% 0%, rgba(250, 204, 21, 0.22), transparent 70%),
+    radial-gradient(55% 100% at 78% 0%, rgba(96, 165, 250, 0.14), transparent 70%);
+}
+.dark .vishu-glow {
+  background:
+    radial-gradient(60% 100% at 22% 0%, rgba(250, 204, 21, 0.09), transparent 70%),
+    radial-gradient(55% 100% at 78% 0%, rgba(96, 165, 250, 0.06), transparent 70%);
+}
+
 /* Pookalam petal burst when he blesses — each petal flies out along its own
    --dx/--dy and fades (fill: forwards keeps it invisible after). */
 @keyframes petal-burst {
