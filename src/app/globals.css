@@ -258,6 +258,50 @@ body {
     radial-gradient(55% 100% at 78% 0%, rgba(96, 165, 250, 0.06), transparent 70%);
 }
 
+/* Akshaya Tritiya trim — pure gold, heavier than Onam's kasavu (which
+   pairs gold with white for the mundu) or Dhanteras's (which pairs gold
+   with a red spark). The imperishable day gets an imperishable band. */
+.akshaya-trim {
+  height: 7px;
+  background-image:
+    linear-gradient(
+      to bottom,
+      #7a4e08 0 1px,
+      #b8860b 1px 2px,
+      #ffdf6b 2px 3px,
+      #fef3c7 3px 4px,
+      #ffdf6b 4px 5px,
+      #b8860b 5px 6px,
+      #7a4e08 6px 7px
+    );
+}
+.dark .akshaya-trim {
+  background-image:
+    linear-gradient(
+      to bottom,
+      #4a2d05 0 1px,
+      #a86a10 1px 2px,
+      #e0c77c 2px 3px,
+      #ffe4a0 3px 4px,
+      #e0c77c 4px 5px,
+      #a86a10 5px 6px,
+      #4a2d05 6px 7px
+    );
+}
+
+/* Akshaya Tritiya wash — warm gold, no red or blue accent. Pure
+   imperishable-metal glow. */
+.akshaya-glow {
+  background:
+    radial-gradient(60% 100% at 22% 0%, rgba(250, 204, 21, 0.24), transparent 70%),
+    radial-gradient(55% 100% at 78% 0%, rgba(245, 158, 11, 0.2), transparent 70%);
+}
+.dark .akshaya-glow {
+  background:
+    radial-gradient(60% 100% at 22% 0%, rgba(250, 204, 21, 0.09), transparent 70%),
+    radial-gradient(55% 100% at 78% 0%, rgba(245, 158, 11, 0.08), transparent 70%);
+}
+
 /* Pookalam petal burst when he blesses — each petal flies out along its own
    --dx/--dy and fades (fill: forwards keeps it invisible after). */
 @keyframes petal-burst {

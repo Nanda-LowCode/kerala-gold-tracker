@@ -2,6 +2,7 @@ import type { CharacterConfig } from "./types";
 import { MAHABALI } from "./characters/mahabali";
 import { LAKSHMI } from "./characters/lakshmi";
 import { KRISHNA } from "./characters/krishna";
+import { KUBERA } from "./characters/kubera";
 
 /**
  * Registered seasonal characters. Order matters for overlap — if two windows
@@ -10,6 +11,7 @@ import { KRISHNA } from "./characters/krishna";
  */
 export const CHARACTERS: CharacterConfig[] = [
   KRISHNA,  // Vishu · Apr (2027)
+  KUBERA,   // Akshaya Tritiya · May (2027)
   MAHABALI, // Onam · Aug-Sep (2026)
   LAKSHMI,  // Dhanteras/Diwali · Nov (2026)
 ];

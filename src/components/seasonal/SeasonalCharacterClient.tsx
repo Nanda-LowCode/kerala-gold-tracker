@@ -4,6 +4,7 @@ import SeasonalCharacter from "./SeasonalCharacter";
 import { MAHABALI } from "./characters/mahabali";
 import { LAKSHMI } from "./characters/lakshmi";
 import { KRISHNA } from "./characters/krishna";
+import { KUBERA } from "./characters/kubera";
 
 /**
  * Client-side dispatcher that resolves a character id to its full config.
@@ -21,6 +22,7 @@ const CONFIGS = {
   mahabali: MAHABALI,
   lakshmi: LAKSHMI,
   krishna: KRISHNA,
+  kubera: KUBERA,
 } as const;
 
 export type CharacterId = keyof typeof CONFIGS;
