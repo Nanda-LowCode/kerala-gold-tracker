@@ -101,7 +101,16 @@ export default function RootLayout({
           <SeasonalCharacterLoader />
           <InstallPrompt />
           <Analytics />
-          <SpeedInsights />
+          {/*
+            sampleRate keeps Speed Insights under the Vercel Hobby free
+            quota (10K events/month). With growing traffic we were burning
+            through it at ~120% and heading toward 200%+ by November.
+            Sampling at 25% still gives statistically representative Core
+            Web Vitals — the field data Google itself surfaces in GSC is
+            sampled similarly. Bump this back up (or remove it) after a
+            plan upgrade.
+          */}
+          <SpeedInsights sampleRate={0.25} />
           {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
             <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
           )}
