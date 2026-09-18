@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { createSupabaseReadClient } from "@/lib/supabase";
 import OldGoldCalculator from "@/components/OldGoldCalculator";
+import SiblingCalculators from "@/components/SiblingCalculators";
 
 export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
@@ -139,6 +140,8 @@ export default async function OldGoldExchangeCalculatorPage() {
             </p>
           </div>
         )}
+
+        <SiblingCalculators exclude={["/tools/old-gold-exchange-calculator"]} />
 
         <section>
           <h2 className="mb-4 text-lg font-bold tracking-tight text-zinc-900 md:text-xl">

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createSupabaseReadClient } from "@/lib/supabase";
 import GoldCalculator from "@/components/GoldCalculator";
 import RelatedTools from "@/components/RelatedTools";
+import SiblingCalculators from "@/components/SiblingCalculators";
 
 export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
@@ -143,6 +144,8 @@ export default async function GoldMakingChargeCalculatorPage() {
             </p>
           </div>
         )}
+
+        <SiblingCalculators exclude={["/tools/gold-making-charge-calculator"]} />
 
         <section className="space-y-4 text-sm leading-relaxed text-zinc-600 md:text-base">
           <p>

@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { getHistory } from "@/app/page";
 import GoldSchemeCalculator from "@/components/GoldSchemeCalculator";
+import SiblingCalculators from "@/components/SiblingCalculators";
 
 export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
@@ -89,6 +90,8 @@ export default async function GoldSchemeCalculatorPage() {
         </div>
 
         <GoldSchemeCalculator rate22k={rate22k} />
+
+        <SiblingCalculators exclude={["/tools/gold-scheme-calculator"]} />
 
         <section className="space-y-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
           <h2 className="text-lg font-bold text-zinc-800 dark:text-zinc-200">How jeweller gold schemes actually work</h2>

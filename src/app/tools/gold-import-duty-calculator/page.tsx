@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import GoldImportDutyCalculator from "@/components/GoldImportDutyCalculator";
+import SiblingCalculators from "@/components/SiblingCalculators";
 import { createSupabaseReadClient } from "@/lib/supabase";
 
 export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
@@ -98,6 +99,8 @@ export default async function GoldImportDutyCalculatorPage() {
         </h1>
 
         <GoldImportDutyCalculator initialGoldRate={rates?.rate_24k_1g || 14000} />
+
+        <SiblingCalculators exclude={["/tools/gold-import-duty-calculator"]} />
 
         <div className="flex flex-wrap items-center justify-center gap-3 mt-4">
           <Link

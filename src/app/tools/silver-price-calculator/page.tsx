@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { getHistory } from "@/app/page";
 import SilverCalculator from "@/components/SilverCalculator";
+import SiblingCalculators from "@/components/SiblingCalculators";
 
 export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
@@ -63,6 +64,8 @@ export default async function SilverCalculatorPage() {
             Silver rate is unavailable right now — please check back shortly.
           </div>
         )}
+
+        <SiblingCalculators exclude={["/tools/silver-price-calculator"]} />
 
         <section className="space-y-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
           <h2 className="text-lg font-bold text-zinc-800 dark:text-zinc-200">How silver pricing works in Kerala</h2>

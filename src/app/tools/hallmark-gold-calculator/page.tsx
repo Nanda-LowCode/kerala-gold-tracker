@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { createSupabaseReadClient } from "@/lib/supabase";
 import HallmarkCalculator from "@/components/HallmarkCalculator";
+import SiblingCalculators from "@/components/SiblingCalculators";
 
 export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
@@ -156,6 +157,8 @@ export default async function HallmarkGoldCalculatorPage() {
             <p className="text-sm text-zinc-500">Gold rates are currently unavailable. Please check back shortly.</p>
           </div>
         )}
+
+        <SiblingCalculators exclude={["/tools/hallmark-gold-calculator"]} />
 
         {/* Explainer */}
         <section className="space-y-5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 md:text-base">

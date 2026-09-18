@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createSupabaseReadClient } from "@/lib/supabase";
 import PavanCalculator from "@/components/PavanCalculator";
 import RelatedTools from "@/components/RelatedTools";
+import SiblingCalculators from "@/components/SiblingCalculators";
 
 export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
@@ -226,6 +227,13 @@ export default async function PavanToGramCalculatorPage() {
             </p>
           </div>
         )}
+
+        {/* Above-the-fold shortcut to the other calculators — the moment
+            the visitor gets their pavan answer, the natural next question
+            is "what will I actually pay in the shop?" (making charge) or
+            "is my old gold worth this today?" (old-gold exchange). Full
+            grid still lives at the bottom of the page. */}
+        <SiblingCalculators exclude={["/tools/pavan-to-gram-calculator"]} />
 
         {/* Static reference table */}
         <section className="space-y-4">
