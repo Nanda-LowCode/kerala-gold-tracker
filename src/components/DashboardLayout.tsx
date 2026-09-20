@@ -28,6 +28,7 @@ import { getFxRates } from "@/lib/fx";
 import { GoldRate } from "@/lib/types";
 import { getCityData, getCityTowns } from "@/lib/cityData";
 import { getAllPosts } from "@/lib/mdx";
+import DhanterasOrnament from "@/components/seasonal/DhanterasOrnament";
 
 /**
  * Days until Thiruvonam 2026 (26 Aug), in IST. Returns null outside the
@@ -257,6 +258,10 @@ export default async function DashboardLayout({
           <>
             {/* Hero: trust badge + date -> Squished aggressively for mobile */}
             <section className="animate-rise flex flex-col items-center text-center">
+              {/* Diwali-window ornament — a row of flickering diyas above the
+                  trust chip during the Lakshmi season, plus a "Today is
+                  Dhanteras" badge on the day itself. Renders nothing otherwise. */}
+              <DhanterasOrnament />
               <div className="pulse-glow inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 sm:px-3 sm:py-1 shadow-sm dark:border-emerald-900/50 dark:bg-emerald-950/30">
                 <svg
                   className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-emerald-600 dark:text-emerald-500"

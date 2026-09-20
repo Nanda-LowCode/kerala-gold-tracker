@@ -173,12 +173,19 @@ body {
     radial-gradient(55% 100% at 78% 0%, rgba(250, 204, 21, 0.08), transparent 70%);
 }
 
-/* Dhanteras trim — a thin gold ribbon with a subtle red inner line, reading
-   as a Diwali/Dhanteras cue rather than the Kerala-specific kasavu. Same 7px
-   footprint as onam-kasavu so pages don't shift when the theme swaps. */
+/* Dhanteras trim — a thin gold ribbon with a red mid-line, dressed with a
+   repeating dark-gold notch every 12px so it reads as a woven rangoli-adjacent
+   pattern rather than a flat band. Same 7px footprint as onam-kasavu so pages
+   don't shift when the theme swaps. */
 .dhanteras-trim {
   height: 7px;
   background-image:
+    /* dark-gold notches at a regular rhythm on top of the ribbon */
+    repeating-linear-gradient(
+      90deg,
+      rgba(122, 78, 8, 0.55) 0 1px,
+      transparent 1px 12px
+    ),
     linear-gradient(
       to bottom,
       #7a4e08 0 1px,
@@ -192,6 +199,11 @@ body {
 }
 .dark .dhanteras-trim {
   background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgba(224, 199, 124, 0.35) 0 1px,
+      transparent 1px 12px
+    ),
     linear-gradient(
       to bottom,
       #4a2d05 0 1px,
@@ -202,6 +214,24 @@ body {
       #b8912f 5px 6px,
       #4a2d05 6px 7px
     );
+}
+
+/* Diya flame flicker — subtle scale + opacity wobble on the flame path so
+   a row of lamps reads as living, not stamped. Each diya sets its own
+   animation-delay inline to prevent lockstep pulsing. Motion is disabled
+   under prefers-reduced-motion. */
+@keyframes diya-flicker {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  25% { transform: scale(1.06, 0.94); opacity: 0.93; }
+  50% { transform: scale(0.96, 1.04); opacity: 1; }
+  75% { transform: scale(1.03, 0.98); opacity: 0.97; }
+}
+.diya-flame {
+  transform-origin: center bottom;
+  animation: diya-flicker 1.8s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .diya-flame { animation: none; }
 }
 
 /* Dhanteras wash — a slightly redder, more golden top glow than Onam's
