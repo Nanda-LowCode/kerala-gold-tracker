@@ -61,8 +61,9 @@ export default function MyGoldClient({ today }: { today: ResolvedRate }) {
 
   const [rates, setRates] = useState<Record<string, ResolvedRate | null>>({});
 
-  // Arriving from the pavan converter carries the weight across, so the visitor
-  // lands with the form half-filled instead of facing an empty one.
+  // Arriving from another tool (pavan converter, backtest calculator) carries
+  // context across: grams via ?g, purchase date via ?d, karat via ?k. The
+  // visitor lands with the form pre-filled instead of facing an empty one.
   const searchParams = useSearchParams();
 
   // Form state
@@ -70,8 +71,14 @@ export default function MyGoldClient({ today }: { today: ResolvedRate }) {
     const g = Number(searchParams.get("g"));
     return Number.isFinite(g) && g > 0 ? String(g) : "";
   });
-  const [karat, setKarat] = useState<Karat>(22);
-  const [date, setDate] = useState("");
+  const [karat, setKarat] = useState<Karat>(() => {
+    const k = Number(searchParams.get("k"));
+    return k === 18 || k === 24 ? (k as Karat) : 22;
+  });
+  const [date, setDate] = useState(() => {
+    const d = searchParams.get("d") ?? "";
+    return /^\d{4}-\d{2}-\d{2}$/.test(d) ? d : "";
+  });
   const [price, setPrice] = useState("");
   const [label, setLabel] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);

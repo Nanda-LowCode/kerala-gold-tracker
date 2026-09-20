@@ -41,6 +41,13 @@ const TOOLS: ToolEntry[] = [
     badge: "Resale",
   },
   {
+    slug: "gold-return-calculator",
+    title: "Gold Return Calculator",
+    blurb:
+      "\"What if you'd bought gold in 2020?\" See today's value, total return and annualised return — from the actual Kerala board rate history back to April 2020.",
+    badge: "Backtest",
+  },
+  {
     slug: "gold-import-duty-calculator",
     title: "NRI Import Duty Calculator",
     blurb:
