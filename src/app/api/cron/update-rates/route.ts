@@ -1,3 +1,49 @@
+/**
+ * Daily gold-rate update — triggered by an external cron service.
+ *
+ * We used to have three Vercel Hobby crons defined in vercel.json (10:00,
+ * 11:30 and 13:00 IST). Hobby cron jobs drift up to 60 minutes from their
+ * scheduled time — data showed the average write landed at 10:34 IST for a
+ * job scheduled at 10:00 IST. External cron services fire on the minute
+ * and are free.
+ *
+ * ─── SETUP: cron-job.org (recommended) ──────────────────────────────────
+ *
+ * 1. Sign in to https://cron-job.org (free forever, 15 second precision).
+ * 2. Create a new cron job:
+ *      URL:      https://www.livegoldkerala.com/api/cron/update-rates
+ *      Schedule: 10:00 IST every day (or 04:30 UTC on the UI)
+ *      Method:   GET
+ *      Advanced → Request headers:
+ *        Authorization: Bearer <the same value as CRON_SECRET in Vercel>
+ * 3. Enable failure notifications to your alert email.
+ * 4. Optional belt-and-braces: create a SECOND job at 10:15 IST that fires
+ *    only if the first missed. Same URL, same header.
+ *
+ * The route is idempotent — a second run within the same day just re-writes
+ * the same numbers via UPSERT; nothing breaks if it fires twice.
+ *
+ * ─── SETUP: GitHub Actions (alternative) ────────────────────────────────
+ *
+ * Store CRON_SECRET as a repo secret, then add a workflow file:
+ *
+ *   name: Trigger gold rate update
+ *   on:
+ *     schedule:
+ *       - cron: '30 4 * * *'   # 10:00 IST
+ *   jobs:
+ *     trigger:
+ *       runs-on: ubuntu-latest
+ *       steps:
+ *         - run: |
+ *             curl -fsS -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+ *               https://www.livegoldkerala.com/api/cron/update-rates
+ *
+ * GitHub Actions also drifts (up to 15 min under load), but is completely
+ * free and self-hosted. cron-job.org is more precise for this use case.
+ * ─────────────────────────────────────────────────────────────────────────
+ */
+
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import * as cheerio from "cheerio";
