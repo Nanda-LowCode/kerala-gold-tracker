@@ -332,6 +332,65 @@ body {
     radial-gradient(55% 100% at 78% 0%, rgba(245, 158, 11, 0.08), transparent 70%);
 }
 
+/* Ramadan / Eid trim — geometric arabesque-inspired pattern in deep green
+   and warm gold. Islam doesn't personify divine figures, so this season
+   is theming only (no character); the trim carries the whole visual
+   identity. Same 7px footprint as the other seasons. */
+.ramadan-trim {
+  height: 7px;
+  background-image:
+    /* Regular diagonal gold notches suggesting geometric tile-work */
+    repeating-linear-gradient(
+      45deg,
+      transparent 0 6px,
+      rgba(243, 185, 58, 0.6) 6px 7px,
+      transparent 7px 10px
+    ),
+    /* Deep-green base ribbon with a mid gold-line */
+    linear-gradient(
+      to bottom,
+      #14532d 0 1px,
+      #166534 1px 2px,
+      #22c55e 2px 3px,
+      #f3b93a 3px 4px,
+      #22c55e 4px 5px,
+      #166534 5px 6px,
+      #14532d 6px 7px
+    );
+}
+.dark .ramadan-trim {
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent 0 6px,
+      rgba(224, 199, 124, 0.45) 6px 7px,
+      transparent 7px 10px
+    ),
+    linear-gradient(
+      to bottom,
+      #052e16 0 1px,
+      #14532d 1px 2px,
+      #166534 2px 3px,
+      #a86a10 3px 4px,
+      #166534 4px 5px,
+      #14532d 5px 6px,
+      #052e16 6px 7px
+    );
+}
+
+/* Ramadan / Eid wash — a warm blend of Islamic-green and gold suggesting
+   evening iftar light. */
+.ramadan-glow {
+  background:
+    radial-gradient(60% 100% at 22% 0%, rgba(34, 197, 94, 0.16), transparent 70%),
+    radial-gradient(55% 100% at 78% 0%, rgba(250, 204, 21, 0.16), transparent 70%);
+}
+.dark .ramadan-glow {
+  background:
+    radial-gradient(60% 100% at 22% 0%, rgba(34, 197, 94, 0.07), transparent 70%),
+    radial-gradient(55% 100% at 78% 0%, rgba(250, 204, 21, 0.07), transparent 70%);
+}
+
 /* Pookalam petal burst when he blesses — each petal flies out along its own
    --dx/--dy and fades (fill: forwards keeps it invisible after). */
 @keyframes petal-burst {
