@@ -32,14 +32,14 @@ export async function generateMetadata(): Promise<Metadata> {
         day: "numeric",
       });
       pavanPrice = ` (${dateStr}): ${fmt(pavan22k)}`;
-      descRate = `1 pavan (8 grams) of 22K gold costs ${fmt(pavan22k)} in Kerala today. `;
+      descRate = `One pavan of 22K gold costs ${fmt(pavan22k)} in Kerala today. `;
     }
   } catch {
     // fall through to static fallback
   }
 
-  const title = `1 Pavan Gold Rate Today${pavanPrice} — Kerala 22K Price`;
-  const description = `${descRate}Convert grams to pavan, sovereign and tola and see the gold value at today's Kerala 916 rate. 1 pavan = 8 grams. Free calculator.`;
+  const title = `Pavan to Gram Calculator — 1 Pavan = 8g${pavanPrice}`;
+  const description = `1 pavan = 8 grams. ${descRate}Convert between grams, pavan, sovereign and tola at today's live Kerala AKGSMA 916 rate. Free calculator, works both ways.`;
 
   return {
     title,
