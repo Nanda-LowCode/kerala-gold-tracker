@@ -27,22 +27,29 @@ export async function generateMetadata(): Promise<Metadata> {
         month: "short",
         day: "numeric",
       });
-      rateSnippet = ` — 22K @ ₹${rate.toLocaleString("en-IN")}/g (${dateStr})`;
-      descRate = `Today's 22K board rate is ₹${rate.toLocaleString("en-IN")}/gram. `;
+      rateSnippet = ` — 22K ₹${rate.toLocaleString("en-IN")}/g (${dateStr})`;
+      descRate = `Today's 22K rate is ₹${rate.toLocaleString("en-IN")}/g. `;
     }
   } catch {
     // fall through to static fallback
   }
 
-  const title = `Gold Making Charges in Kerala 2026 — Calculator${rateSnippet}`;
-  const description = `${descRate}Calculate making charges (8%–25%) and 3% GST to see the real showroom price per gram and per pavan for 22K, 24K and 18K gold. Free calculator.`;
+  // Title captures three CTR clusters we were ranking high (pos 1-7) but
+  // getting 0 clicks on: panikooli (90 imp/mo), pavan making-charge queries
+  // (64 imp/mo), per-gram queries. Head term "gold making charges in Kerala"
+  // stays front-loaded for the winning 5%+ CTR query.
+  const title = `Gold Making Charges (Panikooli) in Kerala — Per Pavan & Gram${rateSnippet}`;
+  // Description leads with chain/ring/bangle intent to catch the 60+ imp/mo
+  // of chain-making-charge queries where the user wants a typical range, not
+  // just a calculator.
+  const description = `Chain, ring, bangle or pavan — typical gold making charges (panikooli) in Kerala. ${descRate}Calculate 8–25% MC + 3% GST for 22K, 24K, 18K.`;
 
   return {
     title,
     description,
     alternates: { canonical: "/tools/gold-making-charge-calculator" },
     openGraph: {
-      title: `Gold Making Charge Calculator — Kerala 2026`,
+      title: `Gold Making Charges (Panikooli) in Kerala — Per Pavan & Gram`,
       description,
       url: "https://www.livegoldkerala.com/tools/gold-making-charge-calculator",
     },
