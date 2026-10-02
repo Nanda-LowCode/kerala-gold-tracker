@@ -95,6 +95,6 @@ export const config = {
   // Content pages only. Exclude api (cron, IndexNow, OG image fetched by social
   // crawlers), framework assets, and metadata files (search engines fetch them).
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|ads.txt).*)",
   ],
 };
