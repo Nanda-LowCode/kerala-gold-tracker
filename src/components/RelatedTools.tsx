@@ -9,6 +9,7 @@ const LINKS: { href: string; label: string; blurb: string }[] = [
   { href: "/tools/gold-making-charge-calculator", label: "Making Charge Calculator", blurb: "Real showroom price + GST" },
   { href: "/tools/pavan-to-gram-calculator", label: "Gram ↔ Pavan Converter", blurb: "Convert + today's value" },
   { href: "/tools/hallmark-gold-calculator", label: "Hallmark Value", blurb: "916 / 750 / 999 gold value" },
+  { href: "/tools/huid-checker", label: "HUID Check", blurb: "Verify your 6-char BIS code" },
   { href: "/tools/gold-scheme-calculator", label: "Gold Scheme Calculator", blurb: "Is a monthly scheme worth it?" },
   { href: "/tools/old-gold-exchange-calculator", label: "Old Gold Exchange", blurb: "Resale / exchange value" },
   { href: "/tools/gold-import-duty-calculator", label: "NRI Import Duty", blurb: "Carrying gold to India" },

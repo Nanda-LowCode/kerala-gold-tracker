@@ -24,6 +24,7 @@ interface Sibling {
 const CALCULATORS: Sibling[] = [
   { href: "/tools/gold-making-charge-calculator", label: "Making Charge", icon: "🧾" },
   { href: "/tools/hallmark-gold-calculator", label: "Hallmark & Purity", icon: "✓" },
+  { href: "/tools/huid-checker", label: "HUID Check", icon: "🔎" },
   { href: "/tools/gold-return-calculator", label: "Historical Return", icon: "📈" },
   { href: "/tools/pavan-to-gram-calculator", label: "Gram ↔ Pavan", icon: "⚖️" },
   { href: "/tools/old-gold-exchange-calculator", label: "Old Gold Exchange", icon: "↺" },

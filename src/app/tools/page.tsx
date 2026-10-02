@@ -62,6 +62,13 @@ const TOOLS: ToolEntry[] = [
     badge: "Purity",
   },
   {
+    slug: "huid-checker",
+    title: "HUID Check",
+    blurb:
+      "Paste the 6-character HUID stamped on your gold to check its format, see what each of the four hallmark marks means, then verify officially in the BIS Care app.",
+    badge: "New",
+  },
+  {
     slug: "pavan-to-gram-calculator",
     title: "Gram to Pavan Converter",
     blurb:

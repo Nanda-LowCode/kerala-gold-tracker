@@ -58,6 +58,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       'old-gold-exchange-calculator',
       'gold-import-duty-calculator',
       'hallmark-gold-calculator',
+      'huid-checker',
       'silver-price-calculator',
       'gold-scheme-calculator',
       'gold-return-calculator',
