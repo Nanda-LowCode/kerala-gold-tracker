@@ -34,14 +34,12 @@ export async function generateMetadata(): Promise<Metadata> {
     // fall through to static fallback
   }
 
-  // Title captures three CTR clusters we were ranking high (pos 1-7) but
-  // getting 0 clicks on: panikooli (90 imp/mo), pavan making-charge queries
-  // (64 imp/mo), per-gram queries. Head term "gold making charges in Kerala"
-  // stays front-loaded for the winning 5%+ CTR query.
-  const title = `Gold Making Charges (Panikooli) in Kerala — Per Pavan & Gram${rateSnippet}`;
-  // Description leads with chain/ring/bangle intent to catch the 60+ imp/mo
-  // of chain-making-charge queries where the user wants a typical range, not
-  // just a calculator.
+  // Keep the winning head term "Gold Making Charges in Kerala" clean —
+  // the "(Panikooli)" parenthetical experiment (Oct 2) dropped CTR on the
+  // top English query from 5.2% to 2.9%. Panikooli hint stays in the
+  // description, where it reaches Malayalam-scanners without confusing the
+  // English scanners who dominate this cluster.
+  const title = `Gold Making Charges in Kerala — Per Pavan & Per Gram${rateSnippet}`;
   const description = `Chain, ring, bangle or pavan — typical gold making charges (panikooli) in Kerala. ${descRate}Calculate 8–25% MC + 3% GST for 22K, 24K, 18K.`;
 
   return {
@@ -49,7 +47,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description,
     alternates: { canonical: "/tools/gold-making-charge-calculator" },
     openGraph: {
-      title: `Gold Making Charges (Panikooli) in Kerala — Per Pavan & Gram`,
+      title: `Gold Making Charges in Kerala — Per Pavan & Per Gram`,
       description,
       url: "https://www.livegoldkerala.com/tools/gold-making-charge-calculator",
     },

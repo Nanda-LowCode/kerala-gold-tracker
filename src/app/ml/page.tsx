@@ -20,18 +20,24 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const languages = { "en-IN": "/", "ml-IN": "/ml", "x-default": "/" };
 
+  // Dominant Malayalam query cluster from GSC (3 months, Oct 2026): the
+  // five "1 പവന് വില today ..." variants collectively drive ~20k monthly
+  // impressions but only ~0.7% CTR because the title led with
+  // "ഇന്നത്തെ സ്വർണ്ണ വില". Front-loading "1 പവന് വില today" and matching
+  // the exact "പവന്" (chandrakkala) spelling users type — not "പവൻ"
+  // (chillu) — is the single biggest unlock on this page.
   if (!today) {
     return {
-      title: "ഇന്നത്തെ സ്വർണ്ണ വില കേരളം — 22K & 24K | LiveGold Kerala",
+      title: "1 പവന് വില today — ഇന്നത്തെ സ്വർണ്ണ വില കേരളം (22K/24K) | LiveGold Kerala",
       description:
-        "ഇന്നത്തെ കേരള സ്വർണ്ണ വില: 22 കാരറ്റ് (916), 24 കാരറ്റ് നിരക്കുകൾ ഗ്രാമിനും പവനും. AKGSMA ബോർഡ് നിരക്ക്, ദിവസവും അപ്ഡേറ്റ്.",
+        "1 പവന് വില today: ഇന്നത്തെ കേരള സ്വർണ്ണ വില 22 കാരറ്റ് (916), 24 കാരറ്റ് നിരക്കുകൾ ഗ്രാമിനും പവനും. AKGSMA ബോർഡ് നിരക്ക്, ദിവസവും അപ്ഡേറ്റ്.",
       alternates: { canonical: "/ml", languages },
     };
   }
 
   return {
-    title: `ഇന്നത്തെ സ്വർണ്ണ വില കേരളം: 22K ₹${today.rate_22k_1g}/ഗ്രാം · ${inr(today.rate_22k_1g * 8)}/പവൻ`,
-    description: `ഇന്നത്തെ കേരള സ്വർണ്ണ വില: 22 കാരറ്റ് (916) ഗ്രാമിന് ₹${today.rate_22k_1g}, ഒരു പവന് (8 ഗ്രാം) ${inr(today.rate_22k_1g * 8)}. 24 കാരറ്റ് ₹${today.rate_24k_1g}/ഗ്രാം. AKGSMA ബോർഡ് നിരക്ക് — എല്ലാ ജില്ലകളിലും ഒരേ വില.`,
+    title: `1 പവന് വില today: ${inr(today.rate_22k_1g * 8)} (916) · ഇന്നത്തെ സ്വർണ്ണ വില കേരളം`,
+    description: `1 പവന് വില today ${inr(today.rate_22k_1g * 8)} (916, 8 ഗ്രാം). ഇന്നത്തെ കേരള സ്വർണ്ണ വില: 22 കാരറ്റ് ഗ്രാമിന് ₹${today.rate_22k_1g}, 24 കാരറ്റ് ₹${today.rate_24k_1g}/ഗ്രാം. AKGSMA ബോർഡ് നിരക്ക് — എല്ലാ ജില്ലകളിലും ഒരേ വില.`,
     alternates: { canonical: "/ml", languages },
   };
 }
