@@ -4,6 +4,11 @@ The #1 growth lever for a new (DR0, ~3-month) gold site is **backlinks**. On-pag
 SEO compounds slowly; links move a new domain. This is mostly *your* manual work —
 link-building can't be ethically automated — but here's the kit.
 
+> **Companion playbook:** [`widget-outreach.md`](./widget-outreach.md) — a
+> separate, self-serve channel: pitch the free `/embed` widget to Kerala
+> jewellery shops, wedding blogs and NRI sites. Each install = a permanent
+> attribution backlink without further work.
+
 ## The hook asset
 **`/kerala-gold-price-trends`** — an original data study (22K gold tripled +200%
 since 2020). It has a CC-BY citation block and `Dataset` structured data so it's
