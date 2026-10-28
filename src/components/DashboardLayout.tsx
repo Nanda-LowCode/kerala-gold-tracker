@@ -355,7 +355,14 @@ export default async function DashboardLayout({
 
             {/* Data-trust note — explains the 24K derivation so it doesn't look "wrong" vs aggregators */}
             <p className="-mt-1 text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">
-              22K &amp; 18K are the official AKGSMA Kerala board rates. 24K is derived from the 916 rate by purity (22K&nbsp;&times;&nbsp;24&frasl;22), reflecting pure-gold value.
+              22K &amp; 18K are the official{" "}
+              <Link
+                href="/akgsma"
+                className="font-medium text-zinc-600 underline decoration-dotted underline-offset-2 hover:text-amber-700 hover:decoration-solid dark:text-zinc-300 dark:hover:text-amber-400"
+              >
+                AKGSMA
+              </Link>{" "}
+              Kerala board rates. 24K is derived from the 916 rate by purity (22K&nbsp;&times;&nbsp;24&frasl;22), reflecting pure-gold value.
             </p>
 
             {/* Multi-currency conversion — turns the Kerala rate into a diaspora
