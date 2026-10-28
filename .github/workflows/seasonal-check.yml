@@ -1,0 +1,27 @@
+name: Seasonal Activation Check
+
+# Verifies the live homepage renders the right seasonal theme for today
+# (Lakshmi during Dhanteras/Diwali, Mahabali during Onam, Ramadan window, etc.)
+# — and that no stale season markers are stuck when we're outside every window.
+#
+# Runs once a day. On failure, GitHub emails the repo owner automatically.
+# Also runnable manually from the Actions tab (workflow_dispatch).
+
+on:
+  schedule:
+    - cron: "30 5 * * *" # 11:00 AM IST — after the 10:00 rate cron + CDN warm-up
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Zero deps — the script uses only Node's built-in fetch.
+      - name: Check seasonal markers on live homepage
+        run: node scripts/check-seasonal.mjs
