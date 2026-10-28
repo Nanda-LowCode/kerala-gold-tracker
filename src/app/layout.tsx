@@ -74,6 +74,11 @@ export const metadata: Metadata = {
   verification: {
     google: "RJTBoklRKLnaK24UcIkOxVTLH4tgXkXCjjRgCR-JDek",
   },
+  // AdSense ownership tag — pairs with /public/ads.txt (pub-9229787243154059).
+  // Lets Google match the loader on the page to the approved publisher account.
+  other: {
+    "google-adsense-account": "ca-pub-9229787243154059",
+  },
 };
 
 export default function RootLayout({
@@ -120,6 +125,18 @@ export default function RootLayout({
             <Script id="ms-clarity" strategy="afterInteractive">
               {`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","xcc8gp87mw");`}
             </Script>
+          )}
+          {/* Google AdSense loader — production only. Once this is live, enable
+              Auto Ads in the AdSense dashboard for immediate placement, OR add
+              manual <ins class="adsbygoogle"> units with data-ad-slot IDs. */}
+          {process.env.NODE_ENV === "production" && (
+            <Script
+              id="adsense-loader"
+              async
+              strategy="afterInteractive"
+              src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9229787243154059"
+              crossOrigin="anonymous"
+            />
           )}
         </ThemeProvider>
       </body>

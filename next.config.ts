@@ -1,12 +1,20 @@
 import type { NextConfig } from "next";
 
+// AdSense domains — needed for the pagead loader to inject ad iframes and
+// their creative assets. Keep these grouped so a future removal is one hunk.
+const ADSENSE_SCRIPT = "https://pagead2.googlesyndication.com https://*.googlesyndication.com https://partner.googleadservices.com https://adservice.google.com https://*.adtrafficquality.google";
+const ADSENSE_IMG = "https://*.googlesyndication.com https://*.doubleclick.net https://*.g.doubleclick.net https://*.google.com https://*.adtrafficquality.google";
+const ADSENSE_FRAME = "https://googleads.g.doubleclick.net https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net https://*.adtrafficquality.google";
+const ADSENSE_CONNECT = "https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.adtrafficquality.google";
+
 const CSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://va.vercel-scripts.com https://*.clarity.ms",
+  `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://va.vercel-scripts.com https://*.clarity.ms ${ADSENSE_SCRIPT}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://*.clarity.ms https://c.bing.com",
+  `img-src 'self' data: blob: https://*.clarity.ms https://c.bing.com ${ADSENSE_IMG}`,
   "font-src 'self'",
-  "connect-src 'self' https://*.google-analytics.com https://www.googletagmanager.com https://vitals.vercel-insights.com https://cdn.jsdelivr.net https://*.clarity.ms https://c.bing.com https://api.gold-api.com",
+  `connect-src 'self' https://*.google-analytics.com https://www.googletagmanager.com https://vitals.vercel-insights.com https://cdn.jsdelivr.net https://*.clarity.ms https://c.bing.com https://api.gold-api.com ${ADSENSE_CONNECT}`,
+  `frame-src ${ADSENSE_FRAME}`,
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
