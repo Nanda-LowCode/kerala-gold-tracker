@@ -83,7 +83,14 @@ export default function SiteFooter() {
 
         <div className="mt-8 border-t border-zinc-200/60 pt-5 text-center text-xs text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
           <p className="font-medium">
-            Gold: AKGSMA Kerala board rate · Silver: national market rate · For reference only — confirm at your jeweller
+            Gold:{" "}
+            <Link
+              href="/akgsma"
+              className="underline decoration-dotted underline-offset-2 hover:text-amber-700 hover:decoration-solid dark:hover:text-amber-400"
+            >
+              AKGSMA
+            </Link>{" "}
+            Kerala board rate · Silver: national market rate · For reference only — confirm at your jeweller
           </p>
           <p className="mt-1.5">© 2026 LiveGold Kerala</p>
         </div>
