@@ -19,6 +19,7 @@ import NativeShareButton from "@/components/NativeShareButton";
 import WhatsAppFollow from "@/components/WhatsAppFollow";
 import ThemeToggle from "@/components/ThemeToggle";
 import NotificationToggle from "@/components/NotificationToggle";
+import InstallBanner from "@/components/InstallBanner";
 import PriceAlertInput from "@/components/PriceAlertInput";
 import SilverRateCard from "@/components/SilverRateCard";
 import ExchangeTicker from "@/components/ExchangeTicker";
@@ -364,6 +365,11 @@ export default async function DashboardLayout({
               </Link>{" "}
               Kerala board rates. 24K is derived from the 916 rate by purity (22K&nbsp;&times;&nbsp;24&frasl;22), reflecting pure-gold value.
             </p>
+
+            {/* Active "add to home screen" nudge. Hidden for already-installed
+                users and anyone who's dismissed it. Placed here so first-time
+                visitors see it right after they've got the value they came for. */}
+            <InstallBanner />
 
             {/* Multi-currency conversion — turns the Kerala rate into a diaspora
                 magnet (Gulf/NRI). Renders only when live FX is available. */}
