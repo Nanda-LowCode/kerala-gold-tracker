@@ -393,38 +393,38 @@ async function fetchWithConsensus(
 
   if (successful.length === 0) return { data: null, errors, winner: "none" };
 
-  // Stale detection: if some sources match yesterday but others don't → those are stale
-  if (yesterdayRate22k !== null) {
-    const fresh = successful.filter((s) => s.data.rate_22k_1g !== yesterdayRate22k);
-    const stale = successful.filter((s) => s.data.rate_22k_1g === yesterdayRate22k);
-
-    if (fresh.length > 0 && stale.length > 0) {
-      stale.forEach((s) =>
-        console.warn(`[gold-cron] ${s.name} is STALE — matches yesterday's ₹${yesterdayRate22k}`)
-      );
-      // Among fresh sources, pick the time-appropriate preferred one
-      const chosen = fresh.find((s) => s.name === preferred) ?? fresh[0];
-      console.log(`[gold-cron] Winner: ${chosen.name} (fresh, stale sources skipped)`);
-      return { data: chosen.data, errors, winner: chosen.name };
-    }
-
-    if (stale.length === successful.length) {
-      console.log(
-        `[gold-cron] All sources match yesterday (₹${yesterdayRate22k}) — genuine no-change or all still stale`
-      );
-      // Alert when any source failed — with only 2 sources we can't confirm genuine no-change
-      if (errors.length > 0) {
-        sendStaleAlert(yesterdayRate22k, errors).catch(() => {});
-      }
-    }
-  }
-
-  // No stale conflict: pick by priority order (preferred first, then fallback chain)
+  // Trust the priority order first — AKGSMA (Kerala board) → BankBazaar
+  // (mirrors AKGSMA) → IBJA (national rate, different measurement).
+  //
+  // Why not do stale-detection by comparing to yesterday's rate? Because on
+  // a NO-CHANGE day (gold rate genuinely held steady), the correct Kerala
+  // sources naturally match yesterday — the old logic would call them
+  // "stale" and incorrectly fall through to IBJA, which measures a DIFFERENT
+  // thing (national wholesale, no state markup) and typically shows a
+  // slightly different number. On 29 Oct 2026 this produced a ₹164/g error
+  // visible to users.
+  //
+  // IBJA ≠ AKGSMA ≠ BankBazaar: these aren't three measurements of the same
+  // number, they're three different numbers. Priority order is the only
+  // signal that actually matters; "freshness vs yesterday" is noise.
   const chosen =
     successful.find((s) => s.name === preferred) ??
     SOURCE_PRIORITY.map((name) => successful.find((s) => s.name === name)).find(Boolean) ??
     successful[0];
   console.log(`[gold-cron] Winner: ${chosen.name}`);
+
+  // Still alert when the preferred source was unavailable — so Nanda can
+  // check Vercel logs and understand why. IBJA winning silently is what
+  // caused today's bad data.
+  if (chosen.name !== preferred && yesterdayRate22k !== null) {
+    sendStaleAlert(chosen.data.rate_22k_1g, [
+      `Preferred source (${preferred}) was unavailable or filtered out.`,
+      `Winner: ${chosen.name} (₹${chosen.data.rate_22k_1g}/g 22K).`,
+      `Yesterday's 22K: ₹${yesterdayRate22k}/g — verify this is the real Kerala board rate.`,
+      ...errors,
+    ]).catch(() => {});
+  }
+
   return { data: chosen.data, errors, winner: chosen.name };
 }
 
