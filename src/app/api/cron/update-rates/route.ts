@@ -74,9 +74,22 @@ type FetcherFn = () => Promise<GoldRateResult>;
 // ─── Config ──────────────────────────────────────────────────────────────────
 
 const FETCH_TIMEOUT_MS = 15_000;
+// 3 attempts total (initial + 2 retries) with short backoff. AKGSMA.com is
+// occasionally flaky at 10:00 IST (hit rate observed ~80% in Oct 2026) —
+// often a transient DNS or 502 that clears within a few seconds. Without
+// retries we silently fall through to IBJA, which gives the national rate
+// instead of the Kerala board rate (observed drift up to ~₹150/g).
+// Worst-case per fetcher: 15s + 1s + 15s + 3s + 15s = 49s, within the 60s
+// route budget below.
+const FETCH_RETRY_DELAYS_MS = [1000, 3000] as const;
 const USER_AGENT =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
   "(KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36";
+
+// Vercel Hobby defaults to 10s for route handlers; our worst-case fetch chain
+// with retries can run ~50s, so we bump this explicitly. Pro/Enterprise can
+// go higher but 60s is plenty for a once-daily cron.
+export const maxDuration = 60;
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -94,8 +107,8 @@ function parsePrice(raw: string): number {
   return num;
 }
 
-/** Fetch HTML with timeout and browser headers */
-async function fetchHtml(url: string): Promise<string> {
+/** Fetch HTML once with timeout and browser headers (single attempt) */
+async function fetchHtmlOnce(url: string): Promise<string> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
@@ -121,6 +134,39 @@ async function fetchHtml(url: string): Promise<string> {
   } finally {
     clearTimeout(timer);
   }
+}
+
+/**
+ * Fetch HTML with retry-on-failure. Retries any error (abort / network /
+ * non-2xx) because scraping flakiness is almost always transient. 4xx is
+ * also retried: AKGSMA has occasionally returned 403 on cold connections
+ * that resolve on retry.
+ *
+ * Pure in-handler delay — no new infra. Total wall time is bounded by
+ * maxDuration (60s). See FETCH_RETRY_DELAYS_MS for the budget math.
+ */
+async function fetchHtml(url: string): Promise<string> {
+  const attempts = 1 + FETCH_RETRY_DELAYS_MS.length;
+  let lastErr: unknown;
+
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await fetchHtmlOnce(url);
+    } catch (err) {
+      lastErr = err;
+      const isLast = i === attempts - 1;
+      if (isLast) break;
+      const delay = FETCH_RETRY_DELAYS_MS[i];
+      console.warn(
+        `[fetchHtml] ${url} attempt ${i + 1}/${attempts} failed: ${err instanceof Error ? err.message : String(err)}. Retrying in ${delay}ms.`,
+      );
+      await new Promise((r) => setTimeout(r, delay));
+    }
+  }
+
+  throw lastErr instanceof Error
+    ? lastErr
+    : new Error(`fetchHtml failed for ${url} after ${attempts} attempts`);
 }
 
 /** Sanity check — reject rates outside a reasonable band */
