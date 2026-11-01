@@ -5,6 +5,7 @@ import { getFxRates } from "@/lib/fx";
 import CurrencyRate from "@/components/CurrencyRate";
 import SilverRateCard from "@/components/SilverRateCard";
 import DailyTrendSpark from "@/components/DailyTrendSpark";
+import { MALAYALAM_CITIES, MALAYALAM_CITY_SLUGS } from "@/lib/malayalamCityData";
 
 export const revalidate = 86400; // daily; freshness pushed on-demand by the update-rates cron (revalidatePath)
 
@@ -277,6 +278,26 @@ export default async function MalayalamRatePage() {
             ))}
           </div>
         </section>
+
+        {/* Malayalam city pages — direct links to each district's Malayalam
+            rate page. The strongest internal signal we can send Google that
+            these 14 new URLs form a coherent hub under /ml. */}
+        <div className="mt-8">
+          <p className="mb-3 text-center text-[11px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+            ജില്ല തിരഞ്ഞെടുക്കുക
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {MALAYALAM_CITY_SLUGS.map((s) => (
+              <Link
+                key={s}
+                href={`/ml/${s}`}
+                className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold text-zinc-700 shadow-sm ring-1 ring-inset ring-zinc-200/70 transition-colors hover:border-amber-300 hover:bg-amber-50 hover:text-amber-700 dark:bg-zinc-900 dark:text-zinc-300 dark:ring-zinc-800 dark:hover:bg-amber-950/20 dark:hover:text-amber-400"
+              >
+                {MALAYALAM_CITIES[s].nameMl}
+              </Link>
+            ))}
+          </div>
+        </div>
 
         {/* Cross-links — a broader set now that /ml is a hub, not a leaf.
             English destinations are labelled in Malayalam so a Malayalam

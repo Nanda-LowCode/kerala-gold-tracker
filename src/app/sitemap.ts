@@ -47,6 +47,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
+  // Malayalam city pages — one per Kerala district, mirroring the English
+  // city routes. Slightly higher priority than English city pages because
+  // /ml traffic consistently outperforms every English page in GSC.
+  const malayalamCityRoutes: MetadataRoute.Sitemap = KERALA_CITIES.map((city) => ({
+    url: `${BASE}/ml/${city}`,
+    lastModified: new Date(),
+    changeFrequency: 'daily',
+    priority: 0.85,
+  }))
+
   const TOOLS_DATE = new Date('2026-05-01')
   const toolRoutes: MetadataRoute.Sitemap = [
     { url: `${BASE}/tools`, lastModified: TOOLS_DATE, changeFrequency: 'monthly' as const, priority: 0.85 },
@@ -192,5 +202,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  return [...rootRoute, ...toolRoutes, ...staticRoutes, ...cityRoutes, ...blogRoutes, ...cultureRoutes, ...newsRoutes, ...yearRoutes, ...monthRoutes]
+  return [...rootRoute, ...toolRoutes, ...staticRoutes, ...cityRoutes, ...malayalamCityRoutes, ...blogRoutes, ...cultureRoutes, ...newsRoutes, ...yearRoutes, ...monthRoutes]
 }
