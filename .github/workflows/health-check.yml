@@ -1,0 +1,22 @@
+name: Site Health Check
+
+# Every 30 minutes: is the site up, are key pages returning 200, and (after
+# 11:00 IST) is today's rate showing? A failed run makes GitHub email you.
+# Runnable manually from the Actions tab too.
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Check site
+        run: node scripts/health-check.mjs
