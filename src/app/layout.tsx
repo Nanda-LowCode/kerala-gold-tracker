@@ -1,8 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Fraunces } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 import InstallPrompt from "@/components/InstallPrompt";
 import FeedbackWidget from "@/components/FeedbackWidget";
@@ -105,17 +103,10 @@ export default function RootLayout({
           <FeedbackWidget />
           <SeasonalCharacterLoader />
           <InstallPrompt />
-          <Analytics />
-          {/*
-            sampleRate keeps Speed Insights under the Vercel Hobby free
-            quota (10K events/month). With growing traffic we were burning
-            through it at ~120% and heading toward 200%+ by November.
-            Sampling at 25% still gives statistically representative Core
-            Web Vitals — the field data Google itself surfaces in GSC is
-            sampled similarly. Bump this back up (or remove it) after a
-            plan upgrade.
-          */}
-          <SpeedInsights sampleRate={0.25} />
+          {/* Vercel Analytics + SpeedInsights removed during Cloudflare
+              migration (Nov 2026). Cloudflare Web Analytics is set up via
+              dashboard, no code change needed. GoogleAnalytics + Clarity
+              remain. */}
           {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
             <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
           )}

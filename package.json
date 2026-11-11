@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "backfill": "node --env-file=.env.local scripts/backfill-history.mjs",
-    "post-reddit": "node --env-file=.env.local scripts/post-to-reddit.mjs"
+    "post-reddit": "node --env-file=.env.local scripts/post-to-reddit.mjs",
+    "cf:build": "opennextjs-cloudflare build",
+    "cf:preview": "opennextjs-cloudflare build && wrangler dev",
+    "cf:deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
   },
   "dependencies": {
     "@next/third-parties": "^16.2.2",
@@ -35,6 +38,7 @@
     "web-push": "^3.6.7"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.16",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -43,6 +47,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.2",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.160.0"
   }
 }
